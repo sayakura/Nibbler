@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/29 19:11:21 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/05 21:51:09 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/06 13:15:12 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,8 @@
 #define GAME_HPP
 
 #include "AppleMaker.hpp"
-#include "Renderer.hpp"
-#include "TextRenderer.hpp"
-#include <stdio.h>
-
-#include "GLFW/glfw3.h"
-
-#include <vector>
+#include "IRenderer.hpp"
+#include "Snake.hpp"
 
 enum GameState {
     Active,
@@ -33,7 +28,7 @@ class Game {
 
 private:
     GameState _state;
-    Renderer * _renderer;
+    IRenderer * _renderer;
     Snake *_snake;
     AppleMaker *_apple;
 
@@ -46,15 +41,13 @@ private:
     Direction _curDirection;
 
 public:
-    Game(Renderer *renderer, unsigned int & width, unsigned int & height, unsigned int & squareSize);
+    Game(IRenderer *renderer, unsigned int & width, unsigned int & height, unsigned int & squareSize);
     ~Game();
 
     void init();
-    void processInput(float dt);
+    void processInput();
     void update(float dt);
     void render();
-
-
 
     unsigned int getWidth() const;
     unsigned int getHeight() const;

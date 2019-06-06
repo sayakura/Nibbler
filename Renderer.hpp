@@ -6,29 +6,29 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/25 18:17:05 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/05 21:47:41 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/06 13:12:00 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RENDERER_HPP
 #define RENDERER_HPP
 
-#include "glad/glad.h"
+
 #include "Texture.hpp"
 #include "VertexArray.hpp"
 #include "VertexBuffer.hpp"
 #include "VertexBufferLayout.hpp"
 #include "IndexBuffer.hpp"
 #include "Shader.hpp"
-#include "Snake.hpp"
 #include "TextRenderer.hpp"
+#include "IRenderer.hpp"
 #include <iostream>
 #include <vector>
 #include <sstream>
 
+#include "glad/glad.h"
 #include "vendor/glm/glm.hpp"
 #include "vendor/glm/gtc/matrix_transform.hpp"
-
 #include "GLFW/glfw3.h"
 
 struct ObjectDrawingInfo {
@@ -41,7 +41,7 @@ struct ObjectDrawingInfo {
 	~ObjectDrawingInfo() { if (vb != nullptr) delete vb; }
 };
 
-class Renderer {
+class Renderer : public IRenderer {
 
 private:
     ObjectDrawingInfo *_snakeObj;
@@ -84,14 +84,18 @@ public:
 	void updateScore();
 
 	void draw();
+	bool init();
+	bool initResources();
+	void allocateDrawObjects();
 	int initGLFW();
 
+	void buildApple();
 	void updateApple(const float & x, const float & y);
 
 	static void framebufferSizeCallback(GLFWwindow * window, int width, int height);
 	static void keyCallback(GLFWwindow * window, int key, int scancode, int action, int mode);
 
-	Direction processInput(Direction curDirection);
+	void processInput(Direction & curDirection);
 };
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/25 18:20:49 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/05 22:21:34 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/06 13:04:40 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "ResourceManager.hpp"
 #include "VertexArray.hpp"
 #include "Quad.hpp"
+#include "SnakeSprite.hpp"
 #include <iomanip>
 
 bool Renderer::_keys[1024] = {false};
@@ -23,18 +24,46 @@ Renderer::Renderer(unsigned int width, unsigned int height, unsigned int squareS
 	_clearColor(0.0f), _width(width), _height(height), _squareSize(squareSize), _borderOffset(squareSize * 2), _score(0),
 	_snakeObj(NULL), _appleObj(NULL), _border(NULL), _background(NULL), _textRenderer(nullptr), _window(NULL)
 {
-	initGLFW();
+}
+
+//everything in this class can't be created until GLFW init functions are called
+//wanted to maintain the error checking of these functions. so use an init function rather than constructor
+bool Renderer::init()
+{
+	if (initGLFW() == -1)
+		return (false);
+
+	allocateDrawObjects();
+		
+	_textRenderer = new TextRenderer(_width, _height);
+    _textRenderer->load("fonts/Stencil8bit-Regular.otf", _squareSize + _squareSize / 2);
+
+	//VertexBufferLayout used to organize buffer data for shaders
+	_layout.push<float>(2);
+	_layout.push<float>(2);
+
+	if (!initResources())
+		return (false);
+
+	buildBackground();
+	buildBorder();
+	buildApple();
+
+	_ss << std::setfill('0') << std::setw(3) << _score;
+
+	return (true);
+}
+
+void Renderer::allocateDrawObjects()
+{
 	_snakeObj = new ObjectDrawingInfo;
 	_appleObj = new ObjectDrawingInfo;
 	_border = new ObjectDrawingInfo;
 	_background = new ObjectDrawingInfo;
+}
 
-    _textRenderer = new TextRenderer(_width, _height);
-    _textRenderer->load("fonts/Stencil8bit-Regular.otf", _squareSize + _squareSize / 2);
-
-	_layout.push<float>(2);
-	_layout.push<float>(2);
-
+bool Renderer::initResources()
+{
 	Shader *shader = &ResourceManager::loadShader("./shaders/basic.shader", "default");
 	glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(_width), static_cast<float>(_height), 0.0f, -1.0f, 1.0f);
     if (shader != nullptr)
@@ -42,25 +71,23 @@ Renderer::Renderer(unsigned int width, unsigned int height, unsigned int squareS
         shader->bind();
         shader->setUniformMat4f("u_projection", projection);
     }
+	else
+		return (false);
+	
     shader = &ResourceManager::loadShader("./shaders/text.shader", "text");
     if (shader != nullptr)
     {
         shader->bind();
         shader->setUniformMat4f("u_projection", projection);
-    }   
-
+    }
+	else
+		return (false);
+	
     ResourceManager::loadTexture("./textures/snake-graphics.png", GL_TRUE, GL_FALSE, "snake");
     ResourceManager::loadTexture("./textures/grass.png", GL_TRUE, GL_TRUE, "grass");
     ResourceManager::loadTexture("./textures/tree.png", GL_TRUE, GL_FALSE, "tree");
 
-	buildBackground();
-	buildBorder();
-
-	_appleObj->vb = new VertexBuffer(&SnakeSprite::apple[0], 4 * sizeof(float) * 6, GL_STATIC_DRAW);
-    _appleObj->va.addBuffer(*_appleObj->vb, _layout);
-    _appleObj->vertices.assign(SnakeSprite::apple, SnakeSprite::apple + 24);
-
-	_ss << std::setfill('0') << std::setw(3) << _score;
+	return (true);
 }
 
 Renderer::~Renderer()
@@ -78,7 +105,7 @@ Renderer::~Renderer()
 	if (_textRenderer != nullptr)
 		delete _textRenderer;
 
-	glfwDestroyWindow(_window);
+	glfwDestroyWindow(glfwGetCurrentContext());
 	glfwTerminate();
 }
 
@@ -89,8 +116,6 @@ void Renderer::framebufferSizeCallback(GLFWwindow * window, int width, int heigh
 
 void Renderer::keyCallback(GLFWwindow * window, int key, int scancode, int action, int mode)
 {
-	//if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-	//	glfwSetWindowShouldClose(window, GL_TRUE);
 	if (key >= 0 && key < 1024)
 	{
 		if (action == GLFW_PRESS)
@@ -171,7 +196,6 @@ void Renderer::clear() const
 {
 	GLCall(glClearColor(_clearColor[0], _clearColor[1], _clearColor[2], _clearColor[3]));
 	GLCall(glClear(GL_COLOR_BUFFER_BIT));
-	//depth buffer bit for 3d. it's the zbuffer used to recognize what's closer to the screen and should be drawn	
 }
 
 void Renderer::setClearColor(glm::vec4 color)
@@ -272,6 +296,8 @@ void Renderer::updateScore()
 
 void Renderer::draw()
 {
+	//GLFWwindow *window = glfwGetCurrentContext();
+
 	GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
 	GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
@@ -281,7 +307,14 @@ void Renderer::draw()
     drawSprite(ResourceManager::getTexture("snake"), _snakeObj->va, ResourceManager::getShader("default"), _snakeObj->vertices.size());
     drawApple(ResourceManager::getTexture("snake"), glm::vec2(_appleX, _appleY), _appleObj->va, ResourceManager::getShader("default"), _appleObj->vertices.size(), glm::vec2(static_cast<float>(_squareSize), static_cast<float>(_squareSize)));
 
-	glfwSwapBuffers(_window);
+	glfwSwapBuffers(glfwGetCurrentContext());
+}
+
+void Renderer::buildApple()
+{
+	_appleObj->vb = new VertexBuffer(&SnakeSprite::apple[0], 4 * sizeof(float) * 6, GL_STATIC_DRAW);
+    _appleObj->va.addBuffer(*_appleObj->vb, _layout);
+    _appleObj->vertices.assign(SnakeSprite::apple, SnakeSprite::apple + 24);
 }
 
 void Renderer::updateApple(const float & x, const float & y)
@@ -290,7 +323,7 @@ void Renderer::updateApple(const float & x, const float & y)
 	this->_appleY = y;
 }
 
-Direction Renderer::processInput(Direction curDirection)
+void Renderer::processInput(Direction & curDirection)
 {
 	glfwPollEvents();
 
@@ -302,5 +335,7 @@ Direction Renderer::processInput(Direction curDirection)
         curDirection = Left;
     else if (_keys[GLFW_KEY_DOWN] && curDirection != Up)
         curDirection = Down;
-	return (curDirection);	
+	
+	if (_keys[GLFW_KEY_ESCAPE])
+		curDirection = None;
 }

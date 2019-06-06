@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/01 22:37:40 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/05 19:51:25 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/06 12:41:04 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,11 @@
 
 #include "SnakeSprite.hpp"
 #include "Quad.hpp"
+#include "eDirection.hpp"
 #include <vector>
 #include <deque>
 
-enum Direction {
-    Up,
-    Left,
-    Right,
-    Down
-};
+
 
 class Snake {
 

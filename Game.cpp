@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/29 19:19:43 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/05 22:18:43 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/06 13:35:53 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <iostream>
 #include <iomanip>
 
-Game::Game(Renderer *renderer, unsigned int & width, unsigned int & height, unsigned int & squareSize) :
+Game::Game(IRenderer *renderer, unsigned int & width, unsigned int & height, unsigned int & squareSize) :
     _state(Active), _width(width), _height(height), _renderer(renderer),
     _snake(nullptr), _apple(nullptr), _curDirection(Right), _squareSize(squareSize), _score(0)
 {
@@ -34,8 +34,6 @@ Game::~Game()
 
 void Game::init()
 {
-    //_renderer = new Renderer(_width, _height, _squareSize);
-
     _snake = new Snake(_width, _height, 6, 2, _squareSize);
 	_snake->setBoundsCollision(_borderOffset);
     _apple = new AppleMaker(_width, _height, _squareSize);
@@ -80,9 +78,11 @@ void Game::update(float dt)
 
 }
 
-void Game::processInput(float dt)
+void Game::processInput()
 {
-    _curDirection = _renderer->processInput(_curDirection);
+    _renderer->processInput(_curDirection);
+    if (_curDirection == None)
+        setGameState(Quit);
 }
 
 void Game::render()

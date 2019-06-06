@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/04 16:05:34 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/05 15:37:19 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/05 19:26:48 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ TextRenderer::TextRenderer(GLuint width, GLuint height)
 }
 
 TextRenderer::~TextRenderer()
-{ 
+{
+
 }
 
 void TextRenderer::load(std::string font, GLuint fontSize)

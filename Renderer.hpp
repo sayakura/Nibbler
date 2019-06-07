@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/25 18:17:05 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/06 18:01:38 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/06 19:28:27 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include "Shader.hpp"
 #include "TextRenderer.hpp"
 #include "IRenderer.hpp"
+#include "Callbacks.hpp"
 #include <iostream>
 #include <vector>
 #include <sstream>
@@ -70,7 +71,7 @@ private:
 
 	GLFWwindow *_window;
 
-	static bool _keys[1024];
+	//static bool _keys[1024];
 	static std::unordered_map<std::string, float(*)[12]> _snakeSpriteMap;
 	
 public:
@@ -96,8 +97,8 @@ public:
 	void buildApple();
 	void updateApple(const float & x, const float & y);
 
-	static void framebufferSizeCallback(GLFWwindow * window, int width, int height);
-	static void keyCallback(GLFWwindow * window, int key, int scancode, int action, int mode);
+	//static void framebufferSizeCallback(GLFWwindow * window, int width, int height);
+	//static void keyCallback(GLFWwindow * window, int key, int scancode, int action, int mode);
 
 	void processInput(Direction & curDirection);
 

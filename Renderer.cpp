@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/25 18:20:49 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/06 18:02:03 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/06 19:41:59 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 
 
 std::unordered_map<std::string, float(*)[12]> Renderer::_snakeSpriteMap = Renderer::initSnakeSpriteMap();
-bool Renderer::_keys[1024] = {false};
+
 
 std::unordered_map<std::string, float(*)[12]> Renderer::initSnakeSpriteMap()
 {
@@ -133,7 +133,7 @@ Renderer::~Renderer()
 	glfwTerminate();
 }
 
-void Renderer::framebufferSizeCallback(GLFWwindow * window, int width, int height)
+/*void Renderer::framebufferSizeCallback(GLFWwindow * window, int width, int height)
 {
 	GLCall(glViewport(0, 0, width, height));
 }
@@ -148,7 +148,7 @@ void Renderer::keyCallback(GLFWwindow * window, int key, int scancode, int actio
 			_keys[key] = false;
 	}
 	return;
-}
+}*/
 
 int Renderer::initGLFW()
 {
@@ -166,9 +166,9 @@ int Renderer::initGLFW()
 		return (-1);
 	}
 	glfwMakeContextCurrent(_window);
-	glfwSetFramebufferSizeCallback(_window, Renderer::framebufferSizeCallback);
+	glfwSetFramebufferSizeCallback(_window, Callback::framebufferSizeCallback);
 	glfwSwapInterval(1); //synchronize with vsync
-	glfwSetKeyCallback(_window, Renderer::keyCallback);
+	glfwSetKeyCallback(_window, Callback::keyCallback);
 
 	//loads the address of OpenGL function pointers which are OS-specific
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -351,16 +351,16 @@ void Renderer::processInput(Direction & curDirection)
 {
 	glfwPollEvents();
 
-    if (_keys[GLFW_KEY_UP] && curDirection != Down)
+    if (Callback::_keys[GLFW_KEY_UP] && curDirection != Down)
         curDirection = Up;
-    else if (_keys[GLFW_KEY_RIGHT] && curDirection != Left)
+    else if (Callback::_keys[GLFW_KEY_RIGHT] && curDirection != Left)
         curDirection = Right;
-    else if (_keys[GLFW_KEY_LEFT] && curDirection != Right)
+    else if (Callback::_keys[GLFW_KEY_LEFT] && curDirection != Right)
         curDirection = Left;
-    else if (_keys[GLFW_KEY_DOWN] && curDirection != Up)
+    else if (Callback::_keys[GLFW_KEY_DOWN] && curDirection != Up)
         curDirection = Down;
 	
-	if (_keys[GLFW_KEY_ESCAPE])
+	if (Callback::_keys[GLFW_KEY_ESCAPE])
 		curDirection = None;
 }
 

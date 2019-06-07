@@ -1,34 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   VertexBuffer.hpp                                   :+:      :+:    :+:   */
+/*   Callbacks.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/05/26 14:20:44 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/06 18:43:15 by dpeck            ###   ########.fr       */
+/*   Created: 2019/06/06 19:21:41 by dpeck             #+#    #+#             */
+/*   Updated: 2019/06/06 19:44:47 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef VERTEXBUFFER_HPP
-#define VERTEXBUFFER_HPP
+#ifndef CALLBACKS_HPP
+#define CALLBACKS_HPP
 
 #include "glad/glad.h"
+#include "GLFW/glfw3.h"
+#include "GLDebug.hpp"
 
-class VertexBuffer {
-
-private:
-    unsigned int _rendererID;
+class Callback {
 
 public:
-    VertexBuffer(); // cannonical form
-    VertexBuffer(const void * data, unsigned int size, GLenum usage);
-    ~VertexBuffer();
-    VertexBuffer(VertexBuffer const &);
-    VertexBuffer const & operator=(VertexBuffer const &);
+    static bool _keys[1024];
 
-    void bind() const;
-    void unbind() const;
+    static void framebufferSizeCallback(GLFWwindow * window, int width, int height);
+
+    static void keyCallback(GLFWwindow * window, int key, int scancode, int action, int mode);
+
+private:
+    Callback();
 };
 
 #endif

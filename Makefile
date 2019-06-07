@@ -1,5 +1,7 @@
 NAME = test
 SOURCE = AppleMaker.cpp \
+		 Callbacks.cpp \
+		 Cube.cpp \
 		 GLDebug.cpp \
 		 IndexBuffer.cpp \
 		 Game.cpp \

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Shapes.hpp                                         :+:      :+:    :+:   */
+/*   Quad.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/30 15:00:52 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/01 22:25:37 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/06 16:40:21 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,14 @@ enum ShapeTypes {
 
 class Quad {
 
-private:
+public:
     static int _rows;
     static int _offset;
+    static int _cols;
 
-
-public:
     static std::vector<float> getPosCoords(float x, float y, unsigned int size);
-    static void buildVertex(std::vector<float> & buffer, std::vector<float> & positions, float (&texCoords)[12]);
-    static void buildVertex(std::deque<float> & buffer, std::vector<float> & positions, float (&texCoords)[12]);
+    static void buildVertex(std::vector<float> & buffer, std::vector<float> & positions, std::vector<unsigned int> & offsets, float (&texCoords)[12]);
+    static void buildVertex(std::deque<float> & buffer, std::vector<float> & positions, std::vector<unsigned int> & offsets, float (&texCoords)[12]);
 
 private:
     Quad();

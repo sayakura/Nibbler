@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/25 18:17:05 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/06 13:12:00 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/06 18:01:38 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
+#include <unordered_map>
+#include <string>
 
 #include "glad/glad.h"
 #include "vendor/glm/glm.hpp"
@@ -59,6 +61,7 @@ private:
 	unsigned int _squareSize;
 	unsigned int _borderOffset;
 	unsigned int _score;
+	std::vector<unsigned int> _offsets;
 
 	float _appleX;
 	float _appleY;
@@ -68,6 +71,7 @@ private:
 	GLFWwindow *_window;
 
 	static bool _keys[1024];
+	static std::unordered_map<std::string, float(*)[12]> _snakeSpriteMap;
 	
 public:
 	Renderer(unsigned int width, unsigned int height, unsigned int squareSize);
@@ -96,6 +100,12 @@ public:
 	static void keyCallback(GLFWwindow * window, int key, int scancode, int action, int mode);
 
 	void processInput(Direction & curDirection);
+
+	void popSnakeTail(std::deque<float> & buffer);
+	void buildSnakeVertex(float x, float y, std::deque<float> & buffer, std::string texture);
+	void changeSnakeTexture(bool tail, unsigned int size, std::deque<float> & buffer, std::string texture);
+
+	static std::unordered_map<std::string, float(*)[12]> initSnakeSpriteMap();
 };
 
 #endif

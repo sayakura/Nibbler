@@ -45,7 +45,13 @@ int main(int argc, char** argv)
 		if(game.getGameState() == Quit)
 			quit = true;
 
-		game.render();
+		try {
+			game.render();
+		} catch (std::exception & e)
+		{
+			std::cout << e.what() << std::endl;
+			exit(1);
+		}
 	}
 
 	return 0;

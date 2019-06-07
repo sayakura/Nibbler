@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/29 19:19:43 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/06 13:35:53 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/06 15:53:22 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ Game::~Game()
 
 void Game::init()
 {
-    _snake = new Snake(_width, _height, 6, 2, _squareSize);
+    _snake = new Snake(_renderer, _width, _height, _squareSize);
 	_snake->setBoundsCollision(_borderOffset);
     _apple = new AppleMaker(_width, _height, _squareSize);
 

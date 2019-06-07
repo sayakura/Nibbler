@@ -6,15 +6,17 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/31 20:17:20 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/05 19:25:17 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/06 18:02:23 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Snake.hpp"
 #include <iostream>
 
-Snake::Snake(unsigned int & width, unsigned int & height, unsigned int rows, unsigned int offset, unsigned int squareSize) : 
-    _width(width), _height(height), _squareSize(squareSize), _rows(rows), _cols(offset * 2), _offset(offset), _direction(Right), _grow(false)
+//cols is offset * 2
+
+Snake::Snake(IRenderer * renderer, unsigned int & width, unsigned int & height, unsigned int squareSize) : 
+    _renderer(renderer), _width(width), _height(height), _squareSize(squareSize), _direction(Right), _grow(false)
 {
     unsigned int winSize = width * height;
     for (unsigned int i = 0; i < winSize; i++)
@@ -24,25 +26,21 @@ Snake::Snake(unsigned int & width, unsigned int & height, unsigned int rows, uns
     std::vector<float> start = getStart();
 
     //arbitrary startingPositions. might want to make these constant values somewhere
-    std::vector<float> startingPositions;
-    startingPositions = Quad::getPosCoords(start[0], start[1], _squareSize);
+
     _bodyCoords.push_back(std::pair<float, float>(start[0], start[1]));
-    Quad::buildVertex(_snakeBuffer, startingPositions, SnakeSprite::tailLeft);
+    _renderer->buildSnakeVertex(start[0], start[1], _snakeBuffer, "tailLeft");
     _collisionTable[_bodyCoords.back().second * _width + _bodyCoords.back().first] = true;
 
-    startingPositions = Quad::getPosCoords(start[2], start[3], _squareSize);
     _bodyCoords.push_back(std::pair<float, float>(start[2], start[3]));
-    Quad::buildVertex(_snakeBuffer, startingPositions, SnakeSprite::horizontal);
+    _renderer->buildSnakeVertex(start[2], start[3], _snakeBuffer, "horizontal");
     _collisionTable[_bodyCoords.back().second * _width + _bodyCoords.back().first] = true;
 
-    startingPositions = Quad::getPosCoords(start[4], start[5], _squareSize);
     _bodyCoords.push_back(std::pair<float, float>(start[4], start[5]));
-    Quad::buildVertex(_snakeBuffer, startingPositions, SnakeSprite::horizontal);
+    _renderer->buildSnakeVertex(start[4], start[5], _snakeBuffer, "horizontal");
     _collisionTable[_bodyCoords.back().second * _width + _bodyCoords.back().first] = true;
 
-    startingPositions = Quad::getPosCoords(start[6], start[7], _squareSize);
     _bodyCoords.push_back(std::pair<float, float>(start[6], start[7]));
-    Quad::buildVertex(_snakeBuffer, startingPositions, SnakeSprite::headRight);
+    _renderer->buildSnakeVertex(start[6], start[7], _snakeBuffer, "headRight");
     _collisionTable[_bodyCoords.back().second * _width + _bodyCoords.back().first] = true;
 }
 
@@ -91,73 +89,6 @@ Snake::~Snake()
     return;
 }
 
-/*void Snake::buildVertex(std::vector<float> & positions, float (&texCoords)[12])
-{
-    int posCount = 0;
-    int texCount = 0;
-    for (unsigned int i = 0; i < _rows; i++)
-    {
-        for (unsigned int j = 0; j < _offset; j++)
-        {
-            _snakeBuffer.push_back(positions[posCount]);
-            posCount++;
-        }
-        for (unsigned int j = 0; j < _offset; j++)
-        {
-            _snakeBuffer.push_back(texCoords[texCount]);
-            texCount++;
-        }
-    }
-}*/
-
-void Snake::changeTexture(unsigned int idx, float * texCoords)
-{
-    int texCount = 0;
-    unsigned int curRow = 0;
-    if (idx != 0)
-        curRow = idx / _cols;
-    for (unsigned int i = 0; i < _rows; i++)
-    {
-        for (unsigned int j = 0; j < _offset; j++)
-        {
-            _snakeBuffer[curRow * _cols + j + _offset] = texCoords[texCount];
-            texCount++;
-        }
-        curRow++;
-    }
-}
-
-/*
-*       Layout sample:
-*       350.0f, 400.0f,
-*       400.0f, 350.0f,
-*       350.0f, 350.0f,
-*       400.0f, 400.0f,
-*/
-/*std::vector<float> Snake::getPosCoords(float x, float y, unsigned int size)
-{
-    std::vector<float> quad;
-
-    quad.push_back(x);
-    quad.push_back(y + size);
-
-    quad.push_back(x + size);
-    quad.push_back(y);
-
-    quad.push_back(x);
-    quad.push_back(y);
-
-    quad.push_back(x);
-    quad.push_back(y + size);
-
-    quad.push_back(x + size);
-    quad.push_back(y + size);
-
-    quad.push_back(x + size);
-    quad.push_back(y);
-    return (quad);
-}*/
-
 std::vector<float> Snake::getBufferAsVector()
 {
     return (std::vector<float>(_snakeBuffer.begin(), _snakeBuffer.end()));
@@ -170,16 +101,12 @@ bool Snake::moveSnake(Direction direction)
 
     if (_grow == false)
     {
-        for (unsigned int i = 0; i < _rows; i++)
-        {
-            for (unsigned int j = 0; j < _cols; j++)
-                _snakeBuffer.pop_front();
-        }
+        _renderer->popSnakeTail(_snakeBuffer);
         //this seg faults when out of bounds right now
         _collisionTable[static_cast<int>(_bodyCoords.front().second * _width + _bodyCoords.front().first)] = false;
         _bodyCoords.pop_front();
-        float *tailDirection = getNewTailDirection();
-        changeTexture(0, tailDirection);
+        std::string tailDirection = getNewTailDirection();
+        _renderer->changeSnakeTexture(true, _bodyCoords.size(), _snakeBuffer, tailDirection);
     }
 
     if (direction != _direction)
@@ -225,7 +152,7 @@ void Snake::setDirection(Direction direction)
     _direction = direction;
 }
 
-float * Snake::getNewTailDirection()
+std::string Snake::getNewTailDirection()
 {
     int x1 = static_cast<int>(_bodyCoords[0].first);
     int y1 = static_cast<int>(_bodyCoords[0].second);
@@ -233,12 +160,12 @@ float * Snake::getNewTailDirection()
     int y2 = static_cast<int>(_bodyCoords[1].second);
 
     if (x2 - x1 > 0)
-        return (SnakeSprite::tailLeft);
+        return ("tailLeft");
     if (x2 - x1 < 0)
-        return (SnakeSprite::tailRight);
+        return ("tailRight");
     if (y2 - y1 < 0)
-        return (SnakeSprite::tailDown);
-    return (SnakeSprite::tailUp);
+        return ("tailDown");
+    return ("tailUp");
 }
 
 void Snake::grow()
@@ -251,42 +178,42 @@ void Snake::turn(Direction newDirection)
     if (_direction == Right && newDirection == Up)
     {
         _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first, _bodyCoords.back().second - _squareSize));
-        updateHead(SnakeSprite::headUp, SnakeSprite::leftToUp);       
+        updateHead("headUp", "leftToUp");       
     }
     if (_direction == Right && newDirection == Down)
     {
         _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first, _bodyCoords.back().second + _squareSize));
-        updateHead(SnakeSprite::headDown, SnakeSprite::leftToDown);        
+        updateHead("headDown", "leftToDown");        
     }
     if (_direction == Down && newDirection == Left)
     {
         _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first - _squareSize, _bodyCoords.back().second));
-        updateHead(SnakeSprite::headLeft, SnakeSprite::leftToUp);        
+        updateHead("headLeft", "leftToUp");        
     }
     if (_direction == Down && newDirection == Right)
     {
         _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first + _squareSize, _bodyCoords.back().second));
-        updateHead(SnakeSprite::headRight, SnakeSprite::rightToUp);        
+        updateHead("headRight", "rightToUp");        
     }
     if (_direction == Left && newDirection == Up)
     {
         _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first, _bodyCoords.back().second - _squareSize));
-        updateHead(SnakeSprite::headUp, SnakeSprite::rightToUp);       
+        updateHead("headUp", "rightToUp");       
     }
     if (_direction == Left && newDirection == Down)
     {
         _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first, _bodyCoords.back().second + _squareSize));
-        updateHead(SnakeSprite::headDown, SnakeSprite::rightToDown);        
+        updateHead("headDown", "rightToDown");        
     }
     if (_direction == Up && newDirection == Left)
     {
         _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first - _squareSize, _bodyCoords.back().second));
-        updateHead(SnakeSprite::headLeft, SnakeSprite::leftToDown);       
+        updateHead("headLeft", "leftToDown");       
     }
     if (_direction == Up && newDirection == Right)
     {
         _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first + _squareSize, _bodyCoords.back().second));
-        updateHead(SnakeSprite::headRight, SnakeSprite::rightToDown);
+        updateHead("headRight", "rightToDown");
     }
 }
 
@@ -295,32 +222,30 @@ void Snake::forward()
     if (_direction == Right)
     {   
         _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first + _squareSize, _bodyCoords.back().second));
-        updateHead(SnakeSprite::headRight, SnakeSprite::horizontal);
+        updateHead("headRight", "horizontal");
     }
     if (_direction == Left)
     {
         _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first - _squareSize, _bodyCoords.back().second));
-        updateHead(SnakeSprite::headLeft, SnakeSprite::horizontal);
+        updateHead("headLeft", "horizontal");
     }
     if (_direction == Up)
     {
         _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first, _bodyCoords.back().second - _squareSize));
-        updateHead(SnakeSprite::headUp, SnakeSprite::vertical);
+        updateHead("headUp", "vertical");
     }
     if (_direction == Down)
     {
         _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first, _bodyCoords.back().second + _squareSize));
-        updateHead(SnakeSprite::headDown, SnakeSprite::vertical);
+        updateHead("headDown", "vertical");
     }
 }
 
-void Snake::updateHead(float (&head)[12], float (&neck)[12])
+void Snake::updateHead(const std::string & head, const std::string & neck)
 {
     //bodyidx locates first idx of vertex with neck information
-    unsigned int bodyIdx = (_rows * _cols) * (_bodyCoords.size() - 2);
-     changeTexture(bodyIdx, &neck[0]);
-     std::vector<float> pos = Quad::getPosCoords(_bodyCoords.back().first, _bodyCoords.back().second, _squareSize);
-     Quad::buildVertex(_snakeBuffer, pos, head);
+    _renderer->changeSnakeTexture(false, _bodyCoords.size(), _snakeBuffer, neck);
+    _renderer->buildSnakeVertex(_bodyCoords.back().first, _bodyCoords.back().second, _snakeBuffer, head);
     _collisionTable[_bodyCoords.back().second * _width + _bodyCoords.back().first] = true;
 }
 

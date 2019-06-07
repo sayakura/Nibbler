@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/25 18:20:49 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/06 13:04:40 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/06 18:02:03 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,29 @@
 #include "SnakeSprite.hpp"
 #include <iomanip>
 
+
+std::unordered_map<std::string, float(*)[12]> Renderer::_snakeSpriteMap = Renderer::initSnakeSpriteMap();
 bool Renderer::_keys[1024] = {false};
+
+std::unordered_map<std::string, float(*)[12]> Renderer::initSnakeSpriteMap()
+{
+	std::unordered_map<std::string, float(*)[12]> map;
+	map["rightToDown"] = &SnakeSprite::rightToDown;
+	map["horizontal"] = &SnakeSprite::horizontal;
+	map["leftToDown"] = &SnakeSprite::leftToDown;
+	map["headUp"] = &SnakeSprite::headUp;
+	map["headLeft"] = &SnakeSprite::headLeft;
+	map["headRight"] = &SnakeSprite::headRight;
+	map["headDown"] = &SnakeSprite::headDown;
+	map["vertical"] = &SnakeSprite::vertical;
+	map["rightToUp"] = &SnakeSprite::rightToUp;
+	map["leftToUp"] = &SnakeSprite::leftToUp;
+	map["tailDown"] = &SnakeSprite::tailDown;
+	map["tailUp"] = &SnakeSprite::tailUp;
+	map["tailLeft"] = &SnakeSprite::tailLeft;
+	map["tailRight"] = &SnakeSprite::tailRight;
+	return (map);
+}
 
 Renderer::Renderer(unsigned int width, unsigned int height, unsigned int squareSize) : 
 	_clearColor(0.0f), _width(width), _height(height), _squareSize(squareSize), _borderOffset(squareSize * 2), _score(0),
@@ -40,7 +62,9 @@ bool Renderer::init()
 
 	//VertexBufferLayout used to organize buffer data for shaders
 	_layout.push<float>(2);
+	_offsets.push_back(2);
 	_layout.push<float>(2);
+	_offsets.push_back(2);
 
 	if (!initResources())
 		return (false);
@@ -235,7 +259,7 @@ void Renderer::buildBackground()
         for (unsigned int j = 0; j < totalCols; j++)
         {
             quadCoords = Quad::getPosCoords(posX, posY, _squareSize);
-            Quad::buildVertex(_background->vertices, quadCoords, texCoords);
+            Quad::buildVertex(_background->vertices, quadCoords, _offsets, texCoords);
             posX += _squareSize;
         }
         posY += _squareSize;
@@ -265,9 +289,9 @@ void Renderer::buildBorder()
     for (unsigned int i = 0; i < totalCols; i++)
     {
         quadCoords = Quad::getPosCoords(posX, _borderOffset, borderSquare);
-        Quad::buildVertex(_border->vertices, quadCoords, texCoords);
+        Quad::buildVertex(_border->vertices, quadCoords, _offsets, texCoords);
         quadCoords = Quad::getPosCoords(posX, botY, borderSquare);
-        Quad::buildVertex(_border->vertices, quadCoords, texCoords);
+        Quad::buildVertex(_border->vertices, quadCoords, _offsets, texCoords);
         posX += borderSquare;
     }
 
@@ -277,9 +301,9 @@ void Renderer::buildBorder()
     for (unsigned int i = 1; i < totalRows; i++)
     {
         quadCoords = Quad::getPosCoords(_borderOffset, posY, borderSquare);
-        Quad::buildVertex(_border->vertices, quadCoords, texCoords);
+        Quad::buildVertex(_border->vertices, quadCoords, _offsets, texCoords);
         quadCoords = Quad::getPosCoords(rightX, posY, borderSquare);
-        Quad::buildVertex(_border->vertices, quadCoords, texCoords);
+        Quad::buildVertex(_border->vertices, quadCoords, _offsets, texCoords);
         posY += borderSquare;
     }
 
@@ -338,4 +362,39 @@ void Renderer::processInput(Direction & curDirection)
 	
 	if (_keys[GLFW_KEY_ESCAPE])
 		curDirection = None;
+}
+
+void Renderer::buildSnakeVertex(float x, float y, std::deque<float> & buffer, std::string texture)
+{
+    std::vector<float> startingPositions;
+	startingPositions = Quad::getPosCoords(x, y, _squareSize);
+    Quad::buildVertex(buffer, startingPositions, _offsets, *(Renderer::_snakeSpriteMap[texture]));	
+}
+
+void Renderer::changeSnakeTexture(bool tail, unsigned int size, std::deque<float> & buffer, std::string texture)
+{
+	int idx = (tail) ? 0 : (Quad::_rows * Quad::_cols) * (size - 2);
+	float * texCoords = *Renderer::_snakeSpriteMap[texture];
+    int texCount = 0;
+    unsigned int curRow = 0;
+    if (idx != 0)
+        curRow = idx / Quad::_cols;
+    for (unsigned int i = 0; i < Quad::_rows; i++)
+    {
+        for (unsigned int j = 0; j < _offsets[1]; j++)
+        {
+            buffer[curRow * Quad::_cols + j + _offsets[0]] = texCoords[texCount];
+            texCount++;
+        }
+        curRow++;
+    }	
+}
+
+void Renderer::popSnakeTail(std::deque<float> & buffer)
+{
+	for (unsigned int i = 0; i < Quad::_rows; i++)
+	{
+		for (unsigned int j = 0; j < Quad::_cols; j++)
+			buffer.pop_front();
+	}	
 }

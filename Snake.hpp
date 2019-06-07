@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/01 22:37:40 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/06 12:41:04 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/06 17:57:16 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,16 @@
 #define SNAKE_HPP
 
 #include "SnakeSprite.hpp"
+#include "IRenderer.hpp"
 #include "Quad.hpp"
 #include "eDirection.hpp"
 #include <vector>
 #include <deque>
 
-
-
 class Snake {
 
 private:
+    IRenderer *_renderer;
     unsigned int &_width;
     unsigned int &_height;
     unsigned int _rows;
@@ -39,10 +39,9 @@ private:
     std::deque<float> _snakeBuffer;
 
 public:
-    Snake(unsigned int & width, unsigned int & height, unsigned int rows, unsigned int offset, unsigned int squareSize);
+    Snake(IRenderer * renderer, unsigned int & width, unsigned int & height, unsigned int squareSize);
     ~Snake();
     //void buildVertex(std::vector<float> & positions, float (&texCoords)[12]);
-    void changeTexture(unsigned int idx, float * texCoords);
 
     std::vector<float> getStart();
 
@@ -55,14 +54,14 @@ public:
 	void setBoundsCollision(unsigned int borderOffset);
 
     void setDirection(Direction direction);
-    float * getNewTailDirection();
+    std::string getNewTailDirection();
 
     void turn(Direction newDirection);
     void forward();
 
     void grow();
 
-    void updateHead(float (&head)[12], float (&neck)[12]);
+    void updateHead(const std::string & head, const std::string & neck);
     float getHeadX();
     float getHeadY();
 	bool checkCollisionPoint(float x, float y);

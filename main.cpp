@@ -2,6 +2,7 @@
 #include <chrono>
 #include "Game.hpp"
 #include "Renderer.hpp"
+#include "helpers.hpp"
 
 //unsigned int WINWIDTH = 800;
 //unsigned int WINHEIGHT = 600;
@@ -17,6 +18,7 @@ int main(int argc, char** argv)
 	unsigned int WINWIDTH = (SQUARESIZE * COLS) + SQUARESIZE * 2;
 	unsigned int WINHEIGHT = (SQUARESIZE * ROWS) + SQUARESIZE * 2;
 
+	getArgs(argc, argv);
 	IRenderer *renderer;
 	renderer = new Renderer(WINWIDTH, WINHEIGHT, SQUARESIZE);
 	renderer->init();

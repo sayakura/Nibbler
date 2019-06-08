@@ -17,7 +17,8 @@ SOURCE = AppleMaker.cpp \
 		 glad.cpp \
 		 main.cpp \
 		 vendor/stb_image/stb_image.cpp \
-		 vendor/imgui/*.cpp
+		 vendor/imgui/*.cpp \
+		 helpers.cpp
 INCLUDES = -I./\
 		   -Iinclude/\
 		   -Iinclude/freetype\
@@ -37,7 +38,6 @@ all: $(NAME)
 
 $(NAME):
 	clang++ -std=c++11 -stdlib=libc++ $(INCLUDES) $(LIB) $(DEPEND) $(SOURCE)
-
 clean:
 	/bin/rm -f *.o
 

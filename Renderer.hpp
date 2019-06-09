@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/25 18:17:05 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/06 19:28:27 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/07 20:14:12 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,13 @@
 
 
 #include "Texture.hpp"
-#include "VertexArray.hpp"
-#include "VertexBuffer.hpp"
 #include "VertexBufferLayout.hpp"
 #include "IndexBuffer.hpp"
 #include "Shader.hpp"
 #include "TextRenderer.hpp"
 #include "IRenderer.hpp"
 #include "Callbacks.hpp"
+#include "ObjectDrawingInfo.hpp"
 #include <iostream>
 #include <vector>
 #include <sstream>
@@ -34,15 +33,7 @@
 #include "vendor/glm/gtc/matrix_transform.hpp"
 #include "GLFW/glfw3.h"
 
-struct ObjectDrawingInfo {
 
-    VertexBuffer *vb;
-    VertexArray va;
-    std::vector<float> vertices;
-
-	ObjectDrawingInfo() : vb(nullptr) {}
-	~ObjectDrawingInfo() { if (vb != nullptr) delete vb; }
-};
 
 class Renderer : public IRenderer {
 

@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/06 18:10:33 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/06 18:44:01 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/08 14:38:35 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,55 +16,198 @@ int Cube::_rows = 36;
 int Cube::_cols = 3;
 int Cube::_offset = 3;
 
+
+    /*float cube[] = {
+        x,          y,          -1.0f,
+        x,          y,          1.0f,
+        x,          y2,   1.0f,
+        x2,   y2,   -1.0f,
+        x,          y,         -1.0f,
+        x,          y2,   -1.0f,
+        x2,   y,          1.0f,
+        x,          y,          -1.0f,
+        x2,   y,          -1.0f,
+        x2,   y2,   -1.0f,
+        x2,   y,          -1.0f,
+        x,          y,          -1.0f,
+        x,          y,          -1.0f,
+        x,          y2,    1.0f,
+        x,          y2,   -1.0f,
+        x2,   y,          1.0f,
+        x,          y,          1.0f,
+        x,          y,          -1.0f,
+        x,          y2,   1.0f,
+        x,          y2,   1.0f,
+        x2,   y,          1.0f,
+        x2,   y2,   1.0f,
+        x2,   y,          -1.0f,
+        x2,   y2,   -1.0f,
+        x2,   y,          -1.0f,
+        x2,   y2,   1.0f,
+        x2,   y,          1.0f,
+        x2,   y2,   1.0f,
+        x2,   y2,   -1.0f,
+        x,          y2,   -1.0f,
+        x2,   y2,   1.0f,
+        x,          y2,   -1.0f,
+        x,          y2,   1.0f,
+        x2,   y2,   1.0f,
+        x,          y2,   1.0f,
+        x2,   y,          1.0f
+    };*/
+
+    /*float cube[] = {
+        x, y, -0.5f,
+        x2, y, -0.5f,
+        x2,  y2, -0.5f,
+        x2,  y2, -0.5f,
+        x,  y2, -0.5f,
+        x, y, -0.5f,
+
+        x, y,  0.5f,
+        x2, y,  0.5f,
+        x2,  y2,  0.5f,
+        x2,  y2,  0.5f,
+        x,  y2,  0.5f,
+        x, y,  0.5f,
+
+        x,  y2,  0.5f,
+        x,  y2, -0.5f,
+        x, y, -0.5f,
+        x, y, -0.5f,
+        x, y,  0.5f,
+        x,  y2,  0.5f,
+
+        x2,  y2,  0.5f,
+        x2,  y2, -0.5f,
+        x2, y, -0.5f,
+        x2, y, -0.5f,
+        x2, y,  0.5f,
+        x2,  y2,  0.5f,
+
+        x, y, -0.5f,
+        x2, y, -0.5f,
+        x2, y,  0.5f,
+        x2, y,  0.5f,
+        x, y,  0.5f,
+        x, y, -0.5f,
+
+        x,  y2, -0.5f,
+        x2,  y2, -0.5f,
+        x2,  y2,  0.5f,
+        x2,  y2,  0.5f,
+        x,  y2,  0.5f,
+        x,  y2, -0.5f
+};*/
+
+    /*float cube[] = {
+        -0.5f, -0.5f, -0.5f,
+        0.5f, -0.5f, -0.5f,
+        0.5f,  0.5f, -0.5f,
+        0.5f,  0.5f, -0.5f,
+        -0.5f,  0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
+
+        -0.5f, -0.5f,  0.5f,
+        0.5f, -0.5f,  0.5f,
+        0.5f,  0.5f,  0.5f,
+        0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f,  0.5f,
+        -0.5f, -0.5f,  0.5f,
+
+        -0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f,  0.5f,
+        -0.5f,  0.5f,  0.5f,
+
+        0.5f,  0.5f,  0.5f,
+        0.5f,  0.5f, -0.5f,
+        0.5f, -0.5f, -0.5f,
+        0.5f, -0.5f, -0.5f,
+        0.5f, -0.5f,  0.5f,
+        0.5f,  0.5f,  0.5f,
+
+        -0.5f, -0.5f, -0.5f,
+        0.5f, -0.5f, -0.5f,
+        0.5f, -0.5f,  0.5f,
+        0.5f, -0.5f,  0.5f,
+        -0.5f, -0.5f,  0.5f,
+        -0.5f, -0.5f, -0.5f,
+
+        -0.5f,  0.5f, -0.5f,
+        0.5f,  0.5f, -0.5f,
+        0.5f,  0.5f,  0.5f,
+        0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f, -0.5f
+    };
+
 Cube::Cube()
 {
     return;
-}
+}*/
 
-std::vector<float> Cube::getPosCoords(float x, float y, unsigned int size)
+std::vector<float> Cube::getPosCoords(float x, float y, unsigned int squareSize)
 {
+    /*y = 624 - y;
+    float ySquareSize = 624 - (y + squareSize);
+    x = 2.0f * (x) / 816.0f - 1.0f;
+    y = 2.0f * (y) / 624.0f - 1.0f;
+    float x2 = 2.0f * (x + squareSize) / 816.0f - 1.0f;
+    float y2 = 2.0f * (y + squareSize) / 624.0f - 1.0f;*/
+
+    //float small = squareSize / (624.0f * 816.0f);
+    //float big = small + small;
+
     float cube[] = {
-        x,          y,          -1.0f,
-        x,          y,          1.0f,
-        x,          y + size,   1.0f,
-        x + size,   y + size,   -1.0f,
-        x,          y,         -1.0f,
-        x,          y + size,   -1.0f,
-        x + size,   y,          1.0f,
-        x,          y,          -1.0f,
-        x + size,   y,          -1.0f,
-        x + size,   y + size,   -1.0f,
-        x + size,   y,          -1.0f,
-        x,          y,          -1.0f,
-        x,          y,          -1.0f,
-        x,          y + size,    1.0f,
-        x,          y + size,   -1.0f,
-        x + size,   y,          1.0f,
-        x,          y,          1.0f,
-        x,          y,          -1.0f,
-        x,          y + size,   1.0f,
-        x,          y + size,   1.0f,
-        x + size,   y,          1.0f,
-        x + size,   y + size,   1.0f,
-        x + size,   y,          -1.0f,
-        x + size,   y + size,   -1.0f,
-        x + size,   y,          -1.0f,
-        x + size,   y + size,   1.0f,
-        x + size,   y,          1.0f,
-        x + size,   y + size,   1.0f,
-        x + size,   y + size,   -1.0f,
-        x,          y + size,   -1.0f,
-        x + size,   y + size,   1.0f,
-        x,          y + size,   -1.0f,
-        x,          y + size,   1.0f,
-        x + size,   y + size,   1.0f,
-        x,          y + size,   1.0f,
-        x + size,   y,          1.0f
+        -0.5f, -0.5f, -0.5f,
+        0.5f, -0.5f, -0.5f,
+        0.5f,  0.5f, -0.5f,
+        0.5f,  0.5f, -0.5f,
+        -0.5f,  0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
+
+        -0.5f, -0.5f,  0.5f,
+        0.5f, -0.5f,  0.5f,
+        0.5f,  0.5f,  0.5f,
+        0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f,  0.5f,
+        -0.5f, -0.5f,  0.5f,
+
+        -0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f,  0.5f,
+        -0.5f,  0.5f,  0.5f,
+
+        0.5f,  0.5f,  0.5f,
+        0.5f,  0.5f, -0.5f,
+        0.5f, -0.5f, -0.5f,
+        0.5f, -0.5f, -0.5f,
+        0.5f, -0.5f,  0.5f,
+        0.5f,  0.5f,  0.5f,
+
+        -0.5f, -0.5f, -0.5f,
+        0.5f, -0.5f, -0.5f,
+        0.5f, -0.5f,  0.5f,
+        0.5f, -0.5f,  0.5f,
+        -0.5f, -0.5f,  0.5f,
+        -0.5f, -0.5f, -0.5f,
+
+        -0.5f,  0.5f, -0.5f,
+        0.5f,  0.5f, -0.5f,
+        0.5f,  0.5f,  0.5f,
+        0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f, -0.5f
     };
     return (std::vector<float>(cube, cube + sizeof(cube) / sizeof(float)));
 }
 
-void buildVertex(std::vector<float> & buffer, std::vector<float> & positions, std::vector<unsigned int> & offsets, float (&texCoords)[12])
+void buildVertex(std::vector<float> & buffer, std::vector<float> & positions, std::vector<unsigned int> & offsets)
 {
     int posCount = 0;
     int texCount = 0;
@@ -83,7 +226,7 @@ void buildVertex(std::vector<float> & buffer, std::vector<float> & positions, st
     }
 }
 
-void Cube::buildVertex(std::deque<float> & buffer, std::vector<float> & positions, std::vector<unsigned int> & offsets, float (&texCoords)[12])
+void Cube::buildVertex(std::deque<float> & buffer, std::vector<float> & positions, std::vector<unsigned int> & offsets)
 {
     int posCount = 0;
     int texCount = 0;

@@ -1,12 +1,14 @@
 NAME = test
 SOURCE = AppleMaker.cpp \
 		 Callbacks.cpp \
+		 Camera.cpp \
 		 Cube.cpp \
 		 GLDebug.cpp \
 		 IndexBuffer.cpp \
 		 Game.cpp \
          Quad.cpp \
 		 Renderer.cpp \
+		 Renderer3D.cpp \
 		 ResourceManager.cpp \
 		 Shader.cpp \
 		 Snake.cpp \

@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/06 19:09:20 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/06 19:55:43 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/08 13:45:08 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #include "IRenderer.hpp"
 #include "VertexArray.hpp"
 #include "TextRenderer.hpp"
+#include "Camera.hpp"
+#include "ObjectDrawingInfo.hpp"
 
 #include "glad/glad.h"
 #include "vendor/glm/glm.hpp"
@@ -25,19 +27,11 @@
 #include <vector>
 #include <sstream>
 
-struct ObjectDrawingInfo {
-
-    VertexBuffer *vb;
-    VertexArray va;
-    std::vector<float> vertices;
-
-	ObjectDrawingInfo() : vb(nullptr) {}
-	~ObjectDrawingInfo() { if (vb != nullptr) delete vb; }
-};
-
 class Renderer3D : public IRenderer {
 
 private:
+    Camera _camera;
+
     ObjectDrawingInfo *_snakeObj;
     ObjectDrawingInfo *_appleObj;
     ObjectDrawingInfo *_border;
@@ -53,6 +47,10 @@ private:
 	unsigned int _borderOffset;
 	unsigned int _score;
 	std::vector<unsigned int> _offsets;
+
+    unsigned int _snakeSize;
+    std::deque<float> _snakeCoords;
+    glm::mat4 _proj;
 
 	float _appleX;
 	float _appleY;
@@ -74,12 +72,14 @@ public:
     bool init();
     void draw();
     void updateApple(const float & x, const float & y);
-    void refreshSnakeBuffer(std::vector<float> buffer);
+    void refreshSnakeBuffer(std::vector<float> snakeVertices);
     void processInput(Direction & curDirection);
     void updateScore();
     void buildSnakeVertex(float x, float y, std::deque<float> & buffer, std::string texture);
     void changeSnakeTexture(bool tail, unsigned int size, std::deque<float> & buffer, std::string texture);
     void popSnakeTail(std::deque<float> & buffer);
+
+    void drawCube(const VertexArray & va, Shader & shader, unsigned int numOfVertices, glm::vec3 color = glm::vec3(1.0f));
 };
 
 #endif

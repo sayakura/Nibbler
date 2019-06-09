@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/25 18:20:49 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/06 19:41:59 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/07 20:14:12 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 #include "Quad.hpp"
 #include "SnakeSprite.hpp"
 #include <iomanip>
-
 
 std::unordered_map<std::string, float(*)[12]> Renderer::_snakeSpriteMap = Renderer::initSnakeSpriteMap();
 
@@ -132,23 +131,6 @@ Renderer::~Renderer()
 	glfwDestroyWindow(glfwGetCurrentContext());
 	glfwTerminate();
 }
-
-/*void Renderer::framebufferSizeCallback(GLFWwindow * window, int width, int height)
-{
-	GLCall(glViewport(0, 0, width, height));
-}
-
-void Renderer::keyCallback(GLFWwindow * window, int key, int scancode, int action, int mode)
-{
-	if (key >= 0 && key < 1024)
-	{
-		if (action == GLFW_PRESS)
-			_keys[key] = true;
-		else if (action == GLFW_RELEASE)
-			_keys[key] = false;
-	}
-	return;
-}*/
 
 int Renderer::initGLFW()
 {

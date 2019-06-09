@@ -3,6 +3,7 @@
 #include "Game.hpp"
 #include "Renderer.hpp"
 #include "helpers.hpp"
+#include "Renderer3D.hpp"
 
 //unsigned int WINWIDTH = 800;
 //unsigned int WINHEIGHT = 600;
@@ -17,10 +18,11 @@ int main(int argc, char** argv)
 	//squaresize * 2 for border
 	unsigned int WINWIDTH = (SQUARESIZE * COLS) + SQUARESIZE * 2;
 	unsigned int WINHEIGHT = (SQUARESIZE * ROWS) + SQUARESIZE * 2;
+	std::cout << WINWIDTH << " " << WINHEIGHT << std::endl;
 
 	getArgs(argc, argv);
 	IRenderer *renderer;
-	renderer = new Renderer(WINWIDTH, WINHEIGHT, SQUARESIZE);
+	renderer = new Renderer3D(WINWIDTH, WINHEIGHT, SQUARESIZE);
 	renderer->init();
 
 	bool quit = false;
@@ -54,6 +56,7 @@ int main(int argc, char** argv)
 			std::cout << e.what() << std::endl;
 			exit(1);
 		}
+
 	}
 
 	return 0;

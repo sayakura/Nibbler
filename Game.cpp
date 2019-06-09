@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/29 19:19:43 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/06 15:53:22 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/08 21:40:58 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void Game::init()
 
 void Game::update(float dt)
 {
-    const float animationSpeed = 12.0f;
+    const float animationSpeed = 15.0f;
     float animationUpdateTime = 1.0f / animationSpeed;
     static float timeSinceLastFrameSwap = 0.0f;
     timeSinceLastFrameSwap += dt;

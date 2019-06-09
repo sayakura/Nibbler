@@ -1,6 +1,7 @@
 #include "helpers.hpp"
+#include "sysconfig.hpp"
 
-uint8_t     g_gameMode;
+int         g_gameMode;
 int         g_windowHeight;
 int         g_windowWidth;
 

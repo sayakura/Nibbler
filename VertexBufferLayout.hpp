@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   VertexBufferLayout.hpp                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Kura <Kura@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/26 15:11:32 by dpeck             #+#    #+#             */
-/*   Updated: 2019/05/26 20:57:33 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/09 07:48:59 by Kura             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 #include <vector>
 #include <iostream>
+#include <assert.h>
 #include "glad/glad.h"
 
 struct VertexBufferElement

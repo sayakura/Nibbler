@@ -16,30 +16,29 @@ SOURCE = AppleMaker.cpp \
 		 TextRenderer.cpp \
 		 VertexArray.cpp \
 		 VertexBuffer.cpp \
-		 glad.cpp \
 		 main.cpp \
 		 vendor/stb_image/stb_image.cpp \
 		 vendor/imgui/*.cpp \
-		 helpers.cpp
+		 helpers.cpp\
+		 SoundEngine.cpp
+		 
 INCLUDES = -I./\
-		   -Iinclude/\
 		   -Iinclude/freetype\
 		   -Iinclude/glad\
 		   -Iinclude/GLFW\
 		   -Iinclude/KHR\
-		#    -Iinclude/GLFW\
-		#    -I/nfs/2018/d/dpeck/.brew/Cellar/freetype/2.9.1/include/freetype2 \
-        #    -I/usr/local/Cellar/glf2/3.3/include
-LIB = -Llib
-	# 	-L/nfs/2018/d/dpeck/.brew/Cellar/glfw/3.3/lib \
-	#   -L/nfs/2018/d/dpeck/.brew/Cellar/freetype/2.9.1/lib
-DEPEND = -lglfw -lfreetype -framework CoreVideo -framework OpenGL -framework IOKit -framework Cocoa -framework Carbon
+		   -Iinclude\
 
+LIB = -Llib
+DEPEND = -lglfw -lfreetype -lirrklang -lglad\
+		 -framework ImageIO -framework CoreVideo -framework OpenGL -framework IOKit -framework Cocoa -framework Carbon
 
 all: $(NAME)
 
 $(NAME):
+	export DYLD_LIBRARY_PATH=lib
 	clang++ -std=c++11 -stdlib=libc++ $(INCLUDES) $(LIB) $(DEPEND) $(SOURCE)
+
 clean:
 	/bin/rm -f *.o
 

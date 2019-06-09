@@ -4,6 +4,8 @@
 #include "Renderer.hpp"
 #include "helpers.hpp"
 #include "Renderer3D.hpp"
+#include "SoundEngine.hpp"
+#include "sysconfig.hpp"
 
 //unsigned int WINWIDTH = 800;
 //unsigned int WINHEIGHT = 600;
@@ -15,6 +17,7 @@ unsigned int COLS = 32;
 
 int main(int argc, char** argv)
 {
+	g_soundEngine = new SoundEngine();
 	//squaresize * 2 for border
 	unsigned int WINWIDTH = (SQUARESIZE * COLS) + SQUARESIZE * 2;
 	unsigned int WINHEIGHT = (SQUARESIZE * ROWS) + SQUARESIZE * 2;
@@ -22,14 +25,14 @@ int main(int argc, char** argv)
 
 	getArgs(argc, argv);
 	IRenderer *renderer;
-	renderer = new Renderer3D(WINWIDTH, WINHEIGHT, SQUARESIZE);
+	renderer = new Renderer(WINWIDTH, WINHEIGHT, SQUARESIZE);
 	renderer->init();
 
 	bool quit = false;
 	Game game(renderer, WINWIDTH, WINHEIGHT, SQUARESIZE);
 
 	game.init();
-
+	g_soundEngine->playLoop(SE_BGM);
 	std::chrono::duration<float> deltaTime;
 	auto lastFrame = std::chrono::high_resolution_clock::now();
 

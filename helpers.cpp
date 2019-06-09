@@ -69,5 +69,4 @@ void        getArgs(int ac, char **av)
                ::exit(EXIT_SUCCESS);
         }
     }
-    ::exit(EXIT_SUCCESS);
 }

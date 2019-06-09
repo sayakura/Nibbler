@@ -14,8 +14,8 @@
 #define WINDOW_MAX_WIDTH 200 // change it later
 #define WINDOW_MIN_WIDTH 10 // change it later
 
-void        getArgs(int ac, char **av);
-extern uint8_t     g_gameMode;
-extern int         g_windowHeight;
-extern int         g_windowWidth;
+void                getArgs(int ac, char **av);
+extern uint8_t      g_gameMode;
+extern int          g_windowHeight;
+extern int          g_windowWidth;
 #endif 

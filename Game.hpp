@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/29 19:11:21 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/06 13:15:12 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/09 18:07:44 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ private:
     unsigned int _score;
     unsigned int _borderOffset;
 
+    Direction _prevDirection;
     Direction _curDirection;
 
 public:
@@ -45,7 +46,7 @@ public:
     ~Game();
 
     void init();
-    void processInput();
+    void processInput(float dt);
     void update(float dt);
     void render();
 

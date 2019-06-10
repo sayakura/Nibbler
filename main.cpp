@@ -25,7 +25,7 @@ int main(int argc, char** argv)
 
 	getArgs(argc, argv);
 	IRenderer *renderer;
-	renderer = new Renderer(WINWIDTH, WINHEIGHT, SQUARESIZE);
+	renderer = new Renderer3D(WINWIDTH, WINHEIGHT, SQUARESIZE);
 	renderer->init();
 
 	bool quit = false;
@@ -45,7 +45,7 @@ int main(int argc, char** argv)
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
-		game.processInput();
+		game.processInput(deltaTime.count());
 
 		game.update(deltaTime.count());
 

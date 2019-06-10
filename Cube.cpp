@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/06 18:10:33 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/08 14:38:35 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/09 16:17:03 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,7 @@ Cube::Cube()
     return;
 }*/
 
-std::vector<float> Cube::getPosCoords(float x, float y, unsigned int squareSize)
+std::vector<float> Cube::getGenericCubeCoords()
 {
     /*y = 624 - y;
     float ySquareSize = 624 - (y + squareSize);
@@ -207,7 +207,63 @@ std::vector<float> Cube::getPosCoords(float x, float y, unsigned int squareSize)
     return (std::vector<float>(cube, cube + sizeof(cube) / sizeof(float)));
 }
 
-void buildVertex(std::vector<float> & buffer, std::vector<float> & positions, std::vector<unsigned int> & offsets)
+std::vector<float> Cube::getCubeAtPos(float x, float y, unsigned int squareSize, unsigned int width, unsigned int height)
+{
+    float xSize = 2.0f / (width / squareSize);
+    float ySize = 2.0f / (height / squareSize);
+    y = height - y;
+	x = 2.0f * (x) / width - 1.0f;
+    y = 2.0f * (y) / height - 1.0f;
+    xSize += x;
+    ySize += y;
+
+    float cube[] = {
+        x, y, 0.0f,
+        xSize, y, 0.0f,
+        xSize,  ySize, 0.0f,
+        xSize,  ySize, 0.0f,
+        x,  ySize, 0.0f,
+        x, y, 0.0f,
+
+        x, y,  0.1f,
+        xSize, y,  0.1f,
+        xSize,  ySize,  0.1f,
+        xSize,  ySize,  0.1f,
+        x,  ySize,  0.1f,
+        x, y,  0.1f,
+
+        x,  ySize,  0.1f,
+        x,  ySize, 0.0f,
+        x, y, 0.0f,
+        x, y, 0.0f,
+        x, y,  0.1f,
+        x,  ySize,  0.1f,
+
+        xSize,  ySize,  0.1f,
+        xSize,  ySize, 0.0f,
+        xSize, y, 0.0f,
+        xSize, y, 0.0f,
+        xSize, y,  0.1f,
+        xSize,  ySize,  0.1f,
+
+        x, y, 0.0f,
+        xSize, y, 0.0f,
+        xSize, y,  0.1f,
+        xSize, y,  0.1f,
+        x, y,  0.1f,
+        x, y, 0.0f,
+
+        x,  ySize, 0.0f,
+        xSize,  ySize, 0.0f,
+        xSize,  ySize,  0.1f,
+        xSize,  ySize,  0.1f,
+        x,  ySize,  0.1f,
+        x,  ySize, 0.0f
+    };
+    return (std::vector<float>(cube, cube + sizeof(cube) / sizeof(float)));
+}
+
+void Cube::buildVertex(std::vector<float> & buffer, std::vector<float> & positions, std::vector<unsigned int> & offsets)
 {
     int posCount = 0;
     int texCount = 0;

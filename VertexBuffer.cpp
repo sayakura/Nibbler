@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/26 14:20:01 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/04 18:03:25 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/09 12:28:50 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,4 +59,10 @@ void VertexBuffer::bind() const
 void VertexBuffer::unbind() const
 {
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
+}
+
+void VertexBuffer::updateBufferArray(const void * data, unsigned int size)
+{
+    GLCall(glBindBuffer(GL_ARRAY_BUFFER, _rendererID));
+    GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, size, data));
 }

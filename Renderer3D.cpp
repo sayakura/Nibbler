@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/06 19:12:33 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/09 18:49:49 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/09 22:06:21 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,11 +223,19 @@ void Renderer3D::draw()
 	GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
 	GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
-	drawBackground(_background->va, ResourceManager::getShader("threedimension"), _background->vertices.size(), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
-	drawBorder(_border->va, ResourceManager::getShader("threedimension"), _border->vertices.size(), glm::vec4(1.0f, 0.0f, 1.0f, 0.4f));
+	float alpha = 1.0f;
+
+	if (_pause)
+		alpha = 0.3;
+
+	//if (!_pause)
+	//{
+	drawBackground(_background->va, ResourceManager::getShader("threedimension"), _background->vertices.size(), glm::vec4(0.0f, 0.0f, 1.0f, 1.0 * alpha));
+	drawBorder(_border->va, ResourceManager::getShader("threedimension"), _border->vertices.size(), glm::vec4(1.0f, 0.0f, 1.0f, 0.4f * alpha));
 	_textRenderer->renderText("Score: " + _ss.str(), _borderOffset + 1.0f, _borderOffset / 3.0f, 1.0f);
-	drawApple(glm::vec2(_appleX, _appleY), _appleObj->va, ResourceManager::getShader("threedimension"), _appleObj->vertices.size());	
-	drawCube(_snakeObj->va, ResourceManager::getShader("threedimension"), _snakeObj->vertices.size(), glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+	drawApple(glm::vec2(_appleX, _appleY), _appleObj->va, ResourceManager::getShader("threedimension"), _appleObj->vertices.size(), glm::vec4(1.0f, 0.0f, 0.0f, 1.0f * alpha));	
+	drawCube(_snakeObj->va, ResourceManager::getShader("threedimension"), _snakeObj->vertices.size(), glm::vec4(0.0f, 1.0f, 0.0f, 1.0 * alpha));
+	//}
 	if (_pause)
 	{
 		_textRenderer->renderText("Pause", _width / 2.3f, _height / 3.0f, 1.0f);

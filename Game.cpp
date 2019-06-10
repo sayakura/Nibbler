@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/29 19:19:43 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/08 21:40:58 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/09 18:10:05 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void Game::update(float dt)
     static float timeSinceLastFrameSwap = 0.0f;
     timeSinceLastFrameSwap += dt;
 
-    if (timeSinceLastFrameSwap > animationUpdateTime)
+    if (timeSinceLastFrameSwap > animationUpdateTime && _state == Active)
     {
         if (_snake != nullptr)
         {
@@ -75,13 +75,31 @@ void Game::update(float dt)
         _renderer->refreshSnakeBuffer(_snake->getBufferAsVector());
         timeSinceLastFrameSwap = 0.0f;
     }
-
 }
 
-void Game::processInput()
+void Game::processInput(float dt)
 {
+    //float inputUpdateTime = 1.0f / 5.0f;
+    //static float timeSinceLastFrameSwap = 0.0f;
+    //timeSinceLastFrameSwap += dt;
+
+    //if (timeSinceLastFrameSwap > inputUpdateTime)
+    if (_state == Active)
+        _prevDirection = _curDirection;
     _renderer->processInput(_curDirection);
-    if (_curDirection == None)
+    if (_curDirection == Pause && _state == Active)
+    {
+        setGameState(Menu);
+        _curDirection = None;
+        //_renderer->setPause(true);
+    }
+    else if (_curDirection == Pause && _state == Menu)
+    {
+        setGameState(Active);
+        _curDirection = _prevDirection;
+        //_renderer->setPause(false);
+    }
+    if (_curDirection == Exit)
         setGameState(Quit);
 }
 

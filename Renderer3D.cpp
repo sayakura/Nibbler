@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/06 19:12:33 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/08 21:56:47 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/09 18:30:48 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 Renderer3D::Renderer3D(unsigned int width, unsigned int height, unsigned int squareSize) :
     _width(width), _height(height), _squareSize(squareSize), _borderOffset(squareSize * 2), _score(0),
 	_snakeObj(NULL), _appleObj(NULL), _border(NULL), _background(NULL), _textRenderer(nullptr), _window(NULL),
-	_camera(Camera(glm::vec3(0.0f, 0.0f, 2.0f))), _snakeSize(0)
+	_camera(Camera(glm::vec3(0.0f, 0.0f, 2.5f))), _snakeSize(0), _pause(false), _curMenuChoice(0)
 {
 }
 
@@ -40,16 +40,19 @@ bool Renderer3D::init()
 	if (!initResources())
 		return (false);
 
-	_snakeObj->vertices = Cube::getPosCoords(0.0f, 0.0f, 0);
+	//draw each cube of snake version WORKS
+	/*_snakeObj->vertices = Cube::getPosCoords(0.0f, 0.0f, 0);
 	_snakeObj->vb = new VertexBuffer(&_snakeObj->vertices[0], _snakeObj->vertices.size() * sizeof(float), GL_DYNAMIC_DRAW);
-    _snakeObj->va.addBuffer(*(_snakeObj->vb), _layout);
+    _snakeObj->va.addBuffer(*(_snakeObj->vb), _layout);*/
 
     //TODO
-	/*buildBackground();
+	buildBackground();
 	buildBorder();
-	buildApple();*/
+	buildApple();
 
 	_ss << std::setfill('0') << std::setw(3) << _score;
+
+	_pauseStr = "-> Continue <-\t   Quit";
 
     return (true);
 }
@@ -84,8 +87,8 @@ int Renderer3D::initGLFW()
 	//GLCall(glViewport(0, 0, WINWIDTH, WINHEIGHT));
 	GLCall(glEnable(GL_DEPTH_TEST));
 	//GLCall(glEnable(GL_CULL_FACE));
-	//GLCall(glEnable(GL_BLEND));
-	//GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+	GLCall(glEnable(GL_BLEND));
+	GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
 	return (0);
 }
@@ -102,24 +105,8 @@ bool Renderer3D::initResources()
 {
 	Shader *shader = &ResourceManager::loadShader("./shaders/threedimension.shader", "threedimension");
 
-	//glm::mat4 proj = glm::ortho((float)-_width, static_cast<float>(_width), static_cast<float>(_height), (float)-_height, -1000.0f, 1000.0f);
-	//proj = glm::rotate(proj, glm::radians(35.264f), glm::vec3(1.0f, 0.0f, 0.0f));
-	//proj = glm::rotate(proj, glm::radians(-45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-
-	/*float fov_y = 45.f;
-	float z = 0.5 / glm::tan(glm::radians(fov_y / 2.0f));
-	glm::mat4 view = glm::lookAt(
-		glm::vec3(0.5f, 0.5f, z),
-		glm::vec3(0.5f, 0.5f, 0.0f),
-		glm::vec3(0.0f, 1.0f, 0.0f));*/
 	glm::mat4 view = _camera.getViewMatrix();
 	view = glm::rotate(view, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	//view = glm::rotate(view, glm::radians(-15.0f), glm::vec3(0.0f, 0.0f, -1.0f));
-	//view = glm::rotate(view, glm::radians(-5.0f), glm::vec3(0.0f, 0.0f, -1.0f));
-	//view = glm::rotate(view, glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	//view = glm::rotate(view, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-	//view = glm::rotate(view, glm::radians(-45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-	//view = glm::rotate(view, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 	glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)(_width)/(float)(_height), 0.1f, 100.0f);
 	_proj = proj;
     if (shader != nullptr)
@@ -136,7 +123,7 @@ bool Renderer3D::initResources()
     if (shader != nullptr)
     {
         shader->bind();
-        shader->setUniformMat4f("u_projection", proj);
+        shader->setUniformMat4f("u_projection", glm::ortho(0.0f, static_cast<float>(_width), static_cast<float>(_height), 0.0f, -1.0f, 1.0f));
     }
 	else
 		return (false);	
@@ -163,26 +150,105 @@ Renderer3D::~Renderer3D()
 	glfwTerminate();
 }
 
+void Renderer3D::buildBackground()
+{
+    unsigned int totalRows = _height / _squareSize;
+    unsigned int totalCols = _width / _squareSize;
+    unsigned int posX = 0;
+    unsigned int posY = 0;
+
+    std::vector<float> cubeCoords;
+    
+    for (unsigned int i = 0; i < totalRows; i++)
+    {
+        posX = 0;
+        for (unsigned int j = 0; j < totalCols; j++)
+        {
+            cubeCoords = Cube::getCubeAtPos(posX, posY, _squareSize, _width, _height);
+            Cube::buildVertex(_background->vertices, cubeCoords, _offsets);
+            posX += _squareSize;
+        }
+        posY += _squareSize;
+    }
+
+    _background->vb = new VertexBuffer(&_background->vertices[0], _background->vertices.size() * sizeof(float), GL_STATIC_DRAW);
+    _background->va.addBuffer(*_background->vb, _layout);	
+}
+
+void Renderer3D::buildBorder()
+{
+	unsigned int borderSquare = _squareSize;
+    unsigned int totalRows = (_height - _borderOffset * 2) / borderSquare;
+    unsigned int totalCols = (_width - _borderOffset * 2) / borderSquare;
+    unsigned int posX = _borderOffset;
+    unsigned int botY = (totalRows) * borderSquare + borderSquare;
+
+    std::vector<float> cubeCoords;
+    
+    for (unsigned int i = 0; i < totalCols; i++)
+    {
+        cubeCoords = Cube::getCubeAtPos(posX, _borderOffset, borderSquare, _width, _height);
+        Cube::buildVertex(_border->vertices, cubeCoords, _offsets);
+        cubeCoords = Cube::getCubeAtPos(posX, botY, borderSquare, _width, _height);
+        Cube::buildVertex(_border->vertices, cubeCoords, _offsets);
+        posX += borderSquare;
+    }
+
+    unsigned int rightX = (totalCols) * borderSquare + borderSquare;
+    unsigned int posY = _borderOffset + borderSquare;
+
+    for (unsigned int i = 1; i < totalRows; i++)
+    {
+        cubeCoords = Cube::getCubeAtPos(_borderOffset, posY, borderSquare, _width, _height);
+        Cube::buildVertex(_border->vertices, cubeCoords, _offsets);
+        cubeCoords = Cube::getCubeAtPos(rightX, posY, borderSquare, _width, _height);
+        Cube::buildVertex(_border->vertices, cubeCoords, _offsets);
+        posY += borderSquare;
+    }
+
+    _border->vb = new VertexBuffer(&_border->vertices[0], _border->vertices.size() * sizeof(float), GL_STATIC_DRAW);
+    _border->va.addBuffer(*_border->vb, _layout);	
+}
+
+void Renderer3D::buildApple()
+{
+	std::vector<float> appleCoords = Cube::getGenericCubeCoords();
+	_appleObj->vb = new VertexBuffer(&appleCoords[0], appleCoords.size() * sizeof(float), GL_STATIC_DRAW);
+    _appleObj->va.addBuffer(*_appleObj->vb, _layout);
+    _appleObj->vertices = appleCoords;
+}
+
 void Renderer3D::draw()
 {
 	GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
-	GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT));
-	drawCube(_snakeObj->va, ResourceManager::getShader("threedimension"), _snakeObj->vertices.size(), glm::vec3(0.0f, 1.0f, 0.0f));
+	GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+
+	drawBackground(_background->va, ResourceManager::getShader("threedimension"), _background->vertices.size(), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
+	drawBorder(_border->va, ResourceManager::getShader("threedimension"), _border->vertices.size(), glm::vec4(1.0f, 0.0f, 1.0f, 0.4f));
+	_textRenderer->renderText("Score: " + _ss.str(), _borderOffset + 1.0f, _borderOffset / 3.0f, 1.0f);
+	drawApple(glm::vec2(_appleX, _appleY), _appleObj->va, ResourceManager::getShader("threedimension"), _appleObj->vertices.size());	
+	drawCube(_snakeObj->va, ResourceManager::getShader("threedimension"), _snakeObj->vertices.size(), glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+	if (_pause)
+	{
+		_textRenderer->renderText("Pause", _width / 2.3f, _height / 3.0f, 1.0f);
+		_textRenderer->renderText(_pauseStr, _width / 3.7f, _height / 2.3f, 1.0f);
+	}
+
 
 	glfwSwapBuffers(glfwGetCurrentContext());
 }
 
-void Renderer3D::drawCube(const VertexArray & va, Shader & shader, unsigned int numOfVertices, glm::vec3 color)
+void Renderer3D::drawCube(const VertexArray & va, Shader & shader, unsigned int numOfVertices, glm::vec4 color)
 {
 	shader.bind();
 	glm::mat4 model;
 
 
-	shader.setUniform3f("u_cubeColor", color.x, color.y, color.z);
+	shader.setUniform4f("u_cubeColor", color.x, color.y, color.z, color.w);
 
 	va.bind();
 
-	for (int i = 0, j = 0; i < _snakeSize; i++, j += 3)
+	/*for (int i = 0, j = 0; i < _snakeSize; i++, j += 3)
 	{
 		model = glm::mat4(1.0f);
 		//model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.5f));
@@ -200,40 +266,129 @@ void Renderer3D::drawCube(const VertexArray & va, Shader & shader, unsigned int 
 		else
 			shader.setUniform3f("u_cubeColor", color.x, color.y, color.z);
 		GLCall(glDrawArrays(GL_TRIANGLES, 0, numOfVertices));	
-	}
+	}*/
+	model = glm::mat4(1.0f);
+	shader.setUniformMat4f("u_model", model);
+	GLCall(glDrawArrays(GL_TRIANGLES, 0, numOfVertices));
+}
+
+void Renderer3D::drawBackground(const VertexArray & va, Shader & shader, unsigned int numOfVertices, glm::vec4 color)
+{
+	shader.bind();
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 0.0f));
+	shader.setUniform4f("u_cubeColor", color.x, color.y, color.z, color.w);
+	shader.setUniformMat4f("u_model", model);
+	va.bind();
+	GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_LINE));
+	GLCall(glDrawArrays(GL_TRIANGLES, 0, numOfVertices));
+	GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_FILL));
+}
+
+void Renderer3D::drawBorder(const VertexArray & va, Shader & shader, unsigned int numOfVertices, glm::vec4 color)
+{
+	shader.bind();
+	glm::mat4 model(1.0f);
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.2f));
+
+	shader.setUniformMat4f("u_model", model);
+	shader.setUniform4f("u_cubeColor", color.x, color.y, color.z, color.w);
+
+	va.bind();
+	//GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_LINE));
+	GLCall(glDrawArrays(GL_TRIANGLES, 0, numOfVertices));
+	//GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_FILL));	
+}
+
+void Renderer3D::drawApple(glm::vec2 pos, const VertexArray & va, Shader & shader, const unsigned int numOfVertices, glm::vec4 color)
+{
+	float xScale = 2.0f / (_width / _squareSize);
+	float yScale = 2.0f / (_height / _squareSize);
+
+	shader.bind();
+	glm::mat4 model(1.0f);
+	//model = glm::translate(model, glm::vec3(1.0f, 0.0f, 0.0f));
+
+	//model = glm::translate(model, glm::vec3(0.5f * xScale, 0.5f * yScale, 0.1f));
+	//model = glm::rotate(model, static_cast<float>(glfwGetTime()) * glm::radians(50.0f), glm::vec3(0.5f, 0.0f, 1.0f));
+	//model = glm::translate(model, glm::vec3(-pos, 0.0f));
+
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 0.4f));
+
+	shader.setUniformMat4f("u_model", model);
+	shader.setUniform4f("u_cubeColor", color.x, color.y, color.z, color.w);
+
+	va.bind();
+	GLCall(glDrawArrays(GL_TRIANGLES, 0, numOfVertices));	
 }
 
 void Renderer3D::updateApple(const float & x, const float & y)
 {
-	this->_appleX = x;
-	this->_appleY = y;
+    float inverseY = _height - y;
+	this->_appleX = 2.0f * (x) / _width - 1.0f;
+    this->_appleY = 2.0f * (inverseY) / _height - 1.0f;
+
+	std::vector<float> cubeCoords = Cube::getCubeAtPos(x, y, _squareSize, _width, _height);
+	std::vector<float> cubeVertices;
+    Cube::buildVertex(cubeVertices, cubeCoords, _offsets);
+	_appleObj->vb->updateBufferArray(&cubeVertices[0], cubeVertices.size() * sizeof(float));
+	_appleObj->vertices = cubeVertices;
 }
 
 void Renderer3D::refreshSnakeBuffer(std::vector<float> snakeVertices)
 {
-	/*_snakeObj->vertices = snakeVertices;
+	_snakeObj->vertices = snakeVertices;
     if (_snakeObj->vb != nullptr)
         delete _snakeObj->vb;
-    _snakeObj->vb = new VertexBuffer(&snakeVertices[0], snakeVertices.size() * sizeof(float), GL_STATIC_DRAW);
-    _snakeObj->va.addBuffer(*(_snakeObj->vb), _layout);*/
+    _snakeObj->vb = new VertexBuffer(&snakeVertices[0], snakeVertices.size() * sizeof(float), GL_DYNAMIC_DRAW);
+	_snakeObj->va.addBuffer(*(_snakeObj->vb), _layout);
 	return;    
 }
 
 void Renderer3D::processInput(Direction & curDirection)
 {
-    glfwPollEvents();
+	if (_pause == false)
+	{	
+		glfwPollEvents();
 
-    if (Callback::_keys[GLFW_KEY_UP] && curDirection != Down)
-        curDirection = Up;
-    else if (Callback::_keys[GLFW_KEY_RIGHT] && curDirection != Left)
-        curDirection = Right;
-    else if (Callback::_keys[GLFW_KEY_LEFT] && curDirection != Right)
-        curDirection = Left;
-    else if (Callback::_keys[GLFW_KEY_DOWN] && curDirection != Up)
-        curDirection = Down;
+		if (Callback::_keys[GLFW_KEY_UP] && curDirection != Down)
+        	curDirection = Up;
+		else if (Callback::_keys[GLFW_KEY_RIGHT] && curDirection != Left)
+			curDirection = Right;
+		else if (Callback::_keys[GLFW_KEY_LEFT] && curDirection != Right)
+			curDirection = Left;
+		else if (Callback::_keys[GLFW_KEY_DOWN] && curDirection != Up)
+			curDirection = Down;
+
+		if (Callback::_keys[GLFW_KEY_ESCAPE])
+		{
+			_pause = true;
+			curDirection = Pause;
+		}
+	}
+	else
+	{
+		glfwWaitEvents();
+
+		if (Callback::_keys[GLFW_KEY_LEFT])
+		{
+			_curMenuChoice = 0;
+			moveCursor(Left);
+		}
+		if (Callback::_keys[GLFW_KEY_RIGHT])
+		{
+			_curMenuChoice = 1;
+			moveCursor(Right);
+		}
+		if (Callback::_keys[GLFW_KEY_ENTER] && _curMenuChoice == 0)
+		{
+			_pause = false;
+			curDirection = Pause;
+		}
+		if (Callback::_keys[GLFW_KEY_ENTER] && _curMenuChoice == 1)
+			curDirection = Exit;
+	}
 	
-	if (Callback::_keys[GLFW_KEY_ESCAPE])
-		curDirection = None;   
 }
 
 void Renderer3D::updateScore()
@@ -245,18 +400,12 @@ void Renderer3D::updateScore()
 
 void Renderer3D::buildSnakeVertex(float x, float y, std::deque<float> & buffer, std::string texture)
 {
-    /*std::vector<float> startingPositions;
-	startingPositions = Cube::getPosCoords(x, y, _squareSize);
-    Cube::buildVertex(buffer, startingPositions, _offsets);*/
-	y = _height - y;
+    std::vector<float> startingPositions;
+	startingPositions = Cube::getCubeAtPos(x, y, _squareSize, _width, _height);
+    Cube::buildVertex(buffer, startingPositions, _offsets);
 
-	//glm::vec3 pos = glm::unProject(glm::vec3(x, y, 0.0f), glm::mat4(1.0f), _proj, glm::vec4(0, 0, _width, _height));
-
-	//float prevX = x;
-	//float prevY = y;
-
-	//x = (prevX - prevY) * glm::cos(glm::radians(30.0f));
-	//y = 0.0f + (prevX + prevY) * glm::sin(glm::radians(30.0f));
+	//draw each cube version WORKS
+	/*y = _height - y;
 
 	x = 2.0f * (x) / _width - 1.0f;
     y = 2.0f * (y) / _height - 1.0f;
@@ -264,7 +413,7 @@ void Renderer3D::buildSnakeVertex(float x, float y, std::deque<float> & buffer, 
 	_snakeCoords.push_back(x);
 	_snakeCoords.push_back(y);
 	_snakeCoords.push_back(0.0f);
-	_snakeSize++;
+	_snakeSize++;*/
 }
 
 void Renderer3D::changeSnakeTexture(bool tail, unsigned int size, std::deque<float> & buffer, std::string texture)
@@ -274,12 +423,27 @@ void Renderer3D::changeSnakeTexture(bool tail, unsigned int size, std::deque<flo
 
 void Renderer3D::popSnakeTail(std::deque<float> & buffer)
 {
-	/*for (unsigned int i = 0; i < Cube::_rows; i++)
+	for (unsigned int i = 0; i < Cube::_rows; i++)
 	{
 		for (unsigned int j = 0; j < Cube::_cols; j++)
 			buffer.pop_front();
-	}*/
-	for (unsigned int i = 0; i < 3; i++)
+	}
+	
+	//draw each cube version WORKS
+	/*for (unsigned int i = 0; i < 3; i++)
 		_snakeCoords.pop_front();
-	_snakeSize--;   
+	_snakeSize--;*/   
+}
+
+void Renderer3D::moveCursor(Direction direction)
+{
+	if (direction == Left)
+		_pauseStr = "-> Continue <-\t   Quit";
+	if (direction == Right)
+		_pauseStr = "   Continue   \t-> Quit <-";
+}
+
+void Renderer3D::setPause(bool pause)
+{
+	this->_pause = pause;
 }

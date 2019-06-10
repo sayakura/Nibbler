@@ -6,7 +6,6 @@ layout (location = 0) in vec3 vertex;
 uniform mat4 u_model;
 uniform mat4 u_view;
 uniform mat4 u_projection;
-uniform mat4 u_inverse;
 
 void main()
 {
@@ -18,9 +17,9 @@ void main()
 
 layout(location = 0) out vec4 color;
 
-uniform vec3 u_cubeColor;
+uniform vec4 u_cubeColor;
 
 void main()
 {
-    color = vec4(u_cubeColor, 1.0);
+    color = u_cubeColor;
 }

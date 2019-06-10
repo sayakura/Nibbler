@@ -40,7 +40,7 @@ int main(int argc, char** argv)
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
-		game.processInput();
+		game.processInput(deltaTime.count());
 
 		game.update(deltaTime.count());
 

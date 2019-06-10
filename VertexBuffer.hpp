@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/26 14:20:44 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/06 18:43:15 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/09 12:27:51 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ public:
 
     void bind() const;
     void unbind() const;
+    void updateBufferArray(const void * data, unsigned int size);
 };
 
 #endif

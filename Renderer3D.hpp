@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/06 19:09:20 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/08 13:45:08 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/09 18:23:12 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,9 @@ class Renderer3D : public IRenderer {
 
 private:
     Camera _camera;
+    bool _pause;
+    std::string _pauseStr;
+    int _curMenuChoice;
 
     ObjectDrawingInfo *_snakeObj;
     ObjectDrawingInfo *_appleObj;
@@ -59,8 +62,6 @@ private:
 
 	GLFWwindow *_window;
 
-	static bool _keys[1024];
-
 public:
     Renderer3D(unsigned int width, unsigned int height, unsigned int squareSize);
     ~Renderer3D();
@@ -78,8 +79,17 @@ public:
     void buildSnakeVertex(float x, float y, std::deque<float> & buffer, std::string texture);
     void changeSnakeTexture(bool tail, unsigned int size, std::deque<float> & buffer, std::string texture);
     void popSnakeTail(std::deque<float> & buffer);
+    void setPause(bool pause);
 
-    void drawCube(const VertexArray & va, Shader & shader, unsigned int numOfVertices, glm::vec3 color = glm::vec3(1.0f));
+    void moveCursor(Direction direction);
+    
+    void drawCube(const VertexArray & va, Shader & shader, unsigned int numOfVertices, glm::vec4 color = glm::vec4(1.0f));
+    void drawBackground(const VertexArray & va, Shader & shader, unsigned int numOfVertices, glm::vec4 color = glm::vec4(1.0f));
+    void drawBorder(const VertexArray & va, Shader & shader, unsigned int numOfVertices, glm::vec4 color = glm::vec4(1.0f));
+    void drawApple(glm::vec2 pos, const VertexArray & va, Shader & shader, const unsigned int numOfVertices, glm::vec4 color = glm::vec4(1.0f, 0.0f, 0.0f, 0.9f));
+    void buildBackground();
+    void buildApple();
+    void buildBorder();
 };
 
 #endif

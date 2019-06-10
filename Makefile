@@ -31,7 +31,7 @@ INCLUDES = -I./\
 
 LIB = -Llib
 DEPEND = -lglfw -lfreetype -lirrklang -lglad\
-		 -framework ImageIO -framework CoreVideo -framework OpenGL -framework IOKit -framework Cocoa -framework Carbon
+		 -framework CoreVideo -framework OpenGL -framework IOKit -framework Cocoa -framework Carbon
 
 all: $(NAME)
 

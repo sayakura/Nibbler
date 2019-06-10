@@ -3,19 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   Game.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Kura <Kura@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/29 19:19:43 by dpeck             #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2019/06/09 18:10:05 by dpeck            ###   ########.fr       */
+=======
+/*   Updated: 2019/06/09 08:34:02 by Kura             ###   ########.fr       */
+>>>>>>> 2abb739816a57b1d298959254eadefff3158bcf6
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Game.hpp"
 #include "ResourceManager.hpp"
 #include "SnakeSprite.hpp"
+#include "sysconfig.hpp"
 #include "Quad.hpp"
 #include <iostream>
 #include <iomanip>
+
+SoundEngine *g_soundEngine;
+
 
 Game::Game(IRenderer *renderer, unsigned int & width, unsigned int & height, unsigned int & squareSize) :
     _state(Active), _width(width), _height(height), _renderer(renderer),
@@ -67,6 +75,7 @@ void Game::update(float dt)
 				while (_snake->checkCollisionPoint(_apple->getX(), _apple->getY()))
                 	_apple->generateRandomPos();
                 _renderer->updateApple(_apple->getX(), _apple->getY());
+                g_soundEngine->playOnce(SE_APPLE);
                 _snake->grow();
                 _renderer->updateScore();
             }

@@ -36,9 +36,7 @@ DEPEND = -lglfw -lfreetype -lirrklang -lglad\
 all: $(NAME)
 
 $(NAME):
-	export DYLD_LIBRARY_PATH=lib
-	clang++ -std=c++11 -stdlib=libc++ $(INCLUDES) $(LIB) $(DEPEND) $(SOURCE)
-
+		clang++ -std=c++11 -stdlib=libc++ $(INCLUDES) $(LIB) $(DEPEND) $(SOURCE)
 clean:
 	/bin/rm -f *.o
 

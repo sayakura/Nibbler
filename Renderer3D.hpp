@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/06 19:09:20 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/09 18:23:12 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/10 14:55:50 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ private:
 
     unsigned int _snakeSize;
     std::deque<float> _snakeCoords;
-    glm::mat4 _proj;
 
 	float _appleX;
 	float _appleY;

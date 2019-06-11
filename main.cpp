@@ -28,6 +28,11 @@ int main(int argc, char** argv)
 	renderer = new Renderer3D(WINWIDTH, WINHEIGHT, SQUARESIZE);
 	renderer->init();
 
+	//this should probably be set in a better way.
+	g_windowWidth = WINWIDTH;
+	g_windowHeight = WINHEIGHT;
+	g_squareSize = SQUARESIZE;
+
 	bool quit = false;
 	Game game(renderer, WINWIDTH, WINHEIGHT, SQUARESIZE);
 

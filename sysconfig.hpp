@@ -13,6 +13,9 @@
 #define WINDOW_MIN_WIDTH 10 // change it later'
 
 extern int          g_gameMode;
+extern int          g_rowsBySquare;
+extern int          g_colsBySquare;
+extern int          g_squareSize;
 extern int          g_windowHeight;
 extern int          g_windowWidth;
 extern SoundEngine *g_soundEngine;

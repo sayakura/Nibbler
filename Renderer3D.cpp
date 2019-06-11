@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/06 19:12:33 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/09 22:06:21 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/10 18:09:40 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ bool Renderer3D::init()
 	_snakeObj->vb = new VertexBuffer(&_snakeObj->vertices[0], _snakeObj->vertices.size() * sizeof(float), GL_DYNAMIC_DRAW);
     _snakeObj->va.addBuffer(*(_snakeObj->vb), _layout);*/
 
-    //TODO
 	buildBackground();
 	buildBorder();
 	buildApple();
@@ -108,7 +107,6 @@ bool Renderer3D::initResources()
 	glm::mat4 view = _camera.getViewMatrix();
 	view = glm::rotate(view, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)(_width)/(float)(_height), 0.1f, 100.0f);
-	_proj = proj;
     if (shader != nullptr)
     {
         shader->bind();
@@ -241,7 +239,6 @@ void Renderer3D::draw()
 		_textRenderer->renderText("Pause", _width / 2.3f, _height / 3.0f, 1.0f);
 		_textRenderer->renderText(_pauseStr, _width / 3.7f, _height / 2.3f, 1.0f);
 	}
-
 
 	glfwSwapBuffers(glfwGetCurrentContext());
 }

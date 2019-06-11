@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/10 19:26:35 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/10 19:30:57 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/10 21:28:41 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,14 @@ bool OpenGLHelper::initEverything()
         return (false);
     OpenGLInit::buildTextures();
     OpenGLDraw::buildTextRenderer();
+    OpenGLDraw::allocateObjectDrawingInfo();
     OpenGLDraw::buildVertexBufferLayouts();
+    return (true);
 }
 
 void OpenGLHelper::cleanup()
 {
     OpenGLInit::clearResources();
+    OpenGLDraw::destroyObjects();
     OpenGLInit::destroyWindow();
 }

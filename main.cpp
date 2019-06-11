@@ -6,6 +6,7 @@
 #include "Renderer3D.hpp"
 #include "SoundEngine.hpp"
 #include "sysconfig.hpp"
+#include "Gameboard.hpp"
 
 //unsigned int WINWIDTH = 800;
 //unsigned int WINHEIGHT = 600;
@@ -23,15 +24,23 @@ int main(int argc, char** argv)
 	unsigned int WINHEIGHT = (SQUARESIZE * ROWS) + SQUARESIZE * 2;
 	std::cout << WINWIDTH << " " << WINHEIGHT << std::endl;
 
+
+
 	getArgs(argc, argv);
-	IRenderer *renderer;
-	renderer = new Renderer3D(WINWIDTH, WINHEIGHT, SQUARESIZE);
-	renderer->init();
 
 	//this should probably be set in a better way.
-	g_windowWidth = WINWIDTH;
-	g_windowHeight = WINHEIGHT;
-	g_squareSize = SQUARESIZE;
+	Gameboard::windowWidth = WINWIDTH;
+	Gameboard::windowHeight = WINHEIGHT;
+	Gameboard::squareSize = SQUARESIZE;
+	Gameboard::gameMode = 3;
+
+
+
+	IRenderer *renderer;
+	renderer = new Renderer3D();
+	if (!renderer->initGL())
+		return (1);
+	renderer->init();
 
 	bool quit = false;
 	Game game(renderer, WINWIDTH, WINHEIGHT, SQUARESIZE);
@@ -66,6 +75,8 @@ int main(int argc, char** argv)
 		}
 
 	}
+
+	renderer->cleanupGL();
 
 	return 0;
 }

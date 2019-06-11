@@ -6,6 +6,11 @@ SOURCE = AppleMaker.cpp \
 		 GLDebug.cpp \
 		 IndexBuffer.cpp \
 		 Game.cpp \
+		 Gameboard.cpp \
+		 OpenGLDraw.cpp \
+		 OpenGLHelper.cpp \
+		 OpenGLInit.cpp \
+		 OpenGLInput.cpp \
          Quad.cpp \
 		 Renderer.cpp \
 		 Renderer3D.cpp \
@@ -36,7 +41,7 @@ DEPEND = -lglfw -lfreetype -lirrklang -lglad\
 all: $(NAME)
 
 $(NAME):
-		clang++ -std=c++11 -stdlib=libc++ $(INCLUDES) $(LIB) $(DEPEND) $(SOURCE)
+		clang++ -g -std=c++11 -stdlib=libc++ $(INCLUDES) $(LIB) $(DEPEND) $(SOURCE)
 clean:
 	/bin/rm -f *.o
 

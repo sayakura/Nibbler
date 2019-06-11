@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/06 13:05:07 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/09 17:18:07 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/10 20:22:20 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,9 @@ class IRenderer {
 public:
     //virtual ~IRenderer() = 0;
     virtual void draw() = 0;
-    virtual bool init() = 0;
+    virtual void init() = 0;
+    virtual bool initGL() = 0;
+    virtual void cleanupGL() = 0;
     virtual void updateApple(const float & x, const float & y) = 0;
     virtual void refreshSnakeBuffer(std::vector<float> buffer) = 0;
     virtual void processInput(Direction & curDirection) = 0;
@@ -30,7 +32,6 @@ public:
     virtual void buildSnakeVertex(float x, float y, std::deque<float> & buffer, std::string texture) = 0;
     virtual void changeSnakeTexture(bool tail, unsigned int size, std::deque<float> & buffer, std::string texture) = 0;
     virtual	void popSnakeTail(std::deque<float> & buffer) = 0;
-    virtual void setPause(bool pause) = 0;
 };
 
 #endif

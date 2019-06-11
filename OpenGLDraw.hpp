@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/10 14:43:55 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/10 19:23:35 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/10 21:27:03 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,27 +27,24 @@
 class OpenGLDraw {
 
 private:
-    static std::shared_ptr<ObjectDrawingInfo> _snakeObj;
-    static std::shared_ptr<ObjectDrawingInfo> _appleObj;
-    static std::shared_ptr<ObjectDrawingInfo> _border;
-    static std::shared_ptr<ObjectDrawingInfo> _background;
+    static ObjectDrawingInfo * _snakeObj;
+    static ObjectDrawingInfo * _appleObj;
+    static ObjectDrawingInfo * _border;
+    static ObjectDrawingInfo * _background;
 
-    static std::unordered_map<std::string, std::shared_ptr<ObjectDrawingInfo>> _objectMap;
+    static std::unordered_map<std::string, ObjectDrawingInfo *> _objectMap;
 
     static std::shared_ptr<TextRenderer> _textRenderer;
 
-    static VertexBufferLayout _layout1;
-    static VertexBufferLayout _layout2;
-    static VertexBufferLayout _layout3;
-
-	static std::vector<unsigned int> _offsets1;
-	static std::vector<unsigned int> _offsets2;
-	static std::vector<unsigned int> _offsets3;
+    static VertexBufferLayout _layouts[3];
+    static std::vector<unsigned int> _offsets[3];
 
     static std::string _pauseStr;
 
 public:
-    static std::unordered_map<std::string, std::shared_ptr<ObjectDrawingInfo>> initObjectMap();
+    static std::unordered_map<std::string, ObjectDrawingInfo *> initObjectMap();
+    static void allocateObjectDrawingInfo();
+    static void destroyObjects();
 
     static void buildVertexBufferLayouts();
     static void buildTextRenderer();
@@ -56,12 +53,15 @@ public:
     static void clearScreen();
     static void swapBuffers();
     
-    static void background(float & r, float & g, float & b, float & a);
-    static void border(float & r, float & g, float & b, float & a);
-    static void score(std::string & scoreNumber, unsigned int & borderOffset);
-    static void apple(float & x, float & y, float & r, float & g, float & b, float & a);
-    static void snake(float & r, float & g, float & b, float & a);
+    static void background(const float & r, const float & g, const float & b, const float & a);
+    static void border(const float & r, const float & g, const float & b, const float & a);
+    static void score(const std::string & scoreNumber, unsigned int & borderOffset);
+    static void apple(const float & x, const float & y, const float & r, const float & g, const float & b, const float & a);
+    static void snake(const float & r, const float & g, const float & b, const float & a);
     static void menu();
+
+    static VertexBufferLayout & getBufferLayout(unsigned int slot);
+    static std::vector<unsigned int> & getBufferFormat(unsigned int slot);
 
 private:
     OpenGLDraw();

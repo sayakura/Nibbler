@@ -6,12 +6,13 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/10 19:03:11 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/10 19:15:42 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/10 21:02:58 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "OpenGLInit.hpp"
-#include "sysconfig.hpp"
+#include <iostream>
+#include "Gameboard.hpp"
 #include "ResourceManager.hpp"
 #include "GLDebug.hpp"
 #include "Callbacks.hpp"
@@ -30,7 +31,7 @@ bool OpenGLInit::createWindow()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-	GLFWwindow * window = glfwCreateWindow(g_windowWidth, g_windowHeight, "Snake", NULL, NULL);
+	GLFWwindow * window = glfwCreateWindow(Gameboard::windowWidth, Gameboard::windowHeight, "Snake", NULL, NULL);
 	if (window == NULL)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -78,7 +79,7 @@ bool OpenGLInit::buildShaders()
     shader = &ResourceManager::loadShader("./shaders/threedimension.shader", "threedimension");
 	glm::mat4 view = camera.getViewMatrix();
 	view = glm::rotate(view, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)(g_windowWidth)/(float)(g_windowHeight), 0.1f, 100.0f);
+	glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)(Gameboard::windowWidth)/(float)(Gameboard::windowHeight), 0.1f, 100.0f);
     if (shader != nullptr)
     {
         shader->bind();
@@ -91,7 +92,7 @@ bool OpenGLInit::buildShaders()
 
     //2d shaders
     shader = &ResourceManager::loadShader("./shaders/basic.shader", "default");
-	proj = glm::ortho(0.0f, static_cast<float>(g_windowWidth), static_cast<float>(g_windowHeight), 0.0f, -1.0f, 1.0f);
+	proj = glm::ortho(0.0f, static_cast<float>(Gameboard::windowWidth), static_cast<float>(Gameboard::windowHeight), 0.0f, -1.0f, 1.0f);
     if (shader != nullptr)
     {
         shader->bind();

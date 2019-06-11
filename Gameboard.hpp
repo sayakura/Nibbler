@@ -1,36 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   OpenGLInput.hpp                                    :+:      :+:    :+:   */
+/*   Gameboard.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/06/10 19:15:53 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/10 20:28:27 by dpeck            ###   ########.fr       */
+/*   Created: 2019/06/10 20:56:04 by dpeck             #+#    #+#             */
+/*   Updated: 2019/06/10 20:59:48 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef OPENGLINPUT_HPP
-#define OPENGLINPUT_HPP
+#ifndef GAMEBOARD_HPP
+#define GAMEBOARD_HPP
 
-#include "Callbacks.hpp"
-#include "eDirection.hpp"
-#include "GLFW/glfw3.h"
-#include <string>
-
-class OpenGLInput {
-
-private:
-    static unsigned int _curMenuChoice;
+class Gameboard {
 
 public:
-    static void gameInput(Direction & direction);
-    static void menuInput(Direction & direction, std::string & pauseStr);
-    static void moveCursor(Direction direction, std::string & pauseStr);
+    static unsigned int windowWidth;
+    static unsigned int windowHeight;
+    static unsigned int squareSize;
+    static unsigned int gameMode;
 
 private:
-    OpenGLInput();
-
+    Gameboard();
 };
 
 #endif

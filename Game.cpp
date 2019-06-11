@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/29 19:19:43 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/09 18:50:44 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/10 20:58:38 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,13 +96,11 @@ void Game::processInput(float dt)
     {
         setGameState(Menu);
         _curDirection = None;
-        //_renderer->setPause(true);
     }
     else if (_curDirection == Pause && _state == Menu)
     {
         setGameState(Active);
         _curDirection = _prevDirection;
-        //_renderer->setPause(false);
     }
     if (_curDirection == Exit)
         setGameState(Quit);

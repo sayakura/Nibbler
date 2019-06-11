@@ -6,12 +6,12 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/10 19:17:15 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/10 19:21:21 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/10 20:28:29 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "OpenGLInput.hpp"
-#include "Callbacks.hpp"
+
 
 unsigned int OpenGLInput::_curMenuChoice = 0;
 

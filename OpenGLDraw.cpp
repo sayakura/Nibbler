@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/10 15:23:40 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/10 19:23:32 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/10 21:35:16 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,25 @@
 #include "Callbacks.hpp"
 #include "ResourceManager.hpp"
 #include "Camera.hpp"
-#include "sysconfig.hpp"
+#include "Gameboard.hpp"
 
-std::shared_ptr<ObjectDrawingInfo> OpenGLDraw::_snakeObj(new ObjectDrawingInfo);
-std::shared_ptr<ObjectDrawingInfo> OpenGLDraw::_appleObj(new ObjectDrawingInfo);
-std::shared_ptr<ObjectDrawingInfo> OpenGLDraw::_border(new ObjectDrawingInfo);
-std::shared_ptr<ObjectDrawingInfo> OpenGLDraw::_background(new ObjectDrawingInfo);
+ObjectDrawingInfo * OpenGLDraw::_snakeObj = nullptr;
+ObjectDrawingInfo * OpenGLDraw::_appleObj = nullptr;
+ObjectDrawingInfo * OpenGLDraw::_border = nullptr;
+ObjectDrawingInfo * OpenGLDraw::_background = nullptr;
 
-std::unordered_map<std::string, std::shared_ptr<ObjectDrawingInfo>> OpenGLDraw::_objectMap = initObjectMap();
+std::unordered_map<std::string, ObjectDrawingInfo *> OpenGLDraw::_objectMap;
 
 std::shared_ptr<TextRenderer> OpenGLDraw::_textRenderer = nullptr;
 
-VertexBufferLayout OpenGLDraw::_layout1;
-VertexBufferLayout OpenGLDraw::_layout2;
-VertexBufferLayout OpenGLDraw::_layout3;
+VertexBufferLayout OpenGLDraw::_layouts[3];
+std::vector<unsigned int> OpenGLDraw::_offsets[3];
 
 std::string OpenGLDraw::_pauseStr = "-> Continue <-\t   Quit";
 
-std::unordered_map<std::string, std::shared_ptr<ObjectDrawingInfo>> OpenGLDraw::initObjectMap()
+std::unordered_map<std::string, ObjectDrawingInfo *> OpenGLDraw::initObjectMap()
 {
-    std::unordered_map<std::string, std::shared_ptr<ObjectDrawingInfo>> map;
+    std::unordered_map<std::string, ObjectDrawingInfo *> map;
     map["background"] = _background;
     map["border"] = _border;
     map["apple"] = _appleObj;
@@ -46,39 +45,66 @@ OpenGLDraw::OpenGLDraw()
     return;
 }
 
+void OpenGLDraw::allocateObjectDrawingInfo()
+{
+    OpenGLDraw::_snakeObj = new ObjectDrawingInfo;
+    OpenGLDraw::_appleObj = new ObjectDrawingInfo;
+    OpenGLDraw::_background = new ObjectDrawingInfo;
+    OpenGLDraw::_border = new ObjectDrawingInfo;
+
+    _objectMap = initObjectMap();
+}
+
+void OpenGLDraw::destroyObjects()
+{
+    if (OpenGLDraw::_snakeObj != nullptr)
+        delete _snakeObj;
+    if (OpenGLDraw::_appleObj != nullptr)
+        delete _appleObj;
+    if (OpenGLDraw::_border != nullptr)
+        delete _border;
+    if (OpenGLDraw::_background != nullptr)
+        delete _background;
+}
+
+
 void OpenGLDraw::buildTextRenderer()
 {
-	_textRenderer = static_cast<std::shared_ptr<TextRenderer>>(new TextRenderer(g_windowWidth, g_windowHeight));
-    _textRenderer->load("fonts/Stencil8bit-Regular.otf", g_squareSize + g_squareSize / 2);    
+	_textRenderer = static_cast<std::shared_ptr<TextRenderer>>(new TextRenderer(Gameboard::windowWidth, Gameboard::windowHeight));
+    _textRenderer->load("fonts/Stencil8bit-Regular.otf", Gameboard::squareSize + Gameboard::squareSize / 2);    
 }
 
 void OpenGLDraw::buildVertexBufferLayouts()
 {
+    //basic 2d
+ 	_layouts[0].push<float>(2);
+	_offsets[0].push_back(2);
+
     //2d textured
- 	_layout2.push<float>(2);
-	_offsets2.push_back(2);
-	_layout2.push<float>(2);
-	_offsets2.push_back(2);
+ 	_layouts[1].push<float>(2);
+	_offsets[1].push_back(2);
+	_layouts[1].push<float>(2);
+	_offsets[1].push_back(2);
 
     //3d version
-	_layout3.push<float>(3);
-	_offsets3.push_back(3);
+	_layouts[2].push<float>(3);
+	_offsets[2].push_back(3);
 }
 
 void OpenGLDraw::updateObjectDrawingInfo(const std::string & name, std::vector<float> vertices)
 {
-    ObjectDrawingInfo *obj = _objectMap[name].get();
+    ObjectDrawingInfo *obj = _objectMap[name];
     
     if (obj->vb != nullptr)
         delete obj->vb;
     obj->vertices = vertices;
     obj->vb = new VertexBuffer(&obj->vertices[0], obj->vertices.size() * sizeof(float), GL_STATIC_DRAW);
-    if (g_gameMode == 1)
-        obj->va.addBuffer(*obj->vb, _layout1);
-    else if (g_gameMode == 2)
-        obj->va.addBuffer(*obj->vb, _layout2);
-    else if (g_gameMode == 3)
-        obj->va.addBuffer(*obj->vb, _layout3);
+    if (Gameboard::gameMode == 1)
+        obj->va.addBuffer(*obj->vb, _layouts[0]);
+    else if (Gameboard::gameMode == 2)
+        obj->va.addBuffer(*obj->vb, _layouts[1]);
+    else if (Gameboard::gameMode == 3)
+        obj->va.addBuffer(*obj->vb, _layouts[2]);
 }
 
 void OpenGLDraw::clearScreen()
@@ -92,9 +118,9 @@ void OpenGLDraw::swapBuffers()
 	glfwSwapBuffers(glfwGetCurrentContext());    
 }
 
-void OpenGLDraw::background(float & r, float & g, float & b, float & a)
+void OpenGLDraw::background(const float & r, const float & g, const float & b, const float & a)
 {
-    if (g_gameMode == 2)
+    if (Gameboard::gameMode == 2)
     {
         // need to change to vec4 for pause screen
         glm::vec3 color = glm::vec3(r, g, b);
@@ -113,7 +139,7 @@ void OpenGLDraw::background(float & r, float & g, float & b, float & a)
         _background->va.bind();
         GLCall(glDrawArrays(GL_TRIANGLES, 0, _background->vertices.size()));
     }
-    else if (g_gameMode == 3)
+    else if (Gameboard::gameMode == 3)
     {
         glm::vec4 color = glm::vec4(r, g, b, a);
         Shader *shader = &ResourceManager::getShader("threedimension");
@@ -130,9 +156,9 @@ void OpenGLDraw::background(float & r, float & g, float & b, float & a)
     }
 }
 
-void OpenGLDraw::border(float & r, float & g, float & b, float & a)
+void OpenGLDraw::border(const float & r, const float & g, const float & b, const float & a)
 {
-    if (g_gameMode == 2)
+    if (Gameboard::gameMode == 2)
     {
         glm::vec3 color = glm::vec3(r, g, b);
         Shader *shader = &ResourceManager::getShader("default");
@@ -148,7 +174,7 @@ void OpenGLDraw::border(float & r, float & g, float & b, float & a)
         _border->va.bind();
         GLCall(glDrawArrays(GL_TRIANGLES, 0, _border->vertices.size()));   
     }
-    else if (g_gameMode == 3)
+    else if (Gameboard::gameMode == 3)
     {
         glm::vec4 color = glm::vec4(r, g, b, a);
         Shader *shader = &ResourceManager::getShader("threedimension");
@@ -165,14 +191,14 @@ void OpenGLDraw::border(float & r, float & g, float & b, float & a)
     }
 }
 
-void OpenGLDraw::score(std::string & scoreNumber, unsigned int & borderOffset)
+void OpenGLDraw::score(const std::string & scoreNumber, unsigned int & borderOffset)
 {
     _textRenderer->renderText("Score: " + scoreNumber, borderOffset + 1.0f, borderOffset / 3.0f, 1.0f);    
 }
 
-void OpenGLDraw::apple(float & x, float & y, float & r, float & g, float & b, float & a)
+void OpenGLDraw::apple(const float & x, const float & y, const float & r, const float & g, const float & b, const float & a)
 {
-    if (g_gameMode == 2)
+    if (Gameboard::gameMode == 2)
     {
         glm::vec3 color = glm::vec3(r, g, b);
         Shader *shader = &ResourceManager::getShader("default");
@@ -181,7 +207,7 @@ void OpenGLDraw::apple(float & x, float & y, float & r, float & g, float & b, fl
         shader->bind();
         glm::mat4 model(1.0f);
         model = glm::translate(model, glm::vec3(x, y, 0.0f));
-        model = glm::scale(model, glm::vec3(static_cast<float>(g_squareSize), static_cast<float>(g_squareSize), 1.0f));
+        model = glm::scale(model, glm::vec3(static_cast<float>(Gameboard::squareSize), static_cast<float>(Gameboard::squareSize), 1.0f));
 
         shader->setUniformMat4f("u_model", model);
         shader->setUniform3f("u_spriteColor", color.x, color.y, color.z);
@@ -192,10 +218,10 @@ void OpenGLDraw::apple(float & x, float & y, float & r, float & g, float & b, fl
         _appleObj->va.bind();
         GLCall(glDrawArrays(GL_TRIANGLES, 0, _appleObj->vertices.size()));       
     }
-    else if (g_gameMode == 3)
+    else if (Gameboard::gameMode == 3)
     {
-        float xScale = 2.0f / (g_windowWidth / g_squareSize);
-        float yScale = 2.0f / (g_windowHeight / g_squareSize);
+        float xScale = 2.0f / (Gameboard::windowWidth / Gameboard::squareSize);
+        float yScale = 2.0f / (Gameboard::windowHeight / Gameboard::squareSize);
         glm::vec4 color = glm::vec4(r, g, b, a);
         Shader *shader = &ResourceManager::getShader("threedimension");
 
@@ -212,9 +238,9 @@ void OpenGLDraw::apple(float & x, float & y, float & r, float & g, float & b, fl
     }
 }
 
-void OpenGLDraw::snake(float & r, float & g, float & b, float & a)
+void OpenGLDraw::snake(const float & r, const float & g, const float & b, const float & a)
 {
-    if (g_gameMode == 2)
+    if (Gameboard::gameMode == 2)
     {
         glm::vec3 color = glm::vec3(r, g, b);
         Shader *shader = &ResourceManager::getShader("default");
@@ -232,7 +258,7 @@ void OpenGLDraw::snake(float & r, float & g, float & b, float & a)
         _snakeObj->va.bind();
         GLCall(glDrawArrays(GL_TRIANGLES, 0, _snakeObj->vertices.size()));  
     }
-    else if (g_gameMode == 3)
+    else if (Gameboard::gameMode == 3)
     {
         glm::vec4 color = glm::vec4(r, g, b, a);
         Shader *shader = &ResourceManager::getShader("threedimension");
@@ -250,6 +276,16 @@ void OpenGLDraw::snake(float & r, float & g, float & b, float & a)
 
 void OpenGLDraw::menu()
 {
-    _textRenderer->renderText("Pause", g_windowWidth / 2.3f, g_windowHeight / 3.0f, 1.0f);
-    _textRenderer->renderText(_pauseStr, g_windowWidth / 3.7f, g_windowHeight / 2.3f, 1.0f);    
+    _textRenderer->renderText("Pause", Gameboard::windowWidth / 2.3f, Gameboard::windowHeight / 3.0f, 1.0f);
+    _textRenderer->renderText(_pauseStr, Gameboard::windowWidth / 3.7f, Gameboard::windowHeight / 2.3f, 1.0f);    
+}
+
+VertexBufferLayout & OpenGLDraw::getBufferLayout(unsigned int slot)
+{
+    return (_layouts[slot]);
+}
+
+std::vector<unsigned int> & OpenGLDraw::getBufferFormat(unsigned int slot)
+{
+    return (_offsets[slot]);
 }

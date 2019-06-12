@@ -6,12 +6,12 @@
 /*   By: Kura <Kura@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/10 19:17:15 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/12 02:55:08 by Kura             ###   ########.fr       */
+/*   Updated: 2019/06/12 05:59:40 by Kura             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "OpenGLInput.hpp"
-
+#include "sysconfig.hpp"
 
 unsigned int OpenGLInput::_curMenuChoice = 0;
 
@@ -44,6 +44,23 @@ void OpenGLInput::gameInput(Direction & curDirection)
         curDirection = Pause;
 }
 
+// void OpenGLInput::getMode(Direction & curDirection)
+// {
+//     glfwPollEvents();
+//     if (glfwWindowShouldClose(glfwGetCurrentContext()))
+//     {
+//         curDirection = Exit;
+//         return;
+//     }
+//     if (Callback::_keys[GLFW_KEY_1])
+//         curDirection = Mode1;
+//     else if (Callback::_keys[GLFW_KEY_2])
+//         curDirection = Mode2;
+//     else if (Callback::_keys[GLFW_KEY_3])
+//         curDirection = Mode3;
+// }
+
+
 void OpenGLInput::menuInput(Direction & curDirection, std::string & pauseStr, bool lost)
 {
     glfwWaitEvents();
@@ -73,6 +90,7 @@ void OpenGLInput::menuInput(Direction & curDirection, std::string & pauseStr, bo
 
 void OpenGLInput::moveCursor(Direction direction, std::string & pauseStr, bool lost)
 {
+    g_soundEngine->playOnce(SE_MENU);
     if (!lost)
     {
         if (direction == Left)

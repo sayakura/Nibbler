@@ -45,13 +45,15 @@ all: $(NAME)
 $(NAME):
 		clang++ -std=c++11 -stdlib=libc++ $(INCLUDES) $(LIB) $(DEPEND) $(SOURCE)
 
-dylib:
-	clang++ -std=c++11 -c -stdlib=libc++ -I./ -Iinclude/freetype -Iinclude/glad -Iinclude/GLFW -Iinclude/KHR -Iinclude RendererA.cpp
-	clang++ -std=c++11 -c -stdlib=libc++ -I./ -Iinclude/freetype -Iinclude/glad -Iinclude/GLFW -Iinclude/KHR -Iinclude RendererB.cpp
-	clang++ -std=c++11 -c -stdlib=libc++ -I./ -Iinclude/freetype -Iinclude/glad -Iinclude/GLFW -Iinclude/KHR -Iinclude RendererC.cpp
+dylib: clean 
+	clang++ -std=c++11 -c -stdlib=libc++ -I./ -Iinclude/freetype -Iinclude/glad -Iinclude/GLFW -Iinclude/KHR -Iinclude OpenGLDraw.cpp OpenGLHelper.cpp OpenGLInit.cpp OpenGLInput.cpp
+	clang++ -dynamiclib -undefined suppress -flat_namespace *.o -o libopenglshits.dylib
+	mv libopenglshits.dylib lib
+	clang++ -std=c++11 -c -stdlib=libc++ -I./ -Iinclude/freetype -Iinclude/glad -Iinclude/GLFW -Iinclude/KHR -Iinclude RendererA.cpp RendererB.cpp RendererC.cpp  
 	clang++ -dynamiclib -undefined suppress -flat_namespace RendererA.o -o renderA.dylib
 	clang++ -dynamiclib -undefined suppress -flat_namespace RendererB.o -o renderB.dylib
 	clang++ -dynamiclib -undefined suppress -flat_namespace RendererC.o -o renderC.dylib
+	/bin/rm -f *.o
 clean:
 	/bin/rm -f *.o
 

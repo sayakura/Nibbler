@@ -187,7 +187,10 @@ void RendererB::draw()
     else if (_lost && _score < WIN_POINT)
 		OpenGLDraw::menu("Continue ?", _pauseStr);
     else if (_lost)
+    {
+        g_soundEngine->playOnce(SE_WIN);
         OpenGLDraw::menu("You win !", _pauseStr);
+    }
 	OpenGLDraw::swapBuffers();
 }
 

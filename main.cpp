@@ -38,29 +38,18 @@ int main(int argc, char** argv)
 
 	IRenderer *renderer;
 
-	current_game_mode = Gameboard::gameMode = 2; // GAMEMODE MUST BE EQUAL TO CURRENT RENDERER OR EVERYTHING BREAKS	
+	current_game_mode = Gameboard::gameMode = 1; // GAMEMODE MUST BE EQUAL TO CURRENT RENDERER OR EVERYTHING BREAKS
 	if (Gameboard::gameMode == 1)
-	{
 		handle = dlopen(PATHLIBA, RTLD_LAZY);
-  		IRenderer* (*create)() = (IRenderer* (*)())dlsym(handle, "create_renderer");
-		renderer = create();
-	}
 	else if (Gameboard::gameMode == 2)
-	{
 		handle = dlopen(PATHLIBB, RTLD_LAZY);
-  		IRenderer* (*create)() = (IRenderer* (*)())dlsym(handle, "create_renderer");
-		renderer = create();
-	}
 	else if (Gameboard::gameMode == 3)
-	{
 		handle = dlopen(PATHLIBC, RTLD_LAZY);
-  		IRenderer* (*create)() = (IRenderer* (*)())dlsym(handle, "create_renderer");
-		renderer = create();
-	}
+	IRenderer* (*create)() = (IRenderer* (*)())dlsym(handle, "create_renderer");
+	renderer = create();
 	if (!renderer->initGL())
 		return (1);
 	renderer->init();
-
 	bool quit = false;
 	Game game(renderer, WINWIDTH, WINHEIGHT, SQUARESIZE);
 
@@ -95,8 +84,7 @@ int main(int argc, char** argv)
 			exit(1);
 		}
 	}
-
 	renderer->cleanupGL();
-
+ 	dlclose(handle);
 	return 0;
 }

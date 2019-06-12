@@ -7,6 +7,7 @@
 #define SE_BGM "audio/bgm.wav"
 #define SE_GAMEOVER "audio/gameover.wav"
 #define SE_WIN "audio/win.wav"
+#define SE_MENU "audio/Switch1.wav"
 #define PATHLIBA "renderA.dylib"
 #define PATHLIBB "renderB.dylib"
 #define PATHLIBC "renderC.dylib"

@@ -6,7 +6,7 @@
 /*   By: Kura <Kura@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/29 19:19:43 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/12 03:37:09 by Kura             ###   ########.fr       */
+/*   Updated: 2019/06/12 05:45:11 by Kura             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@
 #define NUM_OF_OBSTACLES 4
 
 SoundEngine *g_soundEngine;
-
 
 Game::Game(IRenderer *renderer, unsigned int & width, unsigned int & height, unsigned int & squareSize) :
     _state(Active), _width(width), _height(height), _renderer(renderer),
@@ -195,7 +194,5 @@ void Game::setGameState(GameState state) {
 
 void Game::switchRenderer(IRenderer *renderer)
 {
-    // if (_renderer != nullptr)
-    //     delete _renderer;
     _renderer = renderer;
 }

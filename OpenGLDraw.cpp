@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/10 15:23:40 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/10 21:35:16 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/11 18:13:33 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,13 @@ std::shared_ptr<TextRenderer> OpenGLDraw::_textRenderer = nullptr;
 VertexBufferLayout OpenGLDraw::_layouts[3];
 std::vector<unsigned int> OpenGLDraw::_offsets[3];
 
-std::string OpenGLDraw::_pauseStr = "-> Continue <-\t   Quit";
-
 std::unordered_map<std::string, ObjectDrawingInfo *> OpenGLDraw::initObjectMap()
 {
     std::unordered_map<std::string, ObjectDrawingInfo *> map;
     map["background"] = _background;
     map["border"] = _border;
-    map["apple"] = _appleObj;
+    map["appleBuild"] = _appleObj;
+    map["appleUpdate"] = _appleObj;
     map["snake"] = _snakeObj;
     return (map);
 }
@@ -78,7 +77,7 @@ void OpenGLDraw::buildVertexBufferLayouts()
 {
     //basic 2d
  	_layouts[0].push<float>(2);
-	_offsets[0].push_back(2);
+	_offsets[0].push_back(2); 
 
     //2d textured
  	_layouts[1].push<float>(2);
@@ -91,26 +90,31 @@ void OpenGLDraw::buildVertexBufferLayouts()
 	_offsets[2].push_back(3);
 }
 
-void OpenGLDraw::updateObjectDrawingInfo(const std::string & name, std::vector<float> vertices)
+void OpenGLDraw::updateObjectDrawingInfo(const std::string & name, std::vector<float> & vertices)
 {
     ObjectDrawingInfo *obj = _objectMap[name];
     
-    if (obj->vb != nullptr)
-        delete obj->vb;
     obj->vertices = vertices;
-    obj->vb = new VertexBuffer(&obj->vertices[0], obj->vertices.size() * sizeof(float), GL_STATIC_DRAW);
-    if (Gameboard::gameMode == 1)
-        obj->va.addBuffer(*obj->vb, _layouts[0]);
-    else if (Gameboard::gameMode == 2)
-        obj->va.addBuffer(*obj->vb, _layouts[1]);
-    else if (Gameboard::gameMode == 3)
-        obj->va.addBuffer(*obj->vb, _layouts[2]);
+    if (name == "appleUpdate")
+        obj->vb->updateBufferArray(&obj->vertices[0], obj->vertices.size() * sizeof(float));
+    else
+    {
+        if (obj->vb != nullptr)
+            delete obj->vb;
+        obj->vb = new VertexBuffer(&obj->vertices[0], obj->vertices.size() * sizeof(float), GL_STATIC_DRAW);
+        if (Gameboard::gameMode == 1)
+            obj->va.addBuffer(*obj->vb, _layouts[0]);
+        else if (Gameboard::gameMode == 2)
+            obj->va.addBuffer(*obj->vb, _layouts[1]);
+        else if (Gameboard::gameMode == 3)
+            obj->va.addBuffer(*obj->vb, _layouts[2]);
+    }
 }
 
 void OpenGLDraw::clearScreen()
 {
 	GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
-	GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));    
+	GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 }
 
 void OpenGLDraw::swapBuffers()
@@ -120,18 +124,33 @@ void OpenGLDraw::swapBuffers()
 
 void OpenGLDraw::background(const float & r, const float & g, const float & b, const float & a)
 {
-    if (Gameboard::gameMode == 2)
+    if (Gameboard::gameMode == 1)
     {
-        // need to change to vec4 for pause screen
-        glm::vec3 color = glm::vec3(r, g, b);
-        Shader *shader = &ResourceManager::getShader("default");
+        glm::vec4 color = glm::vec4(r, g, b, a);
+        Shader *shader = &ResourceManager::getShader("ShaderA");
+
+        shader->bind();
+        glm::mat4 model(1.0f);
+
+        shader->setUniformMat4f("u_model", model);
+        shader->setUniform4f("u_spriteColor", color.x, color.y, color.z, color.w);
+
+        _background->va.bind();
+        GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_LINE));
+        GLCall(glDrawArrays(GL_TRIANGLES, 0, _background->vertices.size()));
+        GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_FILL));        
+    }
+    else if (Gameboard::gameMode == 2)
+    {
+        glm::vec4 color = glm::vec4(r, g, b, a);
+        Shader *shader = &ResourceManager::getShader("ShaderB");
         Texture *texture = &ResourceManager::getTexture("grass");
 
         shader->bind();
         glm::mat4 model(1.0f);
 
         shader->setUniformMat4f("u_model", model);
-        shader->setUniform3f("u_spriteColor", color.x, color.y, color.z);
+        shader->setUniform4f("u_spriteColor", color.x, color.y, color.z, color.w);
 
         texture->bind(0);
         shader->setUniform1i("u_Image", 0);
@@ -142,7 +161,7 @@ void OpenGLDraw::background(const float & r, const float & g, const float & b, c
     else if (Gameboard::gameMode == 3)
     {
         glm::vec4 color = glm::vec4(r, g, b, a);
-        Shader *shader = &ResourceManager::getShader("threedimension");
+        Shader *shader = &ResourceManager::getShader("ShaderC");
 
         shader->bind();
         glm::mat4 model = glm::mat4(1.0f);
@@ -158,16 +177,31 @@ void OpenGLDraw::background(const float & r, const float & g, const float & b, c
 
 void OpenGLDraw::border(const float & r, const float & g, const float & b, const float & a)
 {
-    if (Gameboard::gameMode == 2)
+    if (Gameboard::gameMode == 1)
     {
-        glm::vec3 color = glm::vec3(r, g, b);
-        Shader *shader = &ResourceManager::getShader("default");
+        glm::vec4 color = glm::vec4(r, g, b, a);
+        Shader *shader = &ResourceManager::getShader("ShaderA");
+
+     	shader->bind();
+        glm::mat4 model(1.0f);
+        shader->setUniformMat4f("u_model", model);
+        shader->setUniform4f("u_spriteColor", color.x, color.y, color.z, color.w);
+
+        _border->va.bind();
+        GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_LINE));        
+        GLCall(glDrawArrays(GL_TRIANGLES, 0, _border->vertices.size()));
+        GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_FILL));        
+    }
+    else if (Gameboard::gameMode == 2)
+    {
+        glm::vec4 color = glm::vec4(r, g, b, a);
+        Shader *shader = &ResourceManager::getShader("ShaderB");
         Texture *texture = &ResourceManager::getTexture("tree");
 
      	shader->bind();
         glm::mat4 model(1.0f);
         shader->setUniformMat4f("u_model", model);
-        shader->setUniform3f("u_spriteColor", color.x, color.y, color.z);
+        shader->setUniform4f("u_spriteColor", color.x, color.y, color.z, color.w);
         texture->bind(0);
         shader->setUniform1i("u_Image", 0);
 
@@ -177,7 +211,7 @@ void OpenGLDraw::border(const float & r, const float & g, const float & b, const
     else if (Gameboard::gameMode == 3)
     {
         glm::vec4 color = glm::vec4(r, g, b, a);
-        Shader *shader = &ResourceManager::getShader("threedimension");
+        Shader *shader = &ResourceManager::getShader("ShaderC");
 
         shader->bind();
         glm::mat4 model(1.0f);
@@ -198,10 +232,28 @@ void OpenGLDraw::score(const std::string & scoreNumber, unsigned int & borderOff
 
 void OpenGLDraw::apple(const float & x, const float & y, const float & r, const float & g, const float & b, const float & a)
 {
-    if (Gameboard::gameMode == 2)
+    if (Gameboard::gameMode == 1)
     {
-        glm::vec3 color = glm::vec3(r, g, b);
-        Shader *shader = &ResourceManager::getShader("default");
+        glm::vec4 color = glm::vec4(r, g, b, a);
+        Shader *shader = &ResourceManager::getShader("ShaderA");
+
+        shader->bind();
+        glm::mat4 model(1.0f);
+        model = glm::translate(model, glm::vec3(x, y, 0.0f));
+        model = glm::scale(model, glm::vec3(static_cast<float>(Gameboard::squareSize), static_cast<float>(Gameboard::squareSize), 1.0f));
+
+        shader->setUniformMat4f("u_model", model);
+        shader->setUniform4f("u_spriteColor", color.x, color.y, color.z, color.w);
+
+        _appleObj->va.bind();
+        GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_LINE));   
+        GLCall(glDrawArrays(GL_TRIANGLES, 0, _appleObj->vertices.size()));   
+        GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_FILL));          
+    }
+    else if (Gameboard::gameMode == 2)
+    {
+        glm::vec4 color = glm::vec4(r, g, b, a);
+        Shader *shader = &ResourceManager::getShader("ShaderB");
         Texture *texture = &ResourceManager::getTexture("snake");
 
         shader->bind();
@@ -210,7 +262,7 @@ void OpenGLDraw::apple(const float & x, const float & y, const float & r, const 
         model = glm::scale(model, glm::vec3(static_cast<float>(Gameboard::squareSize), static_cast<float>(Gameboard::squareSize), 1.0f));
 
         shader->setUniformMat4f("u_model", model);
-        shader->setUniform3f("u_spriteColor", color.x, color.y, color.z);
+        shader->setUniform4f("u_spriteColor", color.x, color.y, color.z, color.w);
 
         texture->bind();
         shader->setUniform1i("u_Image", 0);
@@ -223,7 +275,7 @@ void OpenGLDraw::apple(const float & x, const float & y, const float & r, const 
         float xScale = 2.0f / (Gameboard::windowWidth / Gameboard::squareSize);
         float yScale = 2.0f / (Gameboard::windowHeight / Gameboard::squareSize);
         glm::vec4 color = glm::vec4(r, g, b, a);
-        Shader *shader = &ResourceManager::getShader("threedimension");
+        Shader *shader = &ResourceManager::getShader("ShaderC");
 
         shader->bind();
         glm::mat4 model(1.0f);
@@ -232,7 +284,7 @@ void OpenGLDraw::apple(const float & x, const float & y, const float & r, const 
 
         shader->setUniformMat4f("u_model", model);
         shader->setUniform4f("u_cubeColor", color.x, color.y, color.z, color.w);
-
+        
         _appleObj->va.bind();
         GLCall(glDrawArrays(GL_TRIANGLES, 0, _appleObj->vertices.size()));	        
     }
@@ -240,17 +292,33 @@ void OpenGLDraw::apple(const float & x, const float & y, const float & r, const 
 
 void OpenGLDraw::snake(const float & r, const float & g, const float & b, const float & a)
 {
-    if (Gameboard::gameMode == 2)
+    if (Gameboard::gameMode == 1)
     {
-        glm::vec3 color = glm::vec3(r, g, b);
-        Shader *shader = &ResourceManager::getShader("default");
+        glm::vec4 color = glm::vec4(r, g, b, a);
+        Shader *shader = &ResourceManager::getShader("ShaderA");
+
+      	shader->bind();
+        glm::mat4 model(1.0f);
+
+        shader->setUniformMat4f("u_model", model);
+        shader->setUniform4f("u_spriteColor", color.x, color.y, color.z, color.w);
+
+        _snakeObj->va.bind();
+        //GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_LINE));   
+        GLCall(glDrawArrays(GL_TRIANGLES, 0, _snakeObj->vertices.size())); 
+        //GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_FILL));   
+    }
+    else if (Gameboard::gameMode == 2)
+    {
+        glm::vec4 color = glm::vec4(r, g, b, a);
+        Shader *shader = &ResourceManager::getShader("ShaderB");
         Texture *texture = &ResourceManager::getTexture("snake");
 
       	shader->bind();
         glm::mat4 model(1.0f);
 
         shader->setUniformMat4f("u_model", model);
-        shader->setUniform3f("u_spriteColor", color.x, color.y, color.z);
+        shader->setUniform4f("u_spriteColor", color.x, color.y, color.z, color.w);
 
         texture->bind(0);
         shader->setUniform1i("u_Image", 0);
@@ -261,7 +329,7 @@ void OpenGLDraw::snake(const float & r, const float & g, const float & b, const 
     else if (Gameboard::gameMode == 3)
     {
         glm::vec4 color = glm::vec4(r, g, b, a);
-        Shader *shader = &ResourceManager::getShader("threedimension");
+        Shader *shader = &ResourceManager::getShader("ShaderC");
         shader->bind();
 
         glm::mat4 model;
@@ -274,10 +342,10 @@ void OpenGLDraw::snake(const float & r, const float & g, const float & b, const 
     }
 }
 
-void OpenGLDraw::menu()
+void OpenGLDraw::menu(const std::string & title, const std::string & options)
 {
-    _textRenderer->renderText("Pause", Gameboard::windowWidth / 2.3f, Gameboard::windowHeight / 3.0f, 1.0f);
-    _textRenderer->renderText(_pauseStr, Gameboard::windowWidth / 3.7f, Gameboard::windowHeight / 2.3f, 1.0f);    
+    _textRenderer->renderText(title, Gameboard::windowWidth / 2.3f, Gameboard::windowHeight / 3.0f, 1.0f);
+    _textRenderer->renderText(options, Gameboard::windowWidth / 3.7f, Gameboard::windowHeight / 2.3f, 1.0f);    
 }
 
 VertexBufferLayout & OpenGLDraw::getBufferLayout(unsigned int slot)

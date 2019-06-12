@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/10 19:03:11 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/10 21:02:58 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/11 18:23:03 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,7 @@ bool OpenGLInit::createWindow()
 	}
 
 	//GLCall(glViewport(0, 0, WINWIDTH, WINHEIGHT));
-	GLCall(glEnable(GL_DEPTH_TEST));
-	//GLCall(glEnable(GL_CULL_FACE));
+	GLCall(glEnable(GL_CULL_FACE));
 	GLCall(glEnable(GL_BLEND));
 	GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
@@ -75,23 +74,33 @@ bool OpenGLInit::buildShaders()
 	Shader *shader;
     Camera camera(glm::vec3(0.0f, 0.0f, 2.5f));
     
-    //3d shaders
-    shader = &ResourceManager::loadShader("./shaders/threedimension.shader", "threedimension");
+    //3d shader
+    shader = &ResourceManager::loadShader("./shaders/ThreeDimension.shader", "ShaderC");
 	glm::mat4 view = camera.getViewMatrix();
 	view = glm::rotate(view, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)(Gameboard::windowWidth)/(float)(Gameboard::windowHeight), 0.1f, 100.0f);
     if (shader != nullptr)
     {
         shader->bind();
-		shader->setUniformMat4f("u_inverse", glm::inverse(proj * view));
         shader->setUniformMat4f("u_projection", proj);
 		shader->setUniformMat4f("u_view", view);
     }
 	else
 		return (false);
 
-    //2d shaders
-    shader = &ResourceManager::loadShader("./shaders/basic.shader", "default");
+    //2d Texture shader
+    shader = &ResourceManager::loadShader("./shaders/TwoDimensionTexture.shader", "ShaderB");
+	proj = glm::ortho(0.0f, static_cast<float>(Gameboard::windowWidth), static_cast<float>(Gameboard::windowHeight), 0.0f, -1.0f, 1.0f);
+    if (shader != nullptr)
+    {
+        shader->bind();
+        shader->setUniformMat4f("u_projection", proj);
+    }
+	else
+		return (false);
+
+	//Basic 2d Texture shader
+    shader = &ResourceManager::loadShader("./shaders/BasicTwoDimension.shader", "ShaderA");
 	proj = glm::ortho(0.0f, static_cast<float>(Gameboard::windowWidth), static_cast<float>(Gameboard::windowHeight), 0.0f, -1.0f, 1.0f);
     if (shader != nullptr)
     {
@@ -102,7 +111,7 @@ bool OpenGLInit::buildShaders()
 		return (false);
 	
     //text renderer
-    shader = &ResourceManager::loadShader("./shaders/text.shader", "text");
+    shader = &ResourceManager::loadShader("./shaders/Text.shader", "text");
     if (shader != nullptr)
     {
         shader->bind();
@@ -119,4 +128,15 @@ void OpenGLInit::buildTextures()
     ResourceManager::loadTexture("./textures/snake-graphics.png", GL_TRUE, GL_FALSE, "snake");
     ResourceManager::loadTexture("./textures/grass.png", GL_TRUE, GL_TRUE, "grass");
     ResourceManager::loadTexture("./textures/tree.png", GL_TRUE, GL_FALSE, "tree");    
+}
+
+void OpenGLInit::enable3dDepth()
+{
+	GLCall(glEnable(GL_DEPTH_TEST));
+
+}
+
+void OpenGLInit::disable3dDepth()
+{
+	GLCall(glDisable(GL_DEPTH_TEST));
 }

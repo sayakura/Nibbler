@@ -33,7 +33,7 @@ std::vector<float> Quad::getPosCoords(float x, float y, unsigned int size)
     return (quad);
 }
 
-void Quad::buildVertex(std::vector<float> & buffer, std::vector<float> & positions, std::vector<unsigned int> & offsets, float (&texCoords)[12])
+void Quad::buildVertexWithTex(std::vector<float> & buffer, std::vector<float> & positions, std::vector<unsigned int> & offsets, float (&texCoords)[12])
 {
     int posCount = 0;
     int texCount = 0;
@@ -52,7 +52,7 @@ void Quad::buildVertex(std::vector<float> & buffer, std::vector<float> & positio
     }
 }
 
-void Quad::buildVertex(std::deque<float> & buffer, std::vector<float> & positions, std::vector<unsigned int> & offsets, float (&texCoords)[12])
+void Quad::buildVertexWithTex(std::deque<float> & buffer, std::vector<float> & positions, std::vector<unsigned int> & offsets, float (&texCoords)[12])
 {
     int posCount = 0;
     int texCount = 0;
@@ -67,6 +67,34 @@ void Quad::buildVertex(std::deque<float> & buffer, std::vector<float> & position
         {
             buffer.push_back(texCoords[texCount]);
             texCount++;
+        }
+    }
+}
+
+void Quad::buildVertex(std::vector<float> & buffer, std::vector<float> & positions, std::vector<unsigned int> & offsets)
+{
+    int posCount = 0;
+    int texCount = 0;
+    for (unsigned int i = 0; i < _rows; i++)
+    {
+        for (unsigned int j = 0; j < offsets[0]; j++)
+        {
+            buffer.push_back(positions[posCount]);
+            posCount++;
+        }
+    }
+}
+
+void Quad::buildVertex(std::deque<float> & buffer, std::vector<float> & positions, std::vector<unsigned int> & offsets)
+{
+    int posCount = 0;
+    int texCount = 0;
+    for (unsigned int i = 0; i < _rows; i++)
+    {
+        for (unsigned int j = 0; j < offsets[0]; j++)
+        {
+            buffer.push_back(positions[posCount]);
+            posCount++;
         }
     }
 }

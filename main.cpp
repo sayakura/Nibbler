@@ -1,9 +1,10 @@
 #include <iostream>
 #include <chrono>
 #include "Game.hpp"
-#include "Renderer.hpp"
+#include "RendererA.hpp"
+#include "RendererB.hpp"
+#include "RendererC.hpp"
 #include "helpers.hpp"
-#include "Renderer3D.hpp"
 #include "SoundEngine.hpp"
 #include "sysconfig.hpp"
 #include "Gameboard.hpp"
@@ -32,12 +33,11 @@ int main(int argc, char** argv)
 	Gameboard::windowWidth = WINWIDTH;
 	Gameboard::windowHeight = WINHEIGHT;
 	Gameboard::squareSize = SQUARESIZE;
-	Gameboard::gameMode = 3;
-
 
 
 	IRenderer *renderer;
-	renderer = new Renderer3D();
+	renderer = new RendererC();
+	Gameboard::gameMode = 3; // GAMEMODE MUST BE EQUAL TO CURRENT RENDERER OR EVERYTHING BREAKS	
 	if (!renderer->initGL())
 		return (1);
 	renderer->init();
@@ -51,6 +51,7 @@ int main(int argc, char** argv)
 	auto lastFrame = std::chrono::high_resolution_clock::now();
 
 	game.setGameState(Active);
+
 
 	while (!quit)
 	{

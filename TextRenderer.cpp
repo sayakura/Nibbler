@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/04 16:05:34 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/05 19:26:48 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/11 18:05:56 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 TextRenderer::TextRenderer(GLuint width, GLuint height)
 {
-    this->_textShader = &ResourceManager::loadShader("shaders/text.shader", "text");
+    this->_textShader = &ResourceManager::getShader("text");
     this->_textShader->bind();
     this->_textShader->setUniformMat4f("u_projection", glm::ortho(0.0f, static_cast<GLfloat>(width), static_cast<GLfloat>(height), 0.0f));
     this->_textShader->setUniform1i("u_text", 0);

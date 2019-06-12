@@ -1,24 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Renderer3D.hpp                                     :+:      :+:    :+:   */
+/*   RendererC.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/06 19:09:20 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/10 20:51:31 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/11 18:26:32 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef RENDERER3D_HPP
-#define RENDERER3D_HPP
+#ifndef RendererC_HPP
+#define RendererC_HPP
 
 #include "IRenderer.hpp"
 
 #include <vector>
 #include <sstream>
 
-class Renderer3D : public IRenderer {
+//This is the 3d renderer. Only takes position coordinates.
+
+class RendererC : public IRenderer {
 
 private:
     bool _pause;
@@ -36,8 +38,8 @@ private:
     std::ostringstream _ss;
 
 public:
-    Renderer3D();
-    ~Renderer3D();
+    RendererC();
+    ~RendererC();
 
     bool initGL();
     void cleanupGL();

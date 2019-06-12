@@ -1,27 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Renderer3D.cpp                                     :+:      :+:    :+:   */
+/*   RendererC.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/06 19:12:33 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/10 21:34:00 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/11 17:03:23 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Renderer3D.hpp"
+#include "RendererC.hpp"
 #include <iomanip>
 #include "Gameboard.hpp"
 #include "OpenGLHelper.hpp"
 #include "Cube.hpp"
 
-Renderer3D::Renderer3D() :
+RendererC::RendererC() :
     _borderOffset(Gameboard::squareSize * 2), _score(0), _snakeSize(0), _pause(false)
 {
 }
 
-void Renderer3D::init()
+void RendererC::init()
 {
 	buildBackground();
 	buildBorder();
@@ -30,24 +30,26 @@ void Renderer3D::init()
 	_ss << std::setfill('0') << std::setw(3) << _score;
 
 	_pauseStr = "-> Continue <-\t   Quit";
+
+	OpenGLInit::enable3dDepth();
 }
 
-bool Renderer3D::initGL()
+bool RendererC::initGL()
 {
 	return (OpenGLHelper::initEverything());
 }
 
-void Renderer3D::cleanupGL()
+void RendererC::cleanupGL()
 {
 	OpenGLHelper::cleanup();
 }
 
-Renderer3D::~Renderer3D()
+RendererC::~RendererC()
 {
-	return;
+	OpenGLInit::disable3dDepth();
 }
 
-void Renderer3D::buildBackground()
+void RendererC::buildBackground()
 {
     unsigned int totalRows = Gameboard::windowHeight / Gameboard::squareSize;
     unsigned int totalCols = Gameboard::windowWidth / Gameboard::squareSize;
@@ -68,12 +70,11 @@ void Renderer3D::buildBackground()
         }
         posY += Gameboard::squareSize;
     }
-
-	std::cout << "background" << std::endl;
+	
 	OpenGLDraw::updateObjectDrawingInfo("background", cubeVertices);
 }
 
-void Renderer3D::buildBorder()
+void RendererC::buildBorder()
 {
 	unsigned int borderSquare = Gameboard::squareSize;
     unsigned int totalRows = (Gameboard::windowHeight - _borderOffset * 2) / borderSquare;
@@ -108,13 +109,13 @@ void Renderer3D::buildBorder()
 	OpenGLDraw::updateObjectDrawingInfo("border", borderVertices);
 }
 
-void Renderer3D::buildApple()
+void RendererC::buildApple()
 {
 	std::vector<float> appleCoords = Cube::getGenericCubeCoords();
-	OpenGLDraw::updateObjectDrawingInfo("apple", appleCoords);
+	OpenGLDraw::updateObjectDrawingInfo("appleBuild", appleCoords);
 }
 
-void Renderer3D::draw()
+void RendererC::draw()
 {
 	OpenGLDraw::clearScreen();
 
@@ -130,12 +131,12 @@ void Renderer3D::draw()
 	OpenGLDraw::snake(0.0f, 1.0f, 0.0f, 1.0f * alpha);
 
 	if (_pause)
-		OpenGLDraw::menu();
+		OpenGLDraw::menu("Pause", _pauseStr);
 
 	OpenGLDraw::swapBuffers();
 }
 
-void Renderer3D::updateApple(const float & x, const float & y)
+void RendererC::updateApple(const float & x, const float & y)
 {
     float inverseY = Gameboard::windowHeight - y;
 	this->_appleX = 2.0f * (x) / Gameboard::windowWidth - 1.0f;
@@ -144,15 +145,15 @@ void Renderer3D::updateApple(const float & x, const float & y)
 	std::vector<float> cubeCoords = Cube::getCubeAtPos(x, y, Gameboard::squareSize, Gameboard::windowWidth, Gameboard::windowHeight);
 	std::vector<float> cubeVertices;
     Cube::buildVertex(cubeVertices, cubeCoords, OpenGLDraw::getBufferFormat(2));
-	OpenGLDraw::updateObjectDrawingInfo("apple", cubeVertices);
+	OpenGLDraw::updateObjectDrawingInfo("appleUpdate", cubeVertices);
 }
 
-void Renderer3D::refreshSnakeBuffer(std::vector<float> snakeVertices)
+void RendererC::refreshSnakeBuffer(std::vector<float> snakeVertices)
 {
 	OpenGLDraw::updateObjectDrawingInfo("snake", snakeVertices);
 }
 
-void Renderer3D::processInput(Direction & curDirection)
+void RendererC::processInput(Direction & curDirection)
 {
 	if (_pause == false)
 	{	
@@ -168,29 +169,28 @@ void Renderer3D::processInput(Direction & curDirection)
 		if (curDirection == Pause)
 			_pause = false;
 	}
-	
 }
 
-void Renderer3D::updateScore()
+void RendererC::updateScore()
 {
     _ss.str("");
     _score++;
     _ss << std::setfill('0') << std::setw(3) << _score;	    
 }
 
-void Renderer3D::buildSnakeVertex(float x, float y, std::deque<float> & buffer, std::string texture)
+void RendererC::buildSnakeVertex(float x, float y, std::deque<float> & buffer, std::string texture)
 {
     std::vector<float> startingPositions;
 	startingPositions = Cube::getCubeAtPos(x, y, Gameboard::squareSize, Gameboard::windowWidth, Gameboard::windowHeight);
     Cube::buildVertex(buffer, startingPositions, OpenGLDraw::getBufferFormat(2));
 }
 
-void Renderer3D::changeSnakeTexture(bool tail, unsigned int size, std::deque<float> & buffer, std::string texture)
+void RendererC::changeSnakeTexture(bool tail, unsigned int size, std::deque<float> & buffer, std::string texture)
 {
 	return;
 }
 
-void Renderer3D::popSnakeTail(std::deque<float> & buffer)
+void RendererC::popSnakeTail(std::deque<float> & buffer)
 {
 	for (unsigned int i = 0; i < Cube::_rows; i++)
 	{

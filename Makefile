@@ -12,8 +12,9 @@ SOURCE = AppleMaker.cpp \
 		 OpenGLInit.cpp \
 		 OpenGLInput.cpp \
          Quad.cpp \
-		 Renderer.cpp \
-		 Renderer3D.cpp \
+		 RendererA.cpp \
+		 RendererB.cpp \
+		 RendererC.cpp \
 		 ResourceManager.cpp \
 		 Shader.cpp \
 		 Snake.cpp \
@@ -41,7 +42,7 @@ DEPEND = -lglfw -lfreetype -lirrklang -lglad\
 all: $(NAME)
 
 $(NAME):
-		clang++ -g -std=c++11 -stdlib=libc++ $(INCLUDES) $(LIB) $(DEPEND) $(SOURCE)
+		clang++ -std=c++11 -stdlib=libc++ $(INCLUDES) $(LIB) $(DEPEND) $(SOURCE)
 clean:
 	/bin/rm -f *.o
 

@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/10 14:43:55 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/10 21:27:03 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/11 16:23:54 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,7 @@ private:
 
     static VertexBufferLayout _layouts[3];
     static std::vector<unsigned int> _offsets[3];
-
-    static std::string _pauseStr;
-
+    
 public:
     static std::unordered_map<std::string, ObjectDrawingInfo *> initObjectMap();
     static void allocateObjectDrawingInfo();
@@ -48,7 +46,7 @@ public:
 
     static void buildVertexBufferLayouts();
     static void buildTextRenderer();
-    static void updateObjectDrawingInfo(const std::string & name, std::vector<float> vertices);
+    static void updateObjectDrawingInfo(const std::string & name, std::vector<float> & vertices);
 
     static void clearScreen();
     static void swapBuffers();
@@ -58,7 +56,7 @@ public:
     static void score(const std::string & scoreNumber, unsigned int & borderOffset);
     static void apple(const float & x, const float & y, const float & r, const float & g, const float & b, const float & a);
     static void snake(const float & r, const float & g, const float & b, const float & a);
-    static void menu();
+    static void menu(const std::string & title, const std::string & options);
 
     static VertexBufferLayout & getBufferLayout(unsigned int slot);
     static std::vector<unsigned int> & getBufferFormat(unsigned int slot);

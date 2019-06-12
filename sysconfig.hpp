@@ -7,6 +7,9 @@
 #define SE_BGM "audio/bgm.wav"
 #define SE_GAMEOVER "audio/gameover.wav"
 #define SE_WIN "audio/win.wav"
+#define PATHLIBA "renderA.dylib"
+#define PATHLIBB "renderB.dylib"
+#define PATHLIBC "renderC.dylib"
 #define WINDOW_MAX_HEIGHT 100 // change it later
 #define WINDOW_MIN_HEIGHT 10 // change it later
 #define WINDOW_MAX_WIDTH 200 // change it later

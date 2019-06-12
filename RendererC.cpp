@@ -15,9 +15,14 @@
 #include "Gameboard.hpp"
 #include "OpenGLHelper.hpp"
 #include "Cube.hpp"
+#include "sysconfig.hpp"
+
+extern "C" IRenderer *create_renderer() {
+    return new RendererC();
+}
 
 RendererC::RendererC() :
-    _borderOffset(Gameboard::squareSize * 2), _score(0), _snakeSize(0), _pause(false), _obstaclesBuilt(false)
+    _borderOffset(Gameboard::squareSize * 2), _score(0), _snakeSize(0), _pause(false), _lost(false), _obstaclesBuilt(false)
 {
 }
 
@@ -27,11 +32,12 @@ void RendererC::init()
 	buildBorder();
 	buildApple();
 
+    _score = 0;
+    _ss.str("");
 	_ss << std::setfill('0') << std::setw(3) << _score;
-
 	_pauseStr = "-> Continue <-\t   Quit";
-
 	OpenGLInit::enable3dDepth();
+    _obstaclesBuilt = false;
 }
 
 bool RendererC::initGL()
@@ -117,23 +123,26 @@ void RendererC::buildApple()
 
 void RendererC::draw()
 {
-	OpenGLDraw::clearScreen();
+		OpenGLDraw::clearScreen();
 
 	float alpha = 1.0f;
 
-	if (_pause)
+	if (_pause || _lost)
 		alpha = 0.3;
-
-	OpenGLDraw::background(0.0f, 0.0f, 1.0f, 1.0 * alpha);
-	OpenGLDraw::border(1.0f, 0.0f, 1.0f, 0.4f * alpha);
-	OpenGLDraw::obstacles(1.0, 0.0f, 1.0f, 0.4f * alpha);
+        
+	OpenGLDraw::background(1.0f, 1.0f, 1.0f, 1.0 * alpha);
+	OpenGLDraw::border(0.0f, 0.0f, 1.0f, 1.0f * alpha);
+    OpenGLDraw::obstacles(1.0f, 0.0f, 1.0f, 1.0f * alpha);
 	OpenGLDraw::score(_ss.str(), _borderOffset);
 	OpenGLDraw::apple(_appleX, _appleY, 1.0f, 0.0f, 0.0f, 1.0f * alpha); // x and y value are unused in this version
-	OpenGLDraw::snake(0.0f, 1.0f, 0.0f, 1.0f * alpha);
+	OpenGLDraw::snake(1.0f, 1.0f, 1.0f, 1.0f * alpha);
 
 	if (_pause)
-		OpenGLDraw::menu("Pause", _pauseStr);
-
+        OpenGLDraw::menu("Pause", _pauseStr);
+    else if (_lost && _score < WIN_POINT)
+		OpenGLDraw::menu("Continue ?", _pauseStr);
+    else if (_lost)
+        OpenGLDraw::menu("You win !", _pauseStr);
 	OpenGLDraw::swapBuffers();
 }
 
@@ -156,7 +165,14 @@ void RendererC::refreshSnakeBuffer(std::vector<float> snakeVertices)
 
 void RendererC::processInput(Direction & curDirection)
 {
-	if (_pause == false)
+    if (_lost)
+    {
+        OpenGLInput::menuInput(curDirection, _pauseStr, true);
+		
+		if (curDirection == Restart)
+			_lost = false;
+    }
+	else if (_pause == false)
 	{	
 		OpenGLInput::gameInput(curDirection);
 
@@ -165,7 +181,7 @@ void RendererC::processInput(Direction & curDirection)
 	}
 	else
 	{
-		OpenGLInput::menuInput(curDirection, _pauseStr);
+		OpenGLInput::menuInput(curDirection, _pauseStr, false);
 		
 		if (curDirection == Pause)
 			_pause = false;
@@ -218,3 +234,7 @@ void RendererC::buildObstacles(std::vector<float> x, std::vector<float> y)
     OpenGLDraw::updateObjectDrawingInfo("obstacles", obstacleCoords);
     _obstaclesBuilt = true;
 }
+
+void RendererC::setLost(bool val) {
+        _lost = val;
+        _pauseStr = "-> Restart <-\t   Quit"; }

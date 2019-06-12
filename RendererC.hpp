@@ -24,6 +24,7 @@ class RendererC : public IRenderer {
 
 private:
     bool _pause;
+    bool _lost;
     std::string _pauseStr;
 
 	unsigned int _borderOffset;
@@ -62,6 +63,7 @@ public:
     void buildBackground();
     void buildApple();
     void buildBorder();
+	void setLost(bool);
 };
 
 #endif

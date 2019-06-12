@@ -1,4 +1,5 @@
 #include <iostream>
+#include <dlfcn.h>
 #include <chrono>
 #include "Game.hpp"
 #include "RendererA.hpp"
@@ -23,6 +24,9 @@ int main(int argc, char** argv)
 	//squaresize * 2 for border
 	unsigned int WINWIDTH = (SQUARESIZE * COLS) + SQUARESIZE * 2;
 	unsigned int WINHEIGHT = (SQUARESIZE * ROWS) + SQUARESIZE * 2;
+	unsigned int current_game_mode; 
+	void* handle;
+
 	std::cout << WINWIDTH << " " << WINHEIGHT << std::endl;
 
 	getArgs(argc, argv);
@@ -33,8 +37,26 @@ int main(int argc, char** argv)
 	Gameboard::squareSize = SQUARESIZE;
 
 	IRenderer *renderer;
-	renderer = new RendererA();
-	Gameboard::gameMode = 1; // GAMEMODE MUST BE EQUAL TO CURRENT RENDERER OR EVERYTHING BREAKS	
+
+	current_game_mode = Gameboard::gameMode = 2; // GAMEMODE MUST BE EQUAL TO CURRENT RENDERER OR EVERYTHING BREAKS	
+	if (Gameboard::gameMode == 1)
+	{
+		handle = dlopen(PATHLIBA, RTLD_LAZY);
+  		IRenderer* (*create)() = (IRenderer* (*)())dlsym(handle, "create_renderer");
+		renderer = create();
+	}
+	else if (Gameboard::gameMode == 2)
+	{
+		handle = dlopen(PATHLIBB, RTLD_LAZY);
+  		IRenderer* (*create)() = (IRenderer* (*)())dlsym(handle, "create_renderer");
+		renderer = create();
+	}
+	else if (Gameboard::gameMode == 3)
+	{
+		handle = dlopen(PATHLIBC, RTLD_LAZY);
+  		IRenderer* (*create)() = (IRenderer* (*)())dlsym(handle, "create_renderer");
+		renderer = create();
+	}
 	if (!renderer->initGL())
 		return (1);
 	renderer->init();
@@ -48,8 +70,6 @@ int main(int argc, char** argv)
 	auto lastFrame = std::chrono::high_resolution_clock::now();
 
 	game.setGameState(Active);
-
-
 	while (!quit)
 	{
 		auto currentFrame = std::chrono::high_resolution_clock::now();

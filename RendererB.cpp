@@ -15,7 +15,15 @@
 #include "SnakeSprite.hpp"
 #include "OpenGLHelper.hpp"
 #include "Gameboard.hpp"
+#include "sysconfig.hpp"
 #include <iomanip>
+
+#include <unistd.h>
+#include <stdio.h>
+
+extern "C" IRenderer *create_renderer() {
+    return new RendererB();
+}
 
 std::unordered_map<std::string, float(*)[12]> RendererB::_snakeSpriteMap = RendererB::initSnakeSpriteMap();
 
@@ -40,9 +48,8 @@ std::unordered_map<std::string, float(*)[12]> RendererB::initSnakeSpriteMap()
 }
 
 RendererB::RendererB() : 
-	_borderOffset(Gameboard::squareSize * 2), _score(0), _pause(false), _obstaclesBuilt(false)
-{
-}
+	_borderOffset(Gameboard::squareSize * 2), _score(0), _pause(false), _lost(false), _obstaclesBuilt(false)
+{}
 
 //everything in this class can't be created until GLFW init functions are called
 //wanted to maintain the error checking of these functions. so use an init function rather than constructor
@@ -52,8 +59,9 @@ void RendererB::init()
 	buildBorder();
 	buildApple();
 
+    _score = 0;
+    _ss.str("");
 	_ss << std::setfill('0') << std::setw(3) << _score;
-
 	_pauseStr = "-> Continue <-\t   Quit";
 }
 
@@ -164,19 +172,22 @@ void RendererB::draw()
 
 	float alpha = 1.0f;
 
-	if (_pause)
+	if (_pause || _lost)
 		alpha = 0.3;
-
+        
 	OpenGLDraw::background(1.0f, 1.0f, 1.0f, 1.0 * alpha);
-	OpenGLDraw::border(1.0f, 1.0f, 1.0f, 1.0f * alpha);
-    OpenGLDraw::obstacles(1.0f, 1.0f, 1.0f, 1.0f * alpha);
+	OpenGLDraw::border(0.0f, 0.0f, 1.0f, 1.0f * alpha);
+    OpenGLDraw::obstacles(1.0f, 0.0f, 1.0f, 1.0f * alpha);
 	OpenGLDraw::score(_ss.str(), _borderOffset);
-	OpenGLDraw::apple(_appleX, _appleY, 1.0f, 1.0f, 1.0f, 1.0f * alpha); // x and y value are unused in this version
+	OpenGLDraw::apple(_appleX, _appleY, 1.0f, 0.0f, 0.0f, 1.0f * alpha); // x and y value are unused in this version
 	OpenGLDraw::snake(1.0f, 1.0f, 1.0f, 1.0f * alpha);
 
 	if (_pause)
-		OpenGLDraw::menu("Pause", _pauseStr);
-
+        OpenGLDraw::menu("Pause", _pauseStr);
+    else if (_lost && _score < WIN_POINT)
+		OpenGLDraw::menu("Continue ?", _pauseStr);
+    else if (_lost)
+        OpenGLDraw::menu("You win !", _pauseStr);
 	OpenGLDraw::swapBuffers();
 }
 
@@ -194,7 +205,14 @@ void RendererB::updateApple(const float & x, const float & y)
 
 void RendererB::processInput(Direction & curDirection)
 {
-	if (_pause == false)
+    if (_lost)
+    {
+        OpenGLInput::menuInput(curDirection, _pauseStr, true);
+		
+		if (curDirection == Restart)
+			_lost = false;
+    }
+	else if (_pause == false)
 	{	
 		OpenGLInput::gameInput(curDirection);
 
@@ -203,7 +221,7 @@ void RendererB::processInput(Direction & curDirection)
 	}
 	else
 	{
-		OpenGLInput::menuInput(curDirection, _pauseStr);
+		OpenGLInput::menuInput(curDirection, _pauseStr, false);
 		
 		if (curDirection == Pause)
 			_pause = false;
@@ -269,3 +287,8 @@ void RendererB::buildObstacles(std::vector<float> x, std::vector<float> y)
     OpenGLDraw::updateObjectDrawingInfo("obstacles", obstacleCoords);
     _obstaclesBuilt = true;
 }
+
+
+void RendererB::setLost(bool val) {
+        _lost = val;
+        _pauseStr = "-> Restart <-\t   Quit"; }

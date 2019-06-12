@@ -29,6 +29,7 @@ private:
 	unsigned int _score;
 
 	bool _pause;
+	bool _lost;
 	std::string _pauseStr;
 
 	bool _obstaclesBuilt;
@@ -71,6 +72,7 @@ public:
 	void changeSnakeTexture(bool tail, unsigned int size, std::deque<float> & buffer, std::string texture);
 
 	static std::unordered_map<std::string, float(*)[12]> initSnakeSpriteMap();
+	void setLost(bool);
 };
 
 #endif

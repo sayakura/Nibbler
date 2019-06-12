@@ -6,7 +6,7 @@
 /*   By: Kura <Kura@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/11 17:14:18 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/12 03:08:55 by Kura             ###   ########.fr       */
+/*   Updated: 2019/06/12 05:06:29 by Kura             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,15 @@
 #include <iomanip>
 #include "sysconfig.hpp"
 
+#include <unistd.h>
+#include <stdio.h>
+
+extern "C" IRenderer *create_renderer() {
+    return new RendererA();
+}
+
 RendererA::RendererA() : 
-	_borderOffset(Gameboard::squareSize * 2), _score(0), _pause(false), _obstaclesBuilt(false)
-{
+	_borderOffset(Gameboard::squareSize * 2), _score(0), _pause(false), _obstaclesBuilt(false) {
 }
 
 //everything in this class can't be created until GLFW init functions are called
@@ -160,10 +166,7 @@ void RendererA::draw()
     else if (_lost && _score < WIN_POINT)
 		OpenGLDraw::menu("Continue ?", _pauseStr);
     else if (_lost)
-    {
         OpenGLDraw::menu("You win !", _pauseStr);
-        _score = 0;
-    }
 	OpenGLDraw::swapBuffers();
 }
 

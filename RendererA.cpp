@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RendererA.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Kura <Kura@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/11 17:14:18 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/11 20:16:33 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/12 03:08:55 by Kura             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "SnakeSprite.hpp"
 #include <vector>
 #include <iomanip>
+#include "sysconfig.hpp"
 
 RendererA::RendererA() : 
 	_borderOffset(Gameboard::squareSize * 2), _score(0), _pause(false), _obstaclesBuilt(false)
@@ -31,8 +32,9 @@ void RendererA::init()
 	buildBorder();
 	buildApple();
 
+    _score = 0;
+    _ss.str("");
 	_ss << std::setfill('0') << std::setw(3) << _score;
-
 	_pauseStr = "-> Continue <-\t   Quit";
 }
 
@@ -143,9 +145,9 @@ void RendererA::draw()
 
 	float alpha = 1.0f;
 
-	if (_pause)
+	if (_pause || _lost)
 		alpha = 0.3;
-
+        
 	OpenGLDraw::background(1.0f, 1.0f, 1.0f, 1.0 * alpha);
 	OpenGLDraw::border(0.0f, 0.0f, 1.0f, 1.0f * alpha);
     OpenGLDraw::obstacles(1.0f, 0.0f, 1.0f, 1.0f * alpha);
@@ -154,8 +156,14 @@ void RendererA::draw()
 	OpenGLDraw::snake(1.0f, 1.0f, 1.0f, 1.0f * alpha);
 
 	if (_pause)
-		OpenGLDraw::menu("Pause", _pauseStr);
-
+        OpenGLDraw::menu("Pause", _pauseStr);
+    else if (_lost && _score < WIN_POINT)
+		OpenGLDraw::menu("Continue ?", _pauseStr);
+    else if (_lost)
+    {
+        OpenGLDraw::menu("You win !", _pauseStr);
+        _score = 0;
+    }
 	OpenGLDraw::swapBuffers();
 }
 
@@ -182,7 +190,14 @@ void RendererA::updateApple(const float & x, const float & y)
 
 void RendererA::processInput(Direction & curDirection)
 {
-	if (_pause == false)
+    if (_lost)
+    {
+        OpenGLInput::menuInput(curDirection, _pauseStr, true);
+		
+		if (curDirection == Restart)
+			_lost = false;
+    }
+	else if (_pause == false)
 	{	
 		OpenGLInput::gameInput(curDirection);
 
@@ -191,7 +206,7 @@ void RendererA::processInput(Direction & curDirection)
 	}
 	else
 	{
-		OpenGLInput::menuInput(curDirection, _pauseStr);
+		OpenGLInput::menuInput(curDirection, _pauseStr, false);
 		
 		if (curDirection == Pause)
 			_pause = false;
@@ -236,3 +251,7 @@ void RendererA::buildObstacles(std::vector<float> x, std::vector<float> y)
     OpenGLDraw::updateObjectDrawingInfo("obstacles", obstacleCoords);
     _obstaclesBuilt = true;
 }
+
+void RendererA::setLost(bool val) {
+        _lost = val;
+        _pauseStr = "-> Restart <-\t   Quit"; }

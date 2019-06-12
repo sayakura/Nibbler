@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   OpenGLInput.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Kura <Kura@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/10 19:15:53 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/10 20:28:27 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/12 01:27:28 by Kura             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "eDirection.hpp"
 #include "GLFW/glfw3.h"
 #include <string>
+#include <iostream>
 
 class OpenGLInput {
 
@@ -25,8 +26,8 @@ private:
 
 public:
     static void gameInput(Direction & direction);
-    static void menuInput(Direction & direction, std::string & pauseStr);
-    static void moveCursor(Direction direction, std::string & pauseStr);
+    static void menuInput(Direction & direction, std::string & pauseStr, bool);
+    static void moveCursor(Direction direction, std::string & pauseStr, bool);
 
 private:
     OpenGLInput();

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   OpenGLInput.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Kura <Kura@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/10 19:17:15 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/11 19:19:02 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/12 02:55:08 by Kura             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void OpenGLInput::gameInput(Direction & curDirection)
         curDirection = Pause;
 }
 
-void OpenGLInput::menuInput(Direction & curDirection, std::string & pauseStr)
+void OpenGLInput::menuInput(Direction & curDirection, std::string & pauseStr, bool lost)
 {
     glfwWaitEvents();
 
@@ -58,23 +58,33 @@ void OpenGLInput::menuInput(Direction & curDirection, std::string & pauseStr)
     if (Callback::_keys[GLFW_KEY_LEFT])
     {
         _curMenuChoice = 0;
-        moveCursor(Left, pauseStr);
+        moveCursor(Left, pauseStr, lost);
     }
     if (Callback::_keys[GLFW_KEY_RIGHT])
     {
         _curMenuChoice = 1;
-        moveCursor(Right, pauseStr);
+        moveCursor(Right, pauseStr, lost);
     }
     if (Callback::_keys[GLFW_KEY_ENTER] && _curMenuChoice == 0)
-        curDirection = Pause;
+        curDirection = lost ? Restart : Pause;
     if (Callback::_keys[GLFW_KEY_ENTER] && _curMenuChoice == 1)
         curDirection = Exit;    
 }
 
-void OpenGLInput::moveCursor(Direction direction, std::string & pauseStr)
+void OpenGLInput::moveCursor(Direction direction, std::string & pauseStr, bool lost)
 {
-	if (direction == Left)
-		pauseStr = "-> Continue <-\t   Quit";
-	if (direction == Right)
-		pauseStr = "   Continue   \t-> Quit <-";
+    if (!lost)
+    {
+        if (direction == Left)
+		    pauseStr = "-> Continue <-\t   Quit";
+        if (direction == Right)
+            pauseStr = "   Continue   \t-> Quit <-";
+    }
+    else
+    {
+        if (direction == Left)
+		    pauseStr = "-> Restart <-\t   Quit";
+        if (direction == Right)
+            pauseStr = "   Restart   \t-> Quit <-";
+    }
 }

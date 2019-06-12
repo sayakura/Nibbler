@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RendererA.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Kura <Kura@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/11 17:11:13 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/11 20:02:39 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/12 01:22:24 by Kura             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ class RendererA : public IRenderer {
 	unsigned int _score;
 
 	bool _pause;
+	bool _lost;
 	std::string _pauseStr;
 
 	bool _obstaclesBuilt;
@@ -61,6 +62,7 @@ public:
 	void draw();
 
 	void cleanupGL();
+	void setLost(bool);
 };
 
 #endif

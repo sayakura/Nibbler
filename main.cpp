@@ -25,15 +25,12 @@ int main(int argc, char** argv)
 	unsigned int WINHEIGHT = (SQUARESIZE * ROWS) + SQUARESIZE * 2;
 	std::cout << WINWIDTH << " " << WINHEIGHT << std::endl;
 
-
-
 	getArgs(argc, argv);
 
 	//this should probably be set in a better way.
 	Gameboard::windowWidth = WINWIDTH;
 	Gameboard::windowHeight = WINHEIGHT;
 	Gameboard::squareSize = SQUARESIZE;
-
 
 	IRenderer *renderer;
 	renderer = new RendererA();
@@ -61,12 +58,15 @@ int main(int argc, char** argv)
 		lastFrame = currentFrame;
 
 		game.processInput(deltaTime.count());
-
 		game.update(deltaTime.count());
 
 		if(game.getGameState() == Quit)
 			quit = true;
-
+		if (game.getGameState() == Restarting)
+		{
+			game.restart();
+			continue ;
+		}
 		try {
 			game.render();
 		} catch (std::exception & e)
@@ -74,7 +74,6 @@ int main(int argc, char** argv)
 			std::cout << e.what() << std::endl;
 			exit(1);
 		}
-
 	}
 
 	renderer->cleanupGL();

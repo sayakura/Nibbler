@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IRenderer.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Kura <Kura@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/06 13:05:07 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/11 20:02:00 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/12 02:43:13 by Kura             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,10 @@
 #include <vector>
 #include <deque>
 #include "eDirection.hpp"
+#include "OpenGLHelper.hpp"
 
 class IRenderer {
-
 public:
-    //virtual ~IRenderer() = 0;
     virtual void draw() = 0;
     virtual void init() = 0;
     virtual bool initGL() = 0;
@@ -34,6 +33,7 @@ public:
     virtual	void popSnakeTail(std::deque<float> & buffer) = 0;
     virtual bool obstaclesHaveBeenBuilt() = 0;
     virtual void buildObstacles(std::vector<float> x, std::vector<float> y) = 0;
+    virtual void setLost(bool val) = 0;
 };
 
 #endif

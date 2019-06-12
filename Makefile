@@ -13,8 +13,6 @@ SOURCE = Callbacks.cpp \
          Quad.cpp \
 		 RandomlyPlacedObject.cpp \
 		 RendererA.cpp \
-		 RendererB.cpp \
-		 RendererC.cpp \
 		 ResourceManager.cpp \
 		 Shader.cpp \
 		 Snake.cpp \
@@ -42,7 +40,7 @@ DEPEND = -lglfw -lfreetype -lirrklang -lglad\
 all: $(NAME)
 
 $(NAME):
-		clang++ -std=c++11 -stdlib=libc++ $(INCLUDES) $(LIB) $(DEPEND) $(SOURCE)
+		clang++ -g -std=c++11 -stdlib=libc++ $(INCLUDES) $(LIB) $(DEPEND) $(SOURCE)
 clean:
 	/bin/rm -f *.o
 

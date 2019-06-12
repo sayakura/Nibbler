@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/31 20:17:20 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/06 18:02:23 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/11 19:35:04 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -262,4 +262,9 @@ float Snake::getHeadY()
 bool Snake::checkCollisionPoint(float x, float y)
 {
 	return (_collisionTable[y * _width + x]);
+}
+
+void Snake::setCollisionPoint(float x, float y)
+{
+    _collisionTable[static_cast<int>(y) * _width + static_cast<int>(x)] = true;
 }

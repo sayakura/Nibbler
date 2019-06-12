@@ -1,6 +1,5 @@
 NAME = test
-SOURCE = AppleMaker.cpp \
-		 Callbacks.cpp \
+SOURCE = Callbacks.cpp \
 		 Camera.cpp \
 		 Cube.cpp \
 		 GLDebug.cpp \
@@ -12,6 +11,7 @@ SOURCE = AppleMaker.cpp \
 		 OpenGLInit.cpp \
 		 OpenGLInput.cpp \
          Quad.cpp \
+		 RandomlyPlacedObject.cpp \
 		 RendererA.cpp \
 		 RendererB.cpp \
 		 RendererC.cpp \

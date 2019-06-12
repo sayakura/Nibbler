@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/10 19:17:15 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/10 20:28:29 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/11 19:19:02 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,13 @@ void OpenGLInput::gameInput(Direction & curDirection)
 {
     glfwPollEvents();
 
+    //handles "X"ing out the window
+    if (glfwWindowShouldClose(glfwGetCurrentContext()))
+    {
+        curDirection = Exit;
+        return;
+    }
+
     if (Callback::_keys[GLFW_KEY_UP] && curDirection != Down)
         curDirection = Up;
     else if (Callback::_keys[GLFW_KEY_RIGHT] && curDirection != Left)
@@ -40,6 +47,13 @@ void OpenGLInput::gameInput(Direction & curDirection)
 void OpenGLInput::menuInput(Direction & curDirection, std::string & pauseStr)
 {
     glfwWaitEvents();
+
+    //handles "X"ing out the window
+    if (glfwWindowShouldClose(glfwGetCurrentContext()))
+    {
+        curDirection = Exit;
+        return;
+    }
 
     if (Callback::_keys[GLFW_KEY_LEFT])
     {

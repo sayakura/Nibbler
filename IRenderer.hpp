@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/06 13:05:07 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/10 20:22:20 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/11 20:02:00 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ public:
     virtual void buildSnakeVertex(float x, float y, std::deque<float> & buffer, std::string texture) = 0;
     virtual void changeSnakeTexture(bool tail, unsigned int size, std::deque<float> & buffer, std::string texture) = 0;
     virtual	void popSnakeTail(std::deque<float> & buffer) = 0;
+    virtual bool obstaclesHaveBeenBuilt() = 0;
+    virtual void buildObstacles(std::vector<float> x, std::vector<float> y) = 0;
 };
 
 #endif

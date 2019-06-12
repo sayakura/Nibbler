@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/10 14:43:55 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/11 16:23:54 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/11 20:07:01 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ private:
     static ObjectDrawingInfo * _appleObj;
     static ObjectDrawingInfo * _border;
     static ObjectDrawingInfo * _background;
+    static ObjectDrawingInfo * _obstacles;
 
     static std::unordered_map<std::string, ObjectDrawingInfo *> _objectMap;
 
@@ -53,6 +54,7 @@ public:
     
     static void background(const float & r, const float & g, const float & b, const float & a);
     static void border(const float & r, const float & g, const float & b, const float & a);
+    static void obstacles(const float & r, const float & g, const float & b, const float & a);
     static void score(const std::string & scoreNumber, unsigned int & borderOffset);
     static void apple(const float & x, const float & y, const float & r, const float & g, const float & b, const float & a);
     static void snake(const float & r, const float & g, const float & b, const float & a);

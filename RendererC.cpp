@@ -17,7 +17,7 @@
 #include "Cube.hpp"
 
 RendererC::RendererC() :
-    _borderOffset(Gameboard::squareSize * 2), _score(0), _snakeSize(0), _pause(false)
+    _borderOffset(Gameboard::squareSize * 2), _score(0), _snakeSize(0), _pause(false), _obstaclesBuilt(false)
 {
 }
 
@@ -126,6 +126,7 @@ void RendererC::draw()
 
 	OpenGLDraw::background(0.0f, 0.0f, 1.0f, 1.0 * alpha);
 	OpenGLDraw::border(1.0f, 0.0f, 1.0f, 0.4f * alpha);
+	OpenGLDraw::obstacles(1.0, 0.0f, 1.0f, 0.4f * alpha);
 	OpenGLDraw::score(_ss.str(), _borderOffset);
 	OpenGLDraw::apple(_appleX, _appleY, 1.0f, 0.0f, 0.0f, 1.0f * alpha); // x and y value are unused in this version
 	OpenGLDraw::snake(0.0f, 1.0f, 0.0f, 1.0f * alpha);
@@ -197,4 +198,23 @@ void RendererC::popSnakeTail(std::deque<float> & buffer)
 		for (unsigned int j = 0; j < Cube::_cols; j++)
 			buffer.pop_front();
 	}
+}
+
+bool RendererC::obstaclesHaveBeenBuilt()
+{
+	return (_obstaclesBuilt);
+}
+
+void RendererC::buildObstacles(std::vector<float> x, std::vector<float> y)
+{
+
+    std::vector<float> obstacleCoords;
+
+    for (unsigned int i = 0; i < x.size(); i++)
+    {
+        std::vector<float> obstaclePos = Cube::getCubeAtPos(x[i], y[i], Gameboard::squareSize, Gameboard::windowWidth, Gameboard::windowHeight);
+        Cube::buildVertex(obstacleCoords, obstaclePos, OpenGLDraw::getBufferFormat(2));
+    }
+    OpenGLDraw::updateObjectDrawingInfo("obstacles", obstacleCoords);
+    _obstaclesBuilt = true;
 }

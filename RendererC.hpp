@@ -32,6 +32,8 @@ private:
     unsigned int _snakeSize;
     std::deque<float> _snakeCoords;
 
+    bool _obstaclesBuilt;
+
 	float _appleX;
 	float _appleY;
 
@@ -43,6 +45,9 @@ public:
 
     bool initGL();
     void cleanupGL();
+
+    bool obstaclesHaveBeenBuilt();
+    void buildObstacles(std::vector<float> x, std::vector<float> y);
 
     void init();
     void draw();

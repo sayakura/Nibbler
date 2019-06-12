@@ -40,7 +40,7 @@ std::unordered_map<std::string, float(*)[12]> RendererB::initSnakeSpriteMap()
 }
 
 RendererB::RendererB() : 
-	_borderOffset(Gameboard::squareSize * 2), _score(0), _pause(false)
+	_borderOffset(Gameboard::squareSize * 2), _score(0), _pause(false), _obstaclesBuilt(false)
 {
 }
 
@@ -169,6 +169,7 @@ void RendererB::draw()
 
 	OpenGLDraw::background(1.0f, 1.0f, 1.0f, 1.0 * alpha);
 	OpenGLDraw::border(1.0f, 1.0f, 1.0f, 1.0f * alpha);
+    OpenGLDraw::obstacles(1.0f, 1.0f, 1.0f, 1.0f * alpha);
 	OpenGLDraw::score(_ss.str(), _borderOffset);
 	OpenGLDraw::apple(_appleX, _appleY, 1.0f, 1.0f, 1.0f, 1.0f * alpha); // x and y value are unused in this version
 	OpenGLDraw::snake(1.0f, 1.0f, 1.0f, 1.0f * alpha);
@@ -242,4 +243,29 @@ void RendererB::popSnakeTail(std::deque<float> & buffer)
 		for (unsigned int j = 0; j < Quad::_cols; j++)
 			buffer.pop_front();
 	}	
+}
+
+bool RendererB::obstaclesHaveBeenBuilt()
+{
+    return (_obstaclesBuilt);
+}
+
+void RendererB::buildObstacles(std::vector<float> x, std::vector<float> y)
+{
+    float  texCoords[12] = {0.0f, 1.0f, 
+                            1.0f, 0.0f, 
+                            0.0f, 0.0f,
+                            0.0f, 1.0f,
+                            1.0f, 1.0f,
+                            1.0f, 0.0f};
+
+    std::vector<float> obstacleCoords;
+
+    for (unsigned int i = 0; i < x.size(); i++)
+    {
+        std::vector<float> obstaclePos = Quad::getPosCoords(x[i], y[i], Gameboard::squareSize);
+        Quad::buildVertexWithTex(obstacleCoords, obstaclePos, OpenGLDraw::getBufferFormat(1), texCoords);
+    }
+    OpenGLDraw::updateObjectDrawingInfo("obstacles", obstacleCoords);
+    _obstaclesBuilt = true;
 }

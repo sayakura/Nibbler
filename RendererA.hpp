@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/11 17:11:13 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/11 18:26:58 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/11 20:02:39 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ class RendererA : public IRenderer {
 	bool _pause;
 	std::string _pauseStr;
 
+	bool _obstaclesBuilt;
+
 	float _appleX;
 	float _appleY;
 
@@ -42,6 +44,9 @@ public:
     void buildBorder();
 	void buildBackground();
     void buildApple();
+
+	bool obstaclesHaveBeenBuilt();
+	void buildObstacles(std::vector<float> x, std::vector<float> y);
 	
 	void refreshSnakeBuffer(std::vector<float> snakeBuffer);
 	void updateScore();

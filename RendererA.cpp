@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/11 17:14:18 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/11 18:21:34 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/11 20:16:33 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include <iomanip>
 
 RendererA::RendererA() : 
-	_borderOffset(Gameboard::squareSize * 2), _score(0), _pause(false)
+	_borderOffset(Gameboard::squareSize * 2), _score(0), _pause(false), _obstaclesBuilt(false)
 {
 }
 
@@ -148,6 +148,7 @@ void RendererA::draw()
 
 	OpenGLDraw::background(1.0f, 1.0f, 1.0f, 1.0 * alpha);
 	OpenGLDraw::border(0.0f, 0.0f, 1.0f, 1.0f * alpha);
+    OpenGLDraw::obstacles(1.0f, 0.0f, 1.0f, 1.0f * alpha);
 	OpenGLDraw::score(_ss.str(), _borderOffset);
 	OpenGLDraw::apple(_appleX, _appleY, 1.0f, 0.0f, 0.0f, 1.0f * alpha); // x and y value are unused in this version
 	OpenGLDraw::snake(1.0f, 1.0f, 1.0f, 1.0f * alpha);
@@ -216,4 +217,22 @@ void RendererA::popSnakeTail(std::deque<float> & buffer)
 		for (unsigned int j = 0; j < Quad::_offset; j++)
 			buffer.pop_front();
     }
+}
+
+bool RendererA::obstaclesHaveBeenBuilt()
+{
+    return (_obstaclesBuilt);
+}
+
+void RendererA::buildObstacles(std::vector<float> x, std::vector<float> y)
+{
+    std::vector<float> obstacleCoords;
+
+    for (unsigned int i = 0; i < x.size(); i++)
+    {
+        std::vector<float> obstaclePos = Quad::getPosCoords(x[i], y[i], Gameboard::squareSize);
+        Quad::buildVertex(obstacleCoords, obstaclePos, OpenGLDraw::getBufferFormat(0));
+    }
+    OpenGLDraw::updateObjectDrawingInfo("obstacles", obstacleCoords);
+    _obstaclesBuilt = true;
 }

@@ -31,6 +31,8 @@ private:
 	bool _pause;
 	std::string _pauseStr;
 
+	bool _obstaclesBuilt;
+
 	float _appleX;
 	float _appleY;
 
@@ -44,6 +46,9 @@ public:
 	~RendererB();
 	
 	void refreshSnakeBuffer(std::vector<float> snakeBuffer);
+
+	bool obstaclesHaveBeenBuilt();
+	void buildObstacles(std::vector<float> x, std::vector<float> y);
 
 	void buildBorder();
 	void buildBackground();

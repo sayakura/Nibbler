@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/29 19:19:43 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/10 20:58:38 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/11 20:18:45 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 #include "Quad.hpp"
 #include <iostream>
 #include <iomanip>
+
+#define NUM_OF_OBSTACLES 4
 
 SoundEngine *g_soundEngine;
 
@@ -40,15 +42,30 @@ void Game::init()
 {
     _snake = new Snake(_renderer, _width, _height, _squareSize);
 	_snake->setBoundsCollision(_borderOffset);
-    _apple = new AppleMaker(_width, _height, _squareSize);
+    _apple = new RandomlyPlacedObject(_width, _height, _squareSize);
 
 	while (_snake->checkCollisionPoint(_apple->getX(), _apple->getY()))
 		_apple->generateRandomPos();
+
+    setupObstacles();    
 
     _renderer->updateApple(_apple->getX(), _apple->getY());
 
     //inits the buffer
 	_renderer->refreshSnakeBuffer(_snake->getBufferAsVector());
+}
+
+void Game::setupObstacles()
+{
+    //should change from macro to a variable that's found through the window size.
+    for (unsigned int i = 0; i < NUM_OF_OBSTACLES; i++)
+    {
+        _obstacles.push_back(new RandomlyPlacedObject(_width, _height, _squareSize));
+        while (_snake->checkCollisionPoint(_obstacles[i]->getX(), _obstacles[i]->getY())
+            || (_obstacles[i]->getX() == _apple->getX() && _obstacles[i]->getY() == _apple->getY()))
+            _obstacles[i]->generateRandomPos();
+        _snake->setCollisionPoint(_obstacles[i]->getX(), _obstacles[i]->getY());
+    }
 }
 
 
@@ -58,6 +75,10 @@ void Game::update(float dt)
     float animationUpdateTime = 1.0f / animationSpeed;
     static float timeSinceLastFrameSwap = 0.0f;
     timeSinceLastFrameSwap += dt;
+
+    if (_renderer->obstaclesHaveBeenBuilt() == false)
+        buildObstacles();
+
 
     if (timeSinceLastFrameSwap > animationUpdateTime && _state == Active)
     {
@@ -110,6 +131,19 @@ void Game::render()
 {
     if (_renderer != nullptr)
         _renderer->draw();
+}
+
+void Game::buildObstacles()
+{
+    std::vector<float> obstacleXPositions;
+    std::vector<float> obstacleYPositions;
+
+    for (int i = 0; i < NUM_OF_OBSTACLES; i++)
+    {
+        obstacleXPositions.push_back(_obstacles[i]->getX());
+        obstacleYPositions.push_back(_obstacles[i]->getY());
+    }
+    _renderer->buildObstacles(obstacleXPositions, obstacleYPositions);
 }
 
 unsigned int Game::getWidth() const { return (_width); }

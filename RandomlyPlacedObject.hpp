@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   AppleMaker.hpp                                     :+:      :+:    :+:   */
+/*   RandomlyPlacedObject.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,12 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef APPLEMAKER_HPP
-#define APPLEMAKER_HPP
+#ifndef RANDOMLYPLACEDOBJECT_HPP
+#define RANDOMLYPLACEDOBJECT_HPP
 
 #include <random>
 
-class AppleMaker {
+class RandomlyPlacedObject {
 
 private:
     const unsigned int &_width;
@@ -31,8 +31,8 @@ private:
     std::uniform_int_distribution<int> colRange;
 
 public:
-    AppleMaker(unsigned int & width, unsigned int & height, unsigned int squareSize);
-    ~AppleMaker();
+    RandomlyPlacedObject(unsigned int & width, unsigned int & height, unsigned int squareSize);
+    ~RandomlyPlacedObject();
 
     void generateRandomPos();
     float getX();

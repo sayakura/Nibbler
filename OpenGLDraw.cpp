@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/10 15:23:40 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/11 18:13:33 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/11 20:20:04 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ ObjectDrawingInfo * OpenGLDraw::_snakeObj = nullptr;
 ObjectDrawingInfo * OpenGLDraw::_appleObj = nullptr;
 ObjectDrawingInfo * OpenGLDraw::_border = nullptr;
 ObjectDrawingInfo * OpenGLDraw::_background = nullptr;
+ObjectDrawingInfo * OpenGLDraw::_obstacles = nullptr;
 
 std::unordered_map<std::string, ObjectDrawingInfo *> OpenGLDraw::_objectMap;
 
@@ -35,6 +36,7 @@ std::unordered_map<std::string, ObjectDrawingInfo *> OpenGLDraw::initObjectMap()
     map["border"] = _border;
     map["appleBuild"] = _appleObj;
     map["appleUpdate"] = _appleObj;
+    map["obstacles"] = _obstacles;
     map["snake"] = _snakeObj;
     return (map);
 }
@@ -50,6 +52,7 @@ void OpenGLDraw::allocateObjectDrawingInfo()
     OpenGLDraw::_appleObj = new ObjectDrawingInfo;
     OpenGLDraw::_background = new ObjectDrawingInfo;
     OpenGLDraw::_border = new ObjectDrawingInfo;
+    OpenGLDraw::_obstacles = new ObjectDrawingInfo;
 
     _objectMap = initObjectMap();
 }
@@ -64,6 +67,8 @@ void OpenGLDraw::destroyObjects()
         delete _border;
     if (OpenGLDraw::_background != nullptr)
         delete _background;
+    if (OpenGLDraw::_obstacles != nullptr)
+        delete _obstacles;
 }
 
 
@@ -222,6 +227,56 @@ void OpenGLDraw::border(const float & r, const float & g, const float & b, const
 
         _border->va.bind();
         GLCall(glDrawArrays(GL_TRIANGLES, 0, _border->vertices.size()));     
+    }
+}
+
+void OpenGLDraw::obstacles(const float & r, const float & g, const float & b, const float & a)
+{
+    if (Gameboard::gameMode == 1)
+    {
+        glm::vec4 color = glm::vec4(r, g, b, a);
+        Shader *shader = &ResourceManager::getShader("ShaderA");
+
+     	shader->bind();
+        glm::mat4 model(1.0f);
+        shader->setUniformMat4f("u_model", model);
+        shader->setUniform4f("u_spriteColor", color.x, color.y, color.z, color.w);
+
+        _obstacles->va.bind();
+        GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_LINE));        
+        GLCall(glDrawArrays(GL_TRIANGLES, 0, _obstacles->vertices.size()));
+        GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_FILL));        
+    }
+    else if (Gameboard::gameMode == 2)
+    {
+        glm::vec4 color = glm::vec4(r, g, b, a);
+        Shader *shader = &ResourceManager::getShader("ShaderB");
+        Texture *texture = &ResourceManager::getTexture("tree");
+
+     	shader->bind();
+        glm::mat4 model(1.0f);
+        shader->setUniformMat4f("u_model", model);
+        shader->setUniform4f("u_spriteColor", color.x, color.y, color.z, color.w);
+        texture->bind(0);
+        shader->setUniform1i("u_Image", 0);
+
+        _obstacles->va.bind();
+        GLCall(glDrawArrays(GL_TRIANGLES, 0, _obstacles->vertices.size()));   
+    }
+    else if (Gameboard::gameMode == 3)
+    {
+        glm::vec4 color = glm::vec4(r, g, b, a);
+        Shader *shader = &ResourceManager::getShader("ShaderC");
+
+        shader->bind();
+        glm::mat4 model(1.0f);
+        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.2f));
+
+        shader->setUniformMat4f("u_model", model);
+        shader->setUniform4f("u_cubeColor", color.x, color.y, color.z, color.w);
+
+        _obstacles->va.bind();
+        GLCall(glDrawArrays(GL_TRIANGLES, 0, _obstacles->vertices.size()));     
     }
 }
 

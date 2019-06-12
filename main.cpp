@@ -36,8 +36,8 @@ int main(int argc, char** argv)
 
 
 	IRenderer *renderer;
-	renderer = new RendererC();
-	Gameboard::gameMode = 3; // GAMEMODE MUST BE EQUAL TO CURRENT RENDERER OR EVERYTHING BREAKS	
+	renderer = new RendererA();
+	Gameboard::gameMode = 1; // GAMEMODE MUST BE EQUAL TO CURRENT RENDERER OR EVERYTHING BREAKS	
 	if (!renderer->initGL())
 		return (1);
 	renderer->init();

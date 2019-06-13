@@ -22,7 +22,7 @@ extern "C" IRenderer *create_renderer() {
 }
 
 RendererC::RendererC() :
-    _borderOffset(Gameboard::squareSize * 2), _score(0), _snakeSize(0), _pause(false), _lost(false), _obstaclesBuilt(false)
+    _borderOffset(Gameboard::squareSize * 2), _snakeSize(0), _pause(false), _lost(false), _obstaclesBuilt(false), _score(0)
 {
 }
 
@@ -34,9 +34,8 @@ void RendererC::init()
 	buildBorder();
 	buildApple();
 
-    _score = 0;
     _ss.str("");
-	_ss << std::setfill('0') << std::setw(3) << _score;
+	_ss << std::setfill('0') << std::setw(3) << "";
 	_pauseStr = "-> Continue <-\t   Quit";
 	OpenGLInit::enable3dDepth();
     _obstaclesBuilt = false;
@@ -192,11 +191,11 @@ void RendererC::processInput(Direction & curDirection, unsigned int & renderer)
     OpenGLInput::rendererSelection(renderer);
 }
 
-void RendererC::updateScore()
+void RendererC::updateScore(unsigned int & score)
 {
     _ss.str("");
-    _score++;
-    _ss << std::setfill('0') << std::setw(3) << _score;	    
+    _ss << std::setfill('0') << std::setw(3) << score;
+    _score = score;    
 }
 
 void RendererC::buildSnakeVertex(float x, float y, std::deque<float> & buffer, std::string texture)
@@ -241,4 +240,5 @@ void RendererC::buildObstacles(std::vector<float> x, std::vector<float> y)
 
 void RendererC::setLost(bool val) {
         _lost = val;
-        _pauseStr = "-> Restart <-\t   Quit"; }
+        if (val == true)
+            _pauseStr = "-> Restart <-\t   Quit"; }

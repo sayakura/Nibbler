@@ -28,7 +28,7 @@ private:
     std::string _pauseStr;
 
 	unsigned int _borderOffset;
-	unsigned int _score;
+    unsigned int _score;
 
     unsigned int _snakeSize;
     std::deque<float> _snakeCoords;
@@ -55,7 +55,7 @@ public:
     void updateApple(const float & x, const float & y);
     void refreshSnakeBuffer(std::vector<float> snakeVertices);
     void processInput(Direction & curDirection, unsigned int & renderer);
-    void updateScore();
+    void updateScore(unsigned int & score);
     void buildSnakeVertex(float x, float y, std::deque<float> & buffer, std::string texture);
     void changeSnakeTexture(bool tail, unsigned int size, std::deque<float> & buffer, std::string texture);
     void popSnakeTail(std::deque<float> & buffer);

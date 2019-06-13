@@ -48,7 +48,7 @@ std::unordered_map<std::string, float(*)[12]> RendererB::initSnakeSpriteMap()
 }
 
 RendererB::RendererB() : 
-	_borderOffset(Gameboard::squareSize * 2), _score(0), _pause(false), _lost(false), _obstaclesBuilt(false)
+	_borderOffset(Gameboard::squareSize * 2), _pause(false), _lost(false), _obstaclesBuilt(false), _score(0)
 {
 }
 
@@ -62,9 +62,8 @@ void RendererB::init()
 	buildBorder();
 	buildApple();
 
-    _score = 0;
     _ss.str("");
-	_ss << std::setfill('0') << std::setw(3) << _score;
+	_ss << std::setfill('0') << std::setw(3) << "";
 	_pauseStr = "-> Continue <-\t   Quit";
     OpenGLInit::disable3dDepth();
 }
@@ -163,11 +162,11 @@ void RendererB::buildBorder()
 	OpenGLDraw::updateObjectDrawingInfo("border", borderVertices);
 }
 
-void RendererB::updateScore()
+void RendererB::updateScore(unsigned int & score)
 {
     _ss.str("");
-    _score++;
-    _ss << std::setfill('0') << std::setw(3) << _score;	
+    _ss << std::setfill('0') << std::setw(3) << score;
+    _score = score;
 }
 
 void RendererB::draw()
@@ -300,4 +299,5 @@ void RendererB::buildObstacles(std::vector<float> x, std::vector<float> y)
 
 void RendererB::setLost(bool val) {
         _lost = val;
-        _pauseStr = "-> Restart <-\t   Quit"; }
+        if (val == true)
+            _pauseStr = "-> Restart <-\t   Quit"; }

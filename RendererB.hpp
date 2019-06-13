@@ -54,7 +54,7 @@ public:
 	void buildBorder();
 	void buildBackground();
 
-	void updateScore();
+	void updateScore(unsigned int & score);
 
 	void draw();
 	void init();

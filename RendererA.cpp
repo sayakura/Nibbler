@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/11 17:14:18 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/13 14:24:47 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 14:50:00 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ extern "C" IRenderer *create_renderer() {
 }
 
 RendererA::RendererA() : 
-	_borderOffset(Gameboard::squareSize * 2), _score(0), _pause(false), _obstaclesBuilt(false) 
+	_borderOffset(Gameboard::squareSize * 2), _pause(false), _obstaclesBuilt(false), _score(0)
 {
 }
 
@@ -41,9 +41,8 @@ void RendererA::init()
 	buildBorder();
 	buildApple();
 
-    _score = 0;
     _ss.str("");
-	_ss << std::setfill('0') << std::setw(3) << _score;
+	_ss << std::setfill('0') << std::setw(3) << "";
 	_pauseStr = "-> Continue <-\t   Quit";
     OpenGLInit::disable3dDepth();
 }
@@ -142,11 +141,11 @@ void RendererA::buildBorder()
 	OpenGLDraw::updateObjectDrawingInfo("border", borderVertices);
 }
 
-void RendererA::updateScore()
+void RendererA::updateScore(unsigned int & score)
 {
     _ss.str("");
-    _score++;
-    _ss << std::setfill('0') << std::setw(3) << _score;	
+    _ss << std::setfill('0') << std::setw(3) << score;
+    _score = score;
 }
 
 void RendererA::draw()
@@ -263,4 +262,5 @@ void RendererA::buildObstacles(std::vector<float> x, std::vector<float> y)
 
 void RendererA::setLost(bool val) {
         _lost = val;
-        _pauseStr = "-> Restart <-\t   Quit"; }
+        if (val == true)
+            _pauseStr = "-> Restart <-\t   Quit"; }

@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/29 19:19:43 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/13 14:35:48 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 14:53:02 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ void Game::update(float dt)
                     _renderer->setLost(true);
                 }
                 _snake->grow();
-                _renderer->updateScore();
+                _renderer->updateScore(_score);
             }
         }
                     
@@ -211,5 +211,6 @@ void Game::switchRenderer(IRenderer *renderer)
     _renderer->setLost(false);
     _renderer->updateApple(_apple->getX(), _apple->getY());
 	_renderer->refreshSnakeBuffer(_snake->getBufferAsVector());
+    _renderer->updateScore(_score);
     _curDirection = _prevDirection;
 }

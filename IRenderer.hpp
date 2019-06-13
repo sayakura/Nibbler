@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IRenderer.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Kura <Kura@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/06 13:05:07 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/12 02:43:13 by Kura             ###   ########.fr       */
+/*   Updated: 2019/06/13 14:43:15 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ public:
     virtual void updateApple(const float & x, const float & y) = 0;
     virtual void refreshSnakeBuffer(std::vector<float> buffer) = 0;
     virtual void processInput(Direction & curDirection, unsigned int & renderer) = 0;
-    virtual void updateScore() = 0;
+    virtual void updateScore(unsigned int & score) = 0;
     virtual void buildSnakeVertex(float x, float y, std::deque<float> & buffer, std::string texture) = 0;
     virtual void changeSnakeTexture(bool tail, unsigned int size, std::deque<float> & buffer, std::string texture) = 0;
     virtual	void popSnakeTail(std::deque<float> & buffer) = 0;

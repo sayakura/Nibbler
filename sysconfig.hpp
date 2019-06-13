@@ -15,7 +15,7 @@
 #define WINDOW_MIN_HEIGHT 10 // change it later
 #define WINDOW_MAX_WIDTH 200 // change it later
 #define WINDOW_MIN_WIDTH 10 // change it later'
-#define WIN_POINT 3
+#define WIN_POINT 10
 
 extern int          g_gameMode;
 extern int          g_windowHeight;

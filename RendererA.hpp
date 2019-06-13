@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RendererA.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Kura <Kura@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/11 17:11:13 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/12 01:22:24 by Kura             ###   ########.fr       */
+/*   Updated: 2019/06/13 14:49:29 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ public:
 	void buildObstacles(std::vector<float> x, std::vector<float> y);
 	
 	void refreshSnakeBuffer(std::vector<float> snakeBuffer);
-	void updateScore();
+	void updateScore(unsigned int & score);
 	void updateApple(const float & x, const float & y);
 
     void popSnakeTail(std::deque<float> & buffer);

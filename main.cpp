@@ -41,8 +41,9 @@ int main(int argc, char** argv)
 {
 	g_soundEngine = new SoundEngine();
 	//squaresize * 2 for border
-	unsigned int WINWIDTH = (SQUARESIZE * COLS) + SQUARESIZE * 2;
-	unsigned int WINHEIGHT = (SQUARESIZE * ROWS) + SQUARESIZE * 2;
+	unsigned int borderOffset = SQUARESIZE * 2;
+	unsigned int WINWIDTH = (SQUARESIZE * COLS) + borderOffset * 4;
+	unsigned int WINHEIGHT = (SQUARESIZE * ROWS) + borderOffset * 4;
 	unsigned int current_game_mode; 
 	void* handle = nullptr;
 

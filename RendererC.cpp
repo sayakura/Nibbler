@@ -86,27 +86,27 @@ void RendererC::buildBorder()
 	unsigned int borderSquare = Gameboard::squareSize;
     unsigned int totalRows = (Gameboard::windowHeight - _borderOffset * 2) / borderSquare;
     unsigned int totalCols = (Gameboard::windowWidth - _borderOffset * 2) / borderSquare;
-    unsigned int posX = _borderOffset;
+    unsigned int posX = _borderOffset + Gameboard::squareSize;
     unsigned int botY = (totalRows) * borderSquare + borderSquare;
 
     std::vector<float> cubeCoords;
 	std::vector<float> borderVertices;
     
-    for (unsigned int i = 0; i < totalCols; i++)
+    for (unsigned int i = 0; i < totalCols - 2; i++)
     {
-        cubeCoords = Cube::getCubeAtPos(posX, _borderOffset, borderSquare, Gameboard::windowWidth, Gameboard::windowHeight);
+        cubeCoords = Cube::getCubeAtPos(posX, _borderOffset + Gameboard::squareSize, borderSquare, Gameboard::windowWidth, Gameboard::windowHeight);
         Cube::buildVertex(borderVertices, cubeCoords, OpenGLDraw::getBufferFormat(2));
         cubeCoords = Cube::getCubeAtPos(posX, botY, borderSquare, Gameboard::windowWidth, Gameboard::windowHeight);
         Cube::buildVertex(borderVertices, cubeCoords, OpenGLDraw::getBufferFormat(2));
         posX += borderSquare;
     }
 
-    unsigned int rightX = (totalCols) * borderSquare + borderSquare;
+    unsigned int rightX = (totalCols) * borderSquare;
     unsigned int posY = _borderOffset + borderSquare;
 
-    for (unsigned int i = 1; i < totalRows; i++)
+    for (unsigned int i = 1; i < totalRows - 1; i++)
     {
-        cubeCoords = Cube::getCubeAtPos(_borderOffset, posY, borderSquare, Gameboard::windowWidth, Gameboard::windowHeight);
+        cubeCoords = Cube::getCubeAtPos(_borderOffset + Gameboard::squareSize, posY, borderSquare, Gameboard::windowWidth, Gameboard::windowHeight);
         Cube::buildVertex(borderVertices, cubeCoords, OpenGLDraw::getBufferFormat(2));
         cubeCoords = Cube::getCubeAtPos(rightX, posY, borderSquare, Gameboard::windowWidth, Gameboard::windowHeight);
         Cube::buildVertex(borderVertices, cubeCoords, OpenGLDraw::getBufferFormat(2));

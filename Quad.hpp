@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/30 15:00:52 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/11 17:39:32 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 15:21:05 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ enum ShapeTypes {
 class Quad {
 
 public:
-    static int _rows;
-    static int _offset;
-    static int _cols;
+    static unsigned int _rows;
+    static unsigned int _offset;
+    static unsigned int _cols;
 
     static std::vector<float> getPosCoords(float x, float y, unsigned int size);
     static void buildVertexWithTex(std::vector<float> & buffer, std::vector<float> & positions, std::vector<unsigned int> & offsets, float (&texCoords)[12]);

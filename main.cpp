@@ -21,7 +21,7 @@ unsigned int COLS = 32;
 void changeRenderer(Game & game, void *handle1, unsigned int & current_game_mode, IRenderer *renderer)
 {
 	//closing handle causes seg fault?
-	void *handle;
+	void *handle = nullptr;
 	current_game_mode = Gameboard::gameMode = game.getRendererChoice(); // GAMEMODE MUST BE EQUAL TO CURRENT RENDERER OR EVERYTHING BREAKS
 	if (Gameboard::gameMode == 1)
 		handle = dlopen(PATHLIBA, RTLD_LAZY);
@@ -44,7 +44,7 @@ int main(int argc, char** argv)
 	unsigned int WINWIDTH = (SQUARESIZE * COLS) + SQUARESIZE * 2;
 	unsigned int WINHEIGHT = (SQUARESIZE * ROWS) + SQUARESIZE * 2;
 	unsigned int current_game_mode; 
-	void* handle;
+	void* handle = nullptr;
 
 	std::cout << WINWIDTH << " " << WINHEIGHT << std::endl;
 
@@ -85,7 +85,7 @@ int main(int argc, char** argv)
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
-		game.processInput(deltaTime.count());
+		game.processInput();
 
 		game.update(deltaTime.count());
 

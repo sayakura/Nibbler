@@ -30,7 +30,6 @@ private:
 	unsigned int _borderOffset;
     unsigned int _score;
 
-    unsigned int _snakeSize;
     std::deque<float> _snakeCoords;
 
     bool _obstaclesBuilt;

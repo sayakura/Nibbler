@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/10 15:23:40 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/11 20:20:04 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 15:32:45 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -341,8 +341,6 @@ void OpenGLDraw::apple(const float & x, const float & y, const float & r, const 
     }
     else if (Gameboard::gameMode == 3)
     {
-        float xScale = 2.0f / (Gameboard::windowWidth / Gameboard::squareSize);
-        float yScale = 2.0f / (Gameboard::windowHeight / Gameboard::squareSize);
         glm::vec4 color = glm::vec4(r, g, b, a);
         Shader *shader = &ResourceManager::getShader("ShaderC");
 

@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/11 17:14:18 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/13 14:50:00 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 15:38:27 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ extern "C" IRenderer *create_renderer() {
 }
 
 RendererA::RendererA() : 
-	_borderOffset(Gameboard::squareSize * 2), _pause(false), _obstaclesBuilt(false), _score(0)
+	_borderOffset(Gameboard::squareSize * 2), _score(0), _pause(false), _obstaclesBuilt(false)
 {
 }
 
@@ -68,13 +68,6 @@ void RendererA::refreshSnakeBuffer(std::vector<float> snakeVertices)
 
 void RendererA::buildBackground()
 {
-     float  texCoords[12] = {0.0f, 1.0f, 
-                            1.0f, 0.0f, 
-                            0.0f, 0.0f,
-                            0.0f, 1.0f,
-                            1.0f, 1.0f,
-                            1.0f, 0.0f};
-
 	//could try tiling by the texture size instead of the squaresize. doesn't make much of a difference now. but might on a bigger window
     unsigned int totalRows = Gameboard::windowHeight / Gameboard::squareSize;
     unsigned int totalCols = Gameboard::windowWidth / Gameboard::squareSize;
@@ -101,13 +94,6 @@ void RendererA::buildBackground()
 
 void RendererA::buildBorder()
 {
-    float  texCoords[12] = {0.0f, 1.0f, 
-                            1.0f, 0.0f, 
-                            0.0f, 0.0f,
-                            0.0f, 1.0f,
-                            1.0f, 1.0f,
-                            1.0f, 0.0f};
-
 	unsigned int borderSquare = Gameboard::squareSize * 2;
     unsigned int totalRows = (Gameboard::windowHeight - _borderOffset * 2) / borderSquare;
     unsigned int totalCols = (Gameboard::windowWidth - _borderOffset * 2) / borderSquare;
@@ -223,6 +209,7 @@ void RendererA::processInput(Direction & curDirection, unsigned int & renderer)
 
 void RendererA::buildSnakeVertex(float x, float y, std::deque<float> & buffer, std::string texture)
 {
+    static_cast<void>(texture);
     std::vector<float> startingPositions;
 	startingPositions = Quad::getPosCoords(x, y, Gameboard::squareSize);
     Quad::buildVertex(buffer, startingPositions, OpenGLDraw::getBufferFormat(0));	
@@ -230,6 +217,10 @@ void RendererA::buildSnakeVertex(float x, float y, std::deque<float> & buffer, s
 
 void RendererA::changeSnakeTexture(bool tail, unsigned int size, std::deque<float> & buffer, std::string texture)
 {
+    static_cast<void>(tail);
+    static_cast<void>(size);
+    static_cast<void>(buffer);
+    static_cast<void>(texture);
     return;
 }
 

@@ -22,7 +22,7 @@ extern "C" IRenderer *create_renderer() {
 }
 
 RendererC::RendererC() :
-    _borderOffset(Gameboard::squareSize * 2), _snakeSize(0), _pause(false), _lost(false), _obstaclesBuilt(false), _score(0)
+   _pause(false), _lost(false), _borderOffset(Gameboard::squareSize * 2), _score(0), _obstaclesBuilt(false)
 {
 }
 
@@ -200,6 +200,7 @@ void RendererC::updateScore(unsigned int & score)
 
 void RendererC::buildSnakeVertex(float x, float y, std::deque<float> & buffer, std::string texture)
 {
+    static_cast<void>(texture);
     std::vector<float> startingPositions;
 	startingPositions = Cube::getCubeAtPos(x, y, Gameboard::squareSize, Gameboard::windowWidth, Gameboard::windowHeight);
     Cube::buildVertex(buffer, startingPositions, OpenGLDraw::getBufferFormat(2));
@@ -207,6 +208,10 @@ void RendererC::buildSnakeVertex(float x, float y, std::deque<float> & buffer, s
 
 void RendererC::changeSnakeTexture(bool tail, unsigned int size, std::deque<float> & buffer, std::string texture)
 {
+    static_cast<void>(tail);
+    static_cast<void>(size);
+    static_cast<void>(buffer);
+    static_cast<void>(texture);
 	return;
 }
 

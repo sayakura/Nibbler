@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/31 20:17:20 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/13 14:14:59 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 15:19:39 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 //cols is offset * 2
 
 Snake::Snake(IRenderer * renderer, unsigned int & width, unsigned int & height, unsigned int squareSize) : 
-    _renderer(renderer), _width(width), _height(height), _squareSize(squareSize), _direction(Right), _grow(false)
+    _renderer(renderer), _width(width), _height(height), _squareSize(squareSize), _grow(false), _direction(Right)
 {
     unsigned int winSize = width * height;
     for (unsigned int i = 0; i < winSize; i++)

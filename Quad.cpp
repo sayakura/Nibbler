@@ -1,8 +1,8 @@
 #include "Quad.hpp"
 
-int Quad::_offset = 2;
-int Quad::_rows = 6;
-int Quad::_cols = 4;
+unsigned int Quad::_offset = 2;
+unsigned int Quad::_rows = 6;
+unsigned int Quad::_cols = 4;
 
 Quad::Quad()
 {
@@ -74,7 +74,6 @@ void Quad::buildVertexWithTex(std::deque<float> & buffer, std::vector<float> & p
 void Quad::buildVertex(std::vector<float> & buffer, std::vector<float> & positions, std::vector<unsigned int> & offsets)
 {
     int posCount = 0;
-    int texCount = 0;
     for (unsigned int i = 0; i < _rows; i++)
     {
         for (unsigned int j = 0; j < offsets[0]; j++)
@@ -88,7 +87,6 @@ void Quad::buildVertex(std::vector<float> & buffer, std::vector<float> & positio
 void Quad::buildVertex(std::deque<float> & buffer, std::vector<float> & positions, std::vector<unsigned int> & offsets)
 {
     int posCount = 0;
-    int texCount = 0;
     for (unsigned int i = 0; i < _rows; i++)
     {
         for (unsigned int j = 0; j < offsets[0]; j++)

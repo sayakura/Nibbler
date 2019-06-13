@@ -14,7 +14,7 @@
 #include <iostream>
 
 RandomlyPlacedObject::RandomlyPlacedObject(unsigned int & width, unsigned int & height, unsigned int squareSize) :
-_width(width), _height(height), _squareSize(squareSize), _rows(height / squareSize), _cols(width / squareSize),
+_squareSize(squareSize), _rows(height / squareSize), _cols(width / squareSize),
 rd(), mt(std::mt19937(rd())), rowRange(4, _rows - 5), colRange(4, _cols - 5)
 {
 	generateRandomPos();

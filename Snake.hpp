@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/01 22:37:40 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/13 14:14:39 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 15:19:00 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,6 @@ private:
     IRenderer *_renderer;
     unsigned int &_width;
     unsigned int &_height;
-    unsigned int _rows;
-    unsigned int _cols;
-    unsigned int _offset;
     unsigned int _squareSize;
     bool _grow;
 

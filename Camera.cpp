@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/29 17:09:01 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/07 19:29:58 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 15:28:29 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,6 @@ Camera::Camera(glm::vec3 position, glm::vec3 up) :
     _worldUp = up;
     _up = up;
     _target = glm::vec3(0.0f, 0.0f, 0.0f);
-    //updateCameraVectors();
-}
-
-Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch) :
-    _front(glm::vec3(0.0f, 0.0f, -1.0f))
-{
-
-    _position = glm::vec3(posX, posY, posZ);
-    _worldUp = glm::vec3(upX, upY, upZ);
     //updateCameraVectors();
 }
 

@@ -18,8 +18,6 @@
 class RandomlyPlacedObject {
 
 private:
-    const unsigned int &_width;
-    const unsigned int &_height;
     const unsigned int _squareSize;
     const unsigned int _rows;
     const unsigned int _cols;

@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/29 19:19:43 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/13 14:53:02 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 15:25:07 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,10 @@
 SoundEngine *g_soundEngine;
 
 Game::Game(IRenderer *renderer, unsigned int & width, unsigned int & height, unsigned int & squareSize) :
-    _state(Active), _width(width), _height(height), _renderer(renderer),
-    _snake(nullptr), _apple(nullptr), _curDirection(Right), _squareSize(squareSize), _score(0), _rendererChoice(Gameboard::gameMode)
+    _state(Active), _renderer(renderer), _snake(nullptr), _apple(nullptr), _width(width), _height(height), _squareSize(squareSize), 
+    _score(0), _borderOffset(squareSize * 2), _rendererChoice(Gameboard::gameMode), _curDirection(Right)
 {
-    _borderOffset = _squareSize * 2;
+    //_borderOffset = _squareSize * 2;
 }
 
 Game::~Game()
@@ -138,13 +138,8 @@ void Game::update(float dt)
     }
 }
 
-void Game::processInput(float dt)
+void Game::processInput()
 {
-    //float inputUpdateTime = 1.0f / 5.0f;
-    //static float timeSinceLastFrameSwap = 0.0f;
-    //timeSinceLastFrameSwap += dt;
-
-    //if (timeSinceLastFrameSwap > inputUpdateTime)
     if (_state == Active)
         _prevDirection = _curDirection;
     _renderer->processInput(_curDirection, _rendererChoice);

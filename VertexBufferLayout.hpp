@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   VertexBufferLayout.hpp                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Kura <Kura@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/26 15:11:32 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/09 07:48:59 by Kura             ###   ########.fr       */
+/*   Updated: 2019/06/13 15:18:23 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,12 @@ private:
     //template specializations weren't working right, so used templated function overloads as a workaround
     //still will be called by the public push function with only one parameter
     template <typename TL>
-    void push(unsigned int count, identity<TL>) { return; } // specs should be called
+    void push(unsigned int count, identity<TL>) // specs should be called
+    {
+        //THIS VERSION SHOULD NEVER GET CALLED
+        static_cast<void>(count); 
+        return; 
+    }
 
     void push(unsigned int count, identity<float>)
     {

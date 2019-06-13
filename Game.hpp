@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Game.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Kura <Kura@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/29 19:11:21 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/12 02:38:55 by Kura             ###   ########.fr       */
+/*   Updated: 2019/06/13 15:22:31 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ public:
 
     void init();
     void restart();
-    void processInput(float dt);
+    void processInput();
     void update(float dt);
     void render();
     void switchRenderer(IRenderer *);

@@ -48,7 +48,7 @@ std::unordered_map<std::string, float(*)[12]> RendererB::initSnakeSpriteMap()
 }
 
 RendererB::RendererB() : 
-	_borderOffset(Gameboard::squareSize * 2), _pause(false), _lost(false), _obstaclesBuilt(false), _score(0)
+	_borderOffset(Gameboard::squareSize * 2), _score(0), _pause(false), _lost(false), _obstaclesBuilt(false)
 {
 }
 

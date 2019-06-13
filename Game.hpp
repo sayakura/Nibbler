@@ -23,7 +23,8 @@ enum GameState {
     Win,
     Quit,
     Lost,
-    Restarting
+    Restarting,
+    SwitchingRenderers
 };
 
 class Game {
@@ -40,6 +41,7 @@ private:
     unsigned int &_squareSize;
     unsigned int _score;
     unsigned int _borderOffset;
+    unsigned int _rendererChoice;
 
     Direction _prevDirection;
     Direction _curDirection;
@@ -60,6 +62,7 @@ public:
 
     unsigned int getWidth() const;
     unsigned int getHeight() const;
+    unsigned int getRendererChoice() const;
     GameState getGameState() const;
 
     void setGameState(GameState state);

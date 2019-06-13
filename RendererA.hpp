@@ -57,7 +57,7 @@ public:
 	void buildSnakeVertex(float x, float y, std::deque<float> & buffer, std::string texture);
 	void changeSnakeTexture(bool tail, unsigned int size, std::deque<float> & buffer, std::string texture);
 
-    void processInput(Direction & curDirection);
+    void processInput(Direction & curDirection, unsigned int & renderer);
 
 	void draw();
 

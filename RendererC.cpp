@@ -163,7 +163,7 @@ void RendererC::refreshSnakeBuffer(std::vector<float> snakeVertices)
 	OpenGLDraw::updateObjectDrawingInfo("snake", snakeVertices);
 }
 
-void RendererC::processInput(Direction & curDirection)
+void RendererC::processInput(Direction & curDirection, unsigned int & renderer)
 {
     if (_lost)
     {
@@ -186,6 +186,8 @@ void RendererC::processInput(Direction & curDirection)
 		if (curDirection == Pause)
 			_pause = false;
 	}
+
+    OpenGLInput::rendererSelection(renderer);
 }
 
 void RendererC::updateScore()

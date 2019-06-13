@@ -44,6 +44,7 @@ public:
     static std::unordered_map<std::string, ObjectDrawingInfo *> initObjectMap();
     static void allocateObjectDrawingInfo();
     static void destroyObjects();
+    static void resetObjects();
 
     static void buildVertexBufferLayouts();
     static void buildTextRenderer();

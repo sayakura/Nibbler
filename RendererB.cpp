@@ -63,6 +63,7 @@ void RendererB::init()
     _ss.str("");
 	_ss << std::setfill('0') << std::setw(3) << _score;
 	_pauseStr = "-> Continue <-\t   Quit";
+    OpenGLInit::disable3dDepth();
 }
 
 bool RendererB::initGL()
@@ -206,7 +207,7 @@ void RendererB::updateApple(const float & x, const float & y)
 	this->_appleY = y;
 }
 
-void RendererB::processInput(Direction & curDirection)
+void RendererB::processInput(Direction & curDirection, unsigned int & renderer)
 {
     if (_lost)
     {
@@ -229,6 +230,8 @@ void RendererB::processInput(Direction & curDirection)
 		if (curDirection == Pause)
 			_pause = false;
 	}
+
+    OpenGLInput::rendererSelection(renderer);
 }
 
 void RendererB::buildSnakeVertex(float x, float y, std::deque<float> & buffer, std::string texture)

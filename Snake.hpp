@@ -36,6 +36,7 @@ private:
 
     std::deque<std::pair<float, float>> _bodyCoords;
     std::vector<bool> _collisionTable;
+    std::deque<std::string> _whichTexture;
     std::deque<float> _snakeBuffer;
 
 public:
@@ -60,6 +61,9 @@ public:
     void forward();
 
     void grow();
+
+    //used when render changes
+    void resetBuffer();
 
     void updateHead(const std::string & head, const std::string & neck);
     float getHeadX();

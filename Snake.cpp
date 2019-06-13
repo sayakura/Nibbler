@@ -29,18 +29,22 @@ Snake::Snake(IRenderer * renderer, unsigned int & width, unsigned int & height, 
 
     _bodyCoords.push_back(std::pair<float, float>(start[0], start[1]));
     _renderer->buildSnakeVertex(start[0], start[1], _snakeBuffer, "tailLeft");
+    _whichTexture.push_back("tailLeft");
     _collisionTable[_bodyCoords.back().second * _width + _bodyCoords.back().first] = true;
 
     _bodyCoords.push_back(std::pair<float, float>(start[2], start[3]));
     _renderer->buildSnakeVertex(start[2], start[3], _snakeBuffer, "horizontal");
+    _whichTexture.push_back("horizontal");
     _collisionTable[_bodyCoords.back().second * _width + _bodyCoords.back().first] = true;
 
     _bodyCoords.push_back(std::pair<float, float>(start[4], start[5]));
     _renderer->buildSnakeVertex(start[4], start[5], _snakeBuffer, "horizontal");
+    _whichTexture.push_back("horizontal");
     _collisionTable[_bodyCoords.back().second * _width + _bodyCoords.back().first] = true;
 
     _bodyCoords.push_back(std::pair<float, float>(start[6], start[7]));
     _renderer->buildSnakeVertex(start[6], start[7], _snakeBuffer, "headRight");
+    _whichTexture.push_back("headRight");
     _collisionTable[_bodyCoords.back().second * _width + _bodyCoords.back().first] = true;
 }
 
@@ -105,7 +109,9 @@ bool Snake::moveSnake(Direction direction)
         //this seg faults when out of bounds right now
         _collisionTable[static_cast<int>(_bodyCoords.front().second * _width + _bodyCoords.front().first)] = false;
         _bodyCoords.pop_front();
+        _whichTexture.pop_front();
         std::string tailDirection = getNewTailDirection();
+        _whichTexture.front() = tailDirection;
         _renderer->changeSnakeTexture(true, _bodyCoords.size(), _snakeBuffer, tailDirection);
     }
 
@@ -246,6 +252,8 @@ void Snake::updateHead(const std::string & head, const std::string & neck)
     //bodyidx locates first idx of vertex with neck information
     _renderer->changeSnakeTexture(false, _bodyCoords.size(), _snakeBuffer, neck);
     _renderer->buildSnakeVertex(_bodyCoords.back().first, _bodyCoords.back().second, _snakeBuffer, head);
+    _whichTexture.back() = neck;
+    _whichTexture.push_back(head);
     _collisionTable[_bodyCoords.back().second * _width + _bodyCoords.back().first] = true;
 }
 
@@ -267,4 +275,11 @@ bool Snake::checkCollisionPoint(float x, float y)
 void Snake::setCollisionPoint(float x, float y)
 {
     _collisionTable[static_cast<int>(y) * _width + static_cast<int>(x)] = true;
+}
+
+void Snake::resetBuffer()
+{
+    _snakeBuffer.clear();
+    for (unsigned int i = 0; i < _bodyCoords.size(); i++)
+        _renderer->buildSnakeVertex(_bodyCoords[i].first, _bodyCoords[i].second, _snakeBuffer, _whichTexture[i]);
 }

@@ -17,6 +17,7 @@
 #include "Quad.hpp"
 #include <iostream>
 #include <iomanip>
+#include "Gameboard.hpp"
 
 #define NUM_OF_OBSTACLES 4
 
@@ -24,7 +25,7 @@ SoundEngine *g_soundEngine;
 
 Game::Game(IRenderer *renderer, unsigned int & width, unsigned int & height, unsigned int & squareSize) :
     _state(Active), _width(width), _height(height), _renderer(renderer),
-    _snake(nullptr), _apple(nullptr), _curDirection(Right), _squareSize(squareSize), _score(0)
+    _snake(nullptr), _apple(nullptr), _curDirection(Right), _squareSize(squareSize), _score(0), _rendererChoice(Gameboard::gameMode)
 {
     _borderOffset = _squareSize * 2;
 }
@@ -70,12 +71,12 @@ void Game::restart()
     
     setupObstacles();    
     _state = Active;
+    _renderer->init();
     _renderer->setLost(false);
     _renderer->updateApple(_apple->getX(), _apple->getY());
 	_renderer->refreshSnakeBuffer(_snake->getBufferAsVector());
     _score = 0;
     _curDirection = Right;
-    _renderer->init();
 }
 
 void Game::setupObstacles()
@@ -106,6 +107,7 @@ void Game::update(float dt)
     {
         if (_snake != nullptr)
         {
+
             if (!_snake->moveSnake(_curDirection))
             {
                 setGameState(Lost);
@@ -143,7 +145,12 @@ void Game::processInput(float dt)
     //if (timeSinceLastFrameSwap > inputUpdateTime)
     if (_state == Active)
         _prevDirection = _curDirection;
-    _renderer->processInput(_curDirection);
+    _renderer->processInput(_curDirection, _rendererChoice);
+    if (_rendererChoice != 0 && _rendererChoice != Gameboard::gameMode)
+    {
+        setGameState(SwitchingRenderers);
+        return ;
+    }
     if (_curDirection == Restart && _state == Lost)
     {
         _state = Restarting;
@@ -186,6 +193,8 @@ unsigned int Game::getWidth() const { return (_width); }
 
 unsigned int Game::getHeight() const { return (_height); }
 
+unsigned int Game::getRendererChoice() const { return (_rendererChoice); }
+
 GameState Game::getGameState() const { return (_state); }
 
 void Game::setGameState(GameState state) {
@@ -195,4 +204,9 @@ void Game::setGameState(GameState state) {
 void Game::switchRenderer(IRenderer *renderer)
 {
     _renderer = renderer;
+    _snake->resetBuffer();
+    _renderer->setLost(false);
+    _renderer->updateApple(_apple->getX(), _apple->getY());
+	_renderer->refreshSnakeBuffer(_snake->getBufferAsVector());
+    _curDirection = _prevDirection;
 }

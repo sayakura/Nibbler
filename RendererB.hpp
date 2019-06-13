@@ -65,7 +65,7 @@ public:
 	void updateApple(const float & x, const float & y);
 
 
-	void processInput(Direction & curDirection);
+	void processInput(Direction & curDirection, unsigned int & renderer);
 
 	void popSnakeTail(std::deque<float> & buffer);
 	void buildSnakeVertex(float x, float y, std::deque<float> & buffer, std::string texture);

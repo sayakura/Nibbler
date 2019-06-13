@@ -18,6 +18,24 @@ unsigned int SQUARESIZE = 24;
 unsigned int ROWS = 24;
 unsigned int COLS = 32;
 
+void changeRenderer(Game & game, void *handle, unsigned int & current_game_mode, IRenderer *renderer)
+{
+	//closing handle causes seg fault?
+	//dlclose(handle);
+	current_game_mode = Gameboard::gameMode = game.getRendererChoice(); // GAMEMODE MUST BE EQUAL TO CURRENT RENDERER OR EVERYTHING BREAKS
+	if (Gameboard::gameMode == 1)
+		handle = dlopen(PATHLIBA, RTLD_LAZY);
+	else if (Gameboard::gameMode == 2)
+		handle = dlopen(PATHLIBB, RTLD_LAZY);
+	else if (Gameboard::gameMode == 3)
+		handle = dlopen(PATHLIBC, RTLD_LAZY);
+	IRenderer* (*create)() = (IRenderer* (*)())dlsym(handle, "create_renderer");
+	renderer = create();
+	renderer->init();
+	game.switchRenderer(renderer);
+	game.setGameState(Active);
+}
+
 int main(int argc, char** argv)
 {
 	g_soundEngine = new SoundEngine();
@@ -67,7 +85,14 @@ int main(int argc, char** argv)
 		lastFrame = currentFrame;
 
 		game.processInput(deltaTime.count());
+
 		game.update(deltaTime.count());
+
+		if (game.getGameState() == SwitchingRenderers)
+		{
+			changeRenderer(game, handle, current_game_mode, renderer);
+			continue ;
+		}
 
 		if(game.getGameState() == Quit)
 			quit = true;

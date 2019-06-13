@@ -28,6 +28,7 @@ public:
     static void gameInput(Direction & direction);
     static void menuInput(Direction & direction, std::string & pauseStr, bool);
     static void moveCursor(Direction direction, std::string & pauseStr, bool);
+    static void rendererSelection(unsigned int & choice);
     //static void getMode(Direction & direction);
 private:
     OpenGLInput();

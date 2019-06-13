@@ -71,6 +71,12 @@ void OpenGLDraw::destroyObjects()
         delete _obstacles;
 }
 
+void OpenGLDraw::resetObjects()
+{
+    destroyObjects();
+    allocateObjectDrawingInfo();
+}
+
 
 void OpenGLDraw::buildTextRenderer()
 {
@@ -162,6 +168,8 @@ void OpenGLDraw::background(const float & r, const float & g, const float & b, c
 
         _background->va.bind();
         GLCall(glDrawArrays(GL_TRIANGLES, 0, _background->vertices.size()));
+        texture->unbind();
+        shader->unbind();
     }
     else if (Gameboard::gameMode == 3)
     {
@@ -212,6 +220,8 @@ void OpenGLDraw::border(const float & r, const float & g, const float & b, const
 
         _border->va.bind();
         GLCall(glDrawArrays(GL_TRIANGLES, 0, _border->vertices.size()));   
+        texture->unbind();
+        shader->unbind();
     }
     else if (Gameboard::gameMode == 3)
     {
@@ -262,6 +272,8 @@ void OpenGLDraw::obstacles(const float & r, const float & g, const float & b, co
 
         _obstacles->va.bind();
         GLCall(glDrawArrays(GL_TRIANGLES, 0, _obstacles->vertices.size()));   
+        texture->unbind();
+        shader->unbind();
     }
     else if (Gameboard::gameMode == 3)
     {
@@ -324,6 +336,8 @@ void OpenGLDraw::apple(const float & x, const float & y, const float & r, const 
 
         _appleObj->va.bind();
         GLCall(glDrawArrays(GL_TRIANGLES, 0, _appleObj->vertices.size()));       
+        texture->unbind();
+        shader->unbind();
     }
     else if (Gameboard::gameMode == 3)
     {
@@ -379,7 +393,9 @@ void OpenGLDraw::snake(const float & r, const float & g, const float & b, const 
         shader->setUniform1i("u_Image", 0);
 
         _snakeObj->va.bind();
-        GLCall(glDrawArrays(GL_TRIANGLES, 0, _snakeObj->vertices.size()));  
+        GLCall(glDrawArrays(GL_TRIANGLES, 0, _snakeObj->vertices.size()));
+        texture->unbind();
+        shader->unbind();
     }
     else if (Gameboard::gameMode == 3)
     {

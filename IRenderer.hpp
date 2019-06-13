@@ -26,7 +26,7 @@ public:
     virtual void cleanupGL() = 0;
     virtual void updateApple(const float & x, const float & y) = 0;
     virtual void refreshSnakeBuffer(std::vector<float> buffer) = 0;
-    virtual void processInput(Direction & curDirection) = 0;
+    virtual void processInput(Direction & curDirection, unsigned int & renderer) = 0;
     virtual void updateScore() = 0;
     virtual void buildSnakeVertex(float x, float y, std::deque<float> & buffer, std::string texture) = 0;
     virtual void changeSnakeTexture(bool tail, unsigned int size, std::deque<float> & buffer, std::string texture) = 0;

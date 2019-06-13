@@ -88,6 +88,16 @@ void OpenGLInput::menuInput(Direction & curDirection, std::string & pauseStr, bo
         curDirection = Exit;    
 }
 
+void OpenGLInput::rendererSelection(unsigned int & choice)
+{
+    if (Callback::_keys[GLFW_KEY_1])
+        choice = 1;
+    if (Callback::_keys[GLFW_KEY_2])
+        choice = 2;
+    if (Callback::_keys[GLFW_KEY_3])
+        choice = 3;
+}
+
 void OpenGLInput::moveCursor(Direction direction, std::string & pauseStr, bool lost)
 {
     g_soundEngine->playOnce(SE_MENU);

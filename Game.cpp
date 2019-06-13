@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Game.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Kura <Kura@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/29 19:19:43 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/12 05:45:11 by Kura             ###   ########.fr       */
+/*   Updated: 2019/06/13 14:35:48 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ void Game::restart()
 	while (_snake->checkCollisionPoint(_apple->getX(), _apple->getY()))
 		_apple->generateRandomPos();
     
-    setupObstacles();    
     _state = Active;
     _renderer->init();
     _renderer->setLost(false);
@@ -77,6 +76,9 @@ void Game::restart()
 	_renderer->refreshSnakeBuffer(_snake->getBufferAsVector());
     _score = 0;
     _curDirection = Right;
+
+    setupObstacles();
+    buildObstacles();
 }
 
 void Game::setupObstacles()
@@ -204,6 +206,7 @@ void Game::setGameState(GameState state) {
 void Game::switchRenderer(IRenderer *renderer)
 {
     _renderer = renderer;
+    _snake->changeRenderer(_renderer);
     _snake->resetBuffer();
     _renderer->setLost(false);
     _renderer->updateApple(_apple->getX(), _apple->getY());

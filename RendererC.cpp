@@ -28,6 +28,8 @@ RendererC::RendererC() :
 
 void RendererC::init()
 {
+    OpenGLDraw::resetObjects();
+
 	buildBackground();
 	buildBorder();
 	buildApple();

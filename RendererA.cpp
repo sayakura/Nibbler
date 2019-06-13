@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RendererA.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Kura <Kura@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/11 17:14:18 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/12 06:06:24 by Kura             ###   ########.fr       */
+/*   Updated: 2019/06/13 14:24:47 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,16 @@ extern "C" IRenderer *create_renderer() {
 }
 
 RendererA::RendererA() : 
-	_borderOffset(Gameboard::squareSize * 2), _score(0), _pause(false), _obstaclesBuilt(false) {
+	_borderOffset(Gameboard::squareSize * 2), _score(0), _pause(false), _obstaclesBuilt(false) 
+{
 }
 
 //everything in this class can't be created until GLFW init functions are called
 //wanted to maintain the error checking of these functions. so use an init function rather than constructor
 void RendererA::init()
 {
+    OpenGLDraw::resetObjects();
+
 	buildBackground();
 	buildBorder();
 	buildApple();

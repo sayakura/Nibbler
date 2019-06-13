@@ -18,10 +18,10 @@ unsigned int SQUARESIZE = 24;
 unsigned int ROWS = 24;
 unsigned int COLS = 32;
 
-void changeRenderer(Game & game, void *handle, unsigned int & current_game_mode, IRenderer *renderer)
+void changeRenderer(Game & game, void *handle1, unsigned int & current_game_mode, IRenderer *renderer)
 {
 	//closing handle causes seg fault?
-	//dlclose(handle);
+	void *handle;
 	current_game_mode = Gameboard::gameMode = game.getRendererChoice(); // GAMEMODE MUST BE EQUAL TO CURRENT RENDERER OR EVERYTHING BREAKS
 	if (Gameboard::gameMode == 1)
 		handle = dlopen(PATHLIBA, RTLD_LAZY);
@@ -34,6 +34,7 @@ void changeRenderer(Game & game, void *handle, unsigned int & current_game_mode,
 	renderer->init();
 	game.switchRenderer(renderer);
 	game.setGameState(Active);
+	dlclose(handle1);
 }
 
 int main(int argc, char** argv)

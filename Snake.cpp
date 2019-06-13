@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/31 20:17:20 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/11 19:35:04 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 14:14:59 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -282,4 +282,9 @@ void Snake::resetBuffer()
     _snakeBuffer.clear();
     for (unsigned int i = 0; i < _bodyCoords.size(); i++)
         _renderer->buildSnakeVertex(_bodyCoords[i].first, _bodyCoords[i].second, _snakeBuffer, _whichTexture[i]);
+}
+
+void Snake::changeRenderer(IRenderer * renderer)
+{
+    this->_renderer = renderer;
 }

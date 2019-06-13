@@ -49,12 +49,15 @@ std::unordered_map<std::string, float(*)[12]> RendererB::initSnakeSpriteMap()
 
 RendererB::RendererB() : 
 	_borderOffset(Gameboard::squareSize * 2), _score(0), _pause(false), _lost(false), _obstaclesBuilt(false)
-{}
+{
+}
 
 //everything in this class can't be created until GLFW init functions are called
 //wanted to maintain the error checking of these functions. so use an init function rather than constructor
 void RendererB::init()
 {
+    OpenGLDraw::resetObjects();
+
 	buildBackground();
 	buildBorder();
 	buildApple();

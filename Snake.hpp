@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/01 22:37:40 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/11 19:35:26 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 14:14:39 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ public:
     float getHeadY();
 	bool checkCollisionPoint(float x, float y);
     void setCollisionPoint(float x, float y);
+
+    void changeRenderer(IRenderer *renderer);
 };
 
 #endif

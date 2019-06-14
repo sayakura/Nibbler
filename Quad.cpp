@@ -9,6 +9,23 @@ Quad::Quad()
     return;
 }
 
+Quad::~Quad()
+{
+    return;
+}
+
+Quad::Quad(Quad const & other)
+{
+    static_cast<void>(other);
+    throw(std::exception());
+}
+
+Quad const & Quad::operator=(Quad const & rhs)
+{
+    throw(std::exception());
+    return (rhs);
+}
+
 std::vector<float> Quad::getPosCoords(float x, float y, unsigned int size)
 {
     std::vector<float> quad;

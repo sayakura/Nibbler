@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/10 19:26:35 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/10 21:28:41 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 18:26:10 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,23 @@
 OpenGLHelper::OpenGLHelper()
 {
     return;
+}
+
+OpenGLHelper::~OpenGLHelper()
+{
+    return;
+}
+
+OpenGLHelper::OpenGLHelper(OpenGLHelper const & other)
+{
+    static_cast<void>(other);
+    throw(std::exception());
+}
+
+OpenGLHelper const & OpenGLHelper::operator=(OpenGLHelper const & rhs)
+{
+    throw(std::exception());
+    return (rhs);
 }
 
 bool OpenGLHelper::initEverything()

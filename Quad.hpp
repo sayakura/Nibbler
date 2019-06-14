@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/30 15:00:52 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/13 15:21:05 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 18:30:38 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,12 @@ public:
     static void buildVertex(std::vector<float> & buffer, std::vector<float> & positions, std::vector<unsigned int> & offsets);
     static void buildVertex(std::deque<float> & buffer, std::vector<float> & positions, std::vector<unsigned int> & offsets);
 
+    ~Quad();
 
 private:
     Quad();
+    Quad(Quad const &);
+    Quad const & operator=(Quad const &);
 };
 
 #endif

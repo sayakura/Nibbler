@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/01 22:37:40 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/13 15:19:00 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 19:33:50 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ class Snake {
 
 private:
     IRenderer *_renderer;
+    unsigned int _cannonicalDummy;
     unsigned int &_width;
     unsigned int &_height;
     unsigned int _squareSize;
@@ -36,9 +37,13 @@ private:
     std::deque<std::string> _whichTexture;
     std::deque<float> _snakeBuffer;
 
+    Snake();
+
 public:
     Snake(IRenderer * renderer, unsigned int & width, unsigned int & height, unsigned int squareSize);
     ~Snake();
+    Snake(Snake const &);
+    Snake const & operator=(Snake const &);
     //void buildVertex(std::vector<float> & positions, float (&texCoords)[12]);
 
     std::vector<float> getStart();

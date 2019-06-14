@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/11 17:11:13 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/13 14:49:29 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 18:51:56 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ class RendererA : public IRenderer {
 public:
 	RendererA();
 	~RendererA();
+	RendererA(RendererA const &);
+	RendererA const & operator=(RendererA const &);
 
     void init();
 	bool initGL();

@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/29 19:47:19 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/01 22:26:07 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 19:00:28 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,13 @@ public:
 
     static void clear();
 
+    ~ResourceManager();
+
 private:
     static Texture _texture;
     ResourceManager();
+    ResourceManager(ResourceManager const &);
+    ResourceManager const & operator=(ResourceManager const &);
 
     static Texture & loadTextureFromFile(const std::string & filePath, GLboolean alpha, GLboolean repeat);
 };

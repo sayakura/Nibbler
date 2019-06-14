@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/26 17:33:13 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/08 21:51:18 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 19:06:17 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,22 @@ Shader::Shader() : _rendererID(-1)
 	return;
 }
 
+Shader::Shader(Shader const & other)
+{
+	*this = other;
+}
+
+Shader const & Shader::operator=(Shader const & rhs)
+{
+	if (this != &rhs)
+	{
+    	this->_filePath = rhs._filePath;
+    	this->_rendererID = rhs._rendererID;
+    	this->_uniformLocationCache = rhs._uniformLocationCache;		
+	}
+	return (*this);
+}
+
 Shader::Shader(ShaderProgramSource & source) : _rendererID(0)
 {
     _rendererID = createShader(source.vertexSource, source.fragmentSource);
@@ -31,6 +47,7 @@ Shader::Shader(ShaderProgramSource & source) : _rendererID(0)
 
 Shader::~Shader()
 {
+	//Now deleted with Resource Manager::uncomment if not using resource manager
     //GLCall(glDeleteProgram(_rendererID));
 }
 

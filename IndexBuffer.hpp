@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/26 14:32:18 by dpeck             #+#    #+#             */
-/*   Updated: 2019/05/30 18:18:48 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 18:20:52 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,20 @@ private:
 
 
 public:
-    IndexBuffer(); // cannonical form
+
     IndexBuffer(const unsigned int * data, unsigned int count);
     ~IndexBuffer();
-    IndexBuffer(IndexBuffer const &);
-    IndexBuffer const & operator=(IndexBuffer const &);
+
 
     void bind() const;
     void unbind() const;
 
     unsigned int getCount() const;
+
+private:
+    IndexBuffer(); // cannonical form
+    IndexBuffer(IndexBuffer const &);
+    IndexBuffer const & operator=(IndexBuffer const &);
 };
 
 #endif

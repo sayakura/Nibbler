@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   OpenGLInput.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Kura <Kura@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/10 19:17:15 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/12 05:59:40 by Kura             ###   ########.fr       */
+/*   Updated: 2019/06/13 18:29:38 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,23 @@ unsigned int OpenGLInput::_curMenuChoice = 0;
 OpenGLInput::OpenGLInput()
 {
     return;
+}
+
+OpenGLInput::~OpenGLInput()
+{
+    return;
+}
+
+OpenGLInput::OpenGLInput(OpenGLInput const & other)
+{
+    static_cast<void>(other);
+    throw(std::exception());
+}
+
+OpenGLInput const & OpenGLInput::operator=(OpenGLInput const & rhs)
+{
+    throw(std::exception());
+    return (rhs);
 }
 
 void OpenGLInput::gameInput(Direction & curDirection)

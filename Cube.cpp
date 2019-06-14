@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/06 18:10:33 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/13 15:26:07 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 17:05:07 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,4 +144,26 @@ void Cube::buildVertex(std::deque<float> & buffer, std::vector<float> & position
             posCount++;
         }
     }
+}
+
+Cube::Cube()
+{
+    return;
+}
+
+Cube::~Cube()
+{
+    return;
+}
+
+Cube::Cube(Cube const & other)
+{
+    static_cast<void>(other);
+    throw(std::exception());
+}
+
+Cube const & Cube::operator=(Cube const & rhs)
+{
+    throw(std::exception());
+    return (rhs);
 }

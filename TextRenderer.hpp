@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/04 16:04:25 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/05 16:06:27 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 19:18:42 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,11 @@ public:
     void load(std::string font, GLuint fontSize);
 
     void renderText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color = glm::vec3(1.0f));
+
+private:
+    TextRenderer();
+    TextRenderer(TextRenderer const &);
+    TextRenderer const & operator=(TextRenderer const &);
 
 };
 

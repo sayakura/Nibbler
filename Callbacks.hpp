@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/06 19:21:41 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/06 19:44:47 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 16:58:50 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,13 @@ public:
 
     static void keyCallback(GLFWwindow * window, int key, int scancode, int action, int mode);
 
+    ~Callback();
+
 private:
     Callback();
+    Callback(Callback const &);
+    Callback const & operator=(Callback const &);
+
 };
 
 #endif

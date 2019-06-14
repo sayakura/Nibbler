@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/10 19:03:11 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/11 18:23:03 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 18:27:45 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,23 @@
 OpenGLInit::OpenGLInit()
 {
 	return;
+}
+
+OpenGLInit::~OpenGLInit()
+{
+	return;
+}
+
+OpenGLInit::OpenGLInit(OpenGLInit const & other)
+{
+	static_cast<void>(other);
+	throw(std::exception());
+}
+
+OpenGLInit const & OpenGLInit::operator=(OpenGLInit const & rhs)
+{
+	throw(std::exception());
+	return (rhs);
 }
 
 bool OpenGLInit::createWindow()

@@ -26,6 +26,33 @@ RendererC::RendererC() :
 {
 }
 
+RendererC::RendererC(RendererC const & other)
+{
+    *this = other;
+}
+
+RendererC const & RendererC::operator=(RendererC const & rhs)
+{
+    if (this != &rhs)
+    {
+ 	    this->_borderOffset = rhs._borderOffset;
+	    this->_score = rhs._score;
+
+        this->_pause = rhs._pause;
+        this->_lost = rhs._lost;
+        this->_pauseStr = rhs._pauseStr;
+
+        this->_obstaclesBuilt = rhs._obstaclesBuilt;
+        
+        this->_appleX = rhs._appleX;
+        this->_appleY = rhs._appleY;
+
+        this->_ss.str("");
+        this->_ss << rhs._ss.str();       
+    }
+    return (*this);
+}
+
 void RendererC::init()
 {
     OpenGLDraw::resetObjects();

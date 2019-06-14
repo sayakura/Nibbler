@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/26 15:08:24 by dpeck             #+#    #+#             */
-/*   Updated: 2019/05/26 18:24:12 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 19:21:38 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,10 @@ public:
 
     void bind() const;
     void unbind() const;
+
+private:
+    VertexArray(VertexArray const &);
+    VertexArray const & operator=(VertexArray const &);
 
 };
 

@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/29 19:11:21 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/13 15:22:31 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 17:07:53 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ private:
     unsigned int _score;
     unsigned int _borderOffset;
     unsigned int _rendererChoice;
+    unsigned int _cannonicalFormDummy;
 
     Direction _prevDirection;
     Direction _curDirection;
@@ -49,6 +50,8 @@ private:
 public:
     Game(IRenderer *renderer, unsigned int & width, unsigned int & height, unsigned int & squareSize);
     ~Game();
+    Game(Game const &);
+    Game const & operator=(Game const &);
 
     void init();
     void restart();
@@ -66,6 +69,9 @@ public:
     GameState getGameState() const;
 
     void setGameState(GameState state);
+
+private:
+    Game();
 };
 
 #endif

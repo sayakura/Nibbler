@@ -45,6 +45,8 @@ private:
 public:
 	RendererB();
 	~RendererB();
+	RendererB(RendererB const &);
+	RendererB const & operator=(RendererB const &);
 	
 	void refreshSnakeBuffer(std::vector<float> snakeBuffer);
 

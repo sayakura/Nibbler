@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   OpenGLInput.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Kura <Kura@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/10 19:15:53 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/12 05:55:19 by Kura             ###   ########.fr       */
+/*   Updated: 2019/06/13 18:28:42 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,13 @@ public:
     static void moveCursor(Direction direction, std::string & pauseStr, bool);
     static void rendererSelection(unsigned int & choice);
     //static void getMode(Direction & direction);
+
+    ~OpenGLInput();
+
 private:
     OpenGLInput();
+    OpenGLInput(OpenGLInput const &);
+    OpenGLInput const & operator=(OpenGLInput const &);
 
 };
 

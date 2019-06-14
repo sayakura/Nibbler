@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/29 19:19:43 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/13 15:25:07 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 18:14:28 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,9 @@ Game::~Game()
         delete _snake;
     if (_apple != nullptr)
         delete _apple;
+
+    for (unsigned int i = 0; i < _obstacles.size(); i++)
+        delete _obstacles[i];
 }
 
 void Game::init()
@@ -76,6 +79,13 @@ void Game::restart()
 	_renderer->refreshSnakeBuffer(_snake->getBufferAsVector());
     _score = 0;
     _curDirection = Right;
+
+    std::vector<RandomlyPlacedObject *>::reverse_iterator rit;
+    for (rit = _obstacles.rbegin(); rit != _obstacles.rend(); rit++)
+    {
+        delete *rit;
+        _obstacles.pop_back();
+    }
 
     setupObstacles();
     buildObstacles();
@@ -208,4 +218,57 @@ void Game::switchRenderer(IRenderer *renderer)
 	_renderer->refreshSnakeBuffer(_snake->getBufferAsVector());
     _renderer->updateScore(_score);
     _curDirection = _prevDirection;
+}
+
+Game::Game() : _state(Quit), _renderer(nullptr), _snake(nullptr), _apple(nullptr), _width(_cannonicalFormDummy),
+_height(_cannonicalFormDummy), _squareSize(_cannonicalFormDummy), 
+    _score(0), _borderOffset(0), _rendererChoice(Gameboard::gameMode), _curDirection(Right)
+{
+
+}
+
+Game::Game(Game const & other) : _width(_cannonicalFormDummy), _height(_cannonicalFormDummy), _squareSize(_cannonicalFormDummy)
+{
+    *this = other;
+}
+
+
+Game const & Game::operator=(Game const & rhs)
+{
+    if (this != &rhs)
+    {
+        this->_state = rhs._state;
+        this->_renderer = rhs._renderer;
+        if (this->_snake != nullptr)
+            delete _snake;
+        this->_snake = new Snake(_renderer, rhs._width, rhs._height, rhs._squareSize);
+        this->_snake = rhs._snake;
+        if (this->_apple != nullptr)
+            delete _apple;
+        this->_apple = new RandomlyPlacedObject(rhs._width, rhs._height, rhs._squareSize);
+        this->_apple = rhs._apple;
+
+        if (!this->_obstacles.empty())
+        {
+            for (unsigned int i = 0; i < _obstacles.size(); i++)
+                delete _obstacles[i];
+        }
+
+        for (unsigned int i = 0; i < rhs._obstacles.size(); i++)
+        {
+            this->_obstacles.push_back(new RandomlyPlacedObject(rhs._width, rhs._height, rhs._squareSize));
+            this->_obstacles[i] = rhs._obstacles[i];
+        }
+
+        this->_width = rhs._width;
+        this->_height = rhs._height;
+        this->_squareSize = rhs._squareSize;
+        this->_score = rhs._score;
+        this->_borderOffset = rhs._borderOffset;
+        this->_rendererChoice = rhs._rendererChoice;
+    
+        this->_prevDirection = rhs._prevDirection; 
+        this->_curDirection = rhs._curDirection;        
+    }
+    return (*this);
 }

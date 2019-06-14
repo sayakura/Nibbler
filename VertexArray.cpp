@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/26 15:26:01 by dpeck             #+#    #+#             */
-/*   Updated: 2019/05/30 15:10:20 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 19:22:46 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,20 @@ VertexArray::VertexArray()
 VertexArray::~VertexArray() 
 {
     GLCall(glDeleteVertexArrays(1, &_rendererID));
+}
+
+VertexArray::VertexArray(VertexArray const & other)
+{
+    *this = other;
+}
+
+VertexArray const & VertexArray::operator=(VertexArray const & rhs)
+{
+    if (this != &rhs)
+    {
+        this->_rendererID = rhs._rendererID;
+    }
+    return (*this);
 }
 
 void VertexArray::addBuffer(const VertexBuffer & vb, const VertexBufferLayout & layout)

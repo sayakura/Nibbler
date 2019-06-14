@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/31 20:17:20 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/13 15:19:39 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 19:33:41 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,37 @@
 #include <iostream>
 
 //cols is offset * 2
+
+Snake::Snake() : _renderer(nullptr), _cannonicalDummy(0), _width(_cannonicalDummy), 
+_height(_cannonicalDummy), _squareSize(_cannonicalDummy)
+{
+    return;
+}
+
+Snake::Snake(Snake const & other) : _width(other._width), _height(other._height), _squareSize(other._squareSize)
+{
+    *this = other;
+}
+
+Snake const & Snake::operator=(Snake const & rhs)
+{
+    if (this != &rhs)
+    {
+        this->_renderer = rhs._renderer;
+        this->_width = rhs._width;
+        this->_height = rhs._height;
+        this->_squareSize = rhs._squareSize;
+        this->_grow = rhs._grow;
+
+        this->_direction = rhs._direction;
+
+        this->_bodyCoords = rhs._bodyCoords;
+        this->_collisionTable = rhs._collisionTable;
+        this->_whichTexture = rhs._whichTexture;
+        this->_snakeBuffer = rhs._snakeBuffer;       
+    }
+    return (*this);
+}
 
 Snake::Snake(IRenderer * renderer, unsigned int & width, unsigned int & height, unsigned int squareSize) : 
     _renderer(renderer), _width(width), _height(height), _squareSize(squareSize), _grow(false), _direction(Right)

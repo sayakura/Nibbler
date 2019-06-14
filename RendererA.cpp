@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/11 17:14:18 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/13 15:49:59 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 18:56:23 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,33 @@ extern "C" IRenderer *create_renderer() {
 RendererA::RendererA() : 
 	_borderOffset(Gameboard::squareSize * 2), _score(0), _pause(false), _obstaclesBuilt(false)
 {
+}
+
+RendererA::RendererA(RendererA const & other)
+{
+    *this = other;
+}
+
+RendererA const & RendererA::operator=(RendererA const & rhs)
+{
+    if (this != &rhs)
+    {
+ 	    this->_borderOffset = rhs._borderOffset;
+	    this->_score = rhs._score;
+
+        this->_pause = rhs._pause;
+        this->_lost = rhs._lost;
+        this->_pauseStr = rhs._pauseStr;
+
+        this->_obstaclesBuilt = rhs._obstaclesBuilt;
+        
+        this->_appleX = rhs._appleX;
+        this->_appleY = rhs._appleY;
+
+        this->_ss.str("");
+        this->_ss << rhs._ss.str();       
+    }
+    return (*this);
 }
 
 //everything in this class can't be created until GLFW init functions are called

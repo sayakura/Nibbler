@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/10 14:43:55 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/11 20:07:01 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 18:22:01 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,12 @@ public:
     static VertexBufferLayout & getBufferLayout(unsigned int slot);
     static std::vector<unsigned int> & getBufferFormat(unsigned int slot);
 
+    ~OpenGLDraw();
+
 private:
     OpenGLDraw();
+    OpenGLDraw(OpenGLDraw const &);
+    OpenGLDraw const & operator=(OpenGLDraw const &);
 };
 
 #endif

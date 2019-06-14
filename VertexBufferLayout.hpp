@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/26 15:11:32 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/13 15:18:23 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 19:36:42 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ private:
 
 public:
     VertexBufferLayout() : _stride(0) {}
+    ~VertexBufferLayout() { return; }
 
     template<typename TL>
     void push(unsigned int count)
@@ -85,6 +86,22 @@ public:
 
     inline const std::vector<VertexBufferElement> & getElements() const { return _elements; }
     inline unsigned int getStride() const { return _stride; }
+
+    VertexBufferLayout(VertexBufferLayout const & other)
+    {
+        *this = other;
+    }
+
+    VertexBufferLayout const & operator=(VertexBufferLayout const & rhs)
+    {
+        if (this != &rhs)
+        {
+            this->_elements = rhs._elements;
+            this->_stride = rhs._stride;
+        }
+        return (*this);
+    }
+
 };
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/26 14:20:01 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/09 12:28:50 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 19:23:26 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,16 +35,12 @@ VertexBuffer::VertexBuffer(VertexBuffer const & other)
 
 VertexBuffer const & VertexBuffer::operator=(VertexBuffer const & rhs)
 {
-    std::cout << "copying buffer" << std::endl;
-    //todo should copy opengl object
     if (this != &rhs)
     {
-
+        this->_rendererID = rhs._rendererID;
     }
     return (*this);
 }
-
-//TODO implement coplien form stuff
 
 VertexBuffer::~VertexBuffer()
 {

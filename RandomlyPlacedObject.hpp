@@ -28,9 +28,13 @@ private:
     std::uniform_int_distribution<int> rowRange;
     std::uniform_int_distribution<int> colRange;
 
+    RandomlyPlacedObject();
+
 public:
     RandomlyPlacedObject(unsigned int & width, unsigned int & height, unsigned int squareSize);
     ~RandomlyPlacedObject();
+    RandomlyPlacedObject(RandomlyPlacedObject const &);
+    RandomlyPlacedObject const & operator=(RandomlyPlacedObject const &);
 
     void generateRandomPos();
     float getX();

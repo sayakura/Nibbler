@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/10 19:23:57 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/10 19:33:31 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 18:24:48 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,12 @@ public:
 
     //This calls all gl destroy functions which should only be called once during runtime.
     static void cleanup();
+    ~OpenGLHelper();
 
 private:
     OpenGLHelper();
+    OpenGLHelper(OpenGLHelper const &);
+    OpenGLHelper const & operator=(OpenGLHelper const &);
 
 };
 

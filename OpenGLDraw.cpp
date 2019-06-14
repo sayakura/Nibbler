@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/10 15:23:40 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/13 15:32:45 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 18:23:42 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,23 @@ std::unordered_map<std::string, ObjectDrawingInfo *> OpenGLDraw::initObjectMap()
 OpenGLDraw::OpenGLDraw()
 {
     return;
+}
+
+OpenGLDraw::~OpenGLDraw()
+{
+    return;
+}
+
+OpenGLDraw::OpenGLDraw(OpenGLDraw const & other)
+{
+    static_cast<void>(other);
+    throw(std::exception());
+}
+
+OpenGLDraw const & OpenGLDraw::operator=(OpenGLDraw const & rhs)
+{
+    throw(std::exception());
+    return (rhs);
 }
 
 void OpenGLDraw::allocateObjectDrawingInfo()

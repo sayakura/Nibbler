@@ -30,8 +30,6 @@ private:
 	unsigned int _borderOffset;
     unsigned int _score;
 
-    std::deque<float> _snakeCoords;
-
     bool _obstaclesBuilt;
 
 	float _appleX;
@@ -42,6 +40,8 @@ private:
 public:
     RendererC();
     ~RendererC();
+    RendererC(RendererC const &);
+    RendererC const & operator=(RendererC const &);
 
     bool initGL();
     void cleanupGL();

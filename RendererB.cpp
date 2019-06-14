@@ -52,6 +52,33 @@ RendererB::RendererB() :
 {
 }
 
+RendererB::RendererB(RendererB const & other)
+{
+    *this = other;
+}
+
+RendererB const & RendererB::operator=(RendererB const & rhs)
+{
+    if (this != &rhs)
+    {
+ 	    this->_borderOffset = rhs._borderOffset;
+	    this->_score = rhs._score;
+
+        this->_pause = rhs._pause;
+        this->_lost = rhs._lost;
+        this->_pauseStr = rhs._pauseStr;
+
+        this->_obstaclesBuilt = rhs._obstaclesBuilt;
+        
+        this->_appleX = rhs._appleX;
+        this->_appleY = rhs._appleY;
+
+        this->_ss.str("");
+        this->_ss << rhs._ss.str();       
+    }
+    return (*this);
+}
+
 //everything in this class can't be created until GLFW init functions are called
 //wanted to maintain the error checking of these functions. so use an init function rather than constructor
 void RendererB::init()

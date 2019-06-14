@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/04 16:05:34 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/11 18:05:56 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 19:20:37 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,4 +138,27 @@ void TextRenderer::renderText(std::string text, GLfloat x, GLfloat y, GLfloat sc
     }
     GLCall(glBindVertexArray(0));
     GLCall(glBindTexture(GL_TEXTURE_2D, 0));
+}
+
+TextRenderer::TextRenderer()
+{
+    return;
+}
+
+TextRenderer::TextRenderer(TextRenderer const & other)
+{
+    *this = other;
+}
+
+TextRenderer const & TextRenderer::operator=(TextRenderer const & rhs)
+{
+    if (this != &rhs)
+    {
+        this->_vbo = rhs._vbo;
+        this->_vao = rhs._vao;
+
+        this->_textShader = rhs._textShader;
+        this->_characters = rhs._characters;
+    }
+    return (*this);
 }

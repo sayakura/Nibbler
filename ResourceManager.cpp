@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/29 19:59:37 by dpeck             #+#    #+#             */
-/*   Updated: 2019/05/31 16:59:54 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 19:01:38 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,20 @@ std::map<std::string, Shader> ResourceManager::_shaders;
 Texture ResourceManager::_texture;
 
 ResourceManager::ResourceManager() { return; }
+
+ResourceManager::~ResourceManager() { return; }
+
+ResourceManager::ResourceManager(ResourceManager const & other)
+{
+	static_cast<void>(other);
+	throw(std::exception());
+}
+
+ResourceManager const & ResourceManager::operator=(ResourceManager const & rhs)
+{
+	throw(std::exception());
+	return (rhs);
+}
 
 Shader & ResourceManager::loadShader(const std::string & filePath, const std::string & name)
 {

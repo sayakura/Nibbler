@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/26 17:29:32 by dpeck             #+#    #+#             */
-/*   Updated: 2019/05/31 18:35:22 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/13 19:08:32 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,9 @@ private:
 public:
     Shader();
     Shader(ShaderProgramSource & source);
+
+    Shader(Shader const &);
+    Shader const & operator=(Shader const &);
     ~Shader();
 
     void bind() const;
@@ -53,6 +56,8 @@ private:
     int getUniformLocation(const std::string & name);
     unsigned int createShader(const std::string & vertexShader, const std::string & fragmentShader);
     unsigned int CompileShader(unsigned int type, const std::string & source);
+
+
 };
 
 #endif

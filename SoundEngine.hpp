@@ -7,8 +7,8 @@
 class SoundEngine
 {
     irrklang::ISoundEngine* _engine; 
-    SoundEngine(SoundEngine &);
-    SoundEngine& operator=(const SoundEngine& rhs );
+    SoundEngine(SoundEngine const &);
+    SoundEngine const & operator=(const SoundEngine& rhs );
     public:
         SoundEngine();
         ~SoundEngine();

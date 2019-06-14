@@ -8,9 +8,9 @@
 #define SE_GAMEOVER "audio/gameover.wav"
 #define SE_WIN "audio/win.wav"
 #define SE_MENU "audio/Switch1.wav"
-#define PATHLIBA "renderA.dylib"
-#define PATHLIBB "renderB.dylib"
-#define PATHLIBC "renderC.dylib"
+#define PATHLIBA "lib/renderA.dylib"
+#define PATHLIBB "lib/renderB.dylib"
+#define PATHLIBC "lib/renderC.dylib"
 #define WINDOW_MAX_HEIGHT 100 // change it later
 #define WINDOW_MIN_HEIGHT 10 // change it later
 #define WINDOW_MAX_WIDTH 200 // change it later

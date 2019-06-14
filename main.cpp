@@ -15,8 +15,11 @@
 
 unsigned int SQUARESIZE = 24;
 
-unsigned int ROWS = 24;
-unsigned int COLS = 32;
+int g_windowCols;
+int g_windowRows;
+
+//unsigned int ROWS = 24;
+//unsigned int COLS = 32;
 
 void changeRenderer(Game & game, void *handle1, unsigned int & current_game_mode, IRenderer *renderer)
 {
@@ -33,7 +36,6 @@ void changeRenderer(Game & game, void *handle1, unsigned int & current_game_mode
 	renderer = create();
 	renderer->init();
 	game.switchRenderer(renderer);
-	game.setGameState(Active);
 	dlclose(handle1);
 }
 
@@ -41,24 +43,20 @@ int main(int argc, char** argv)
 {
 	g_soundEngine = new SoundEngine();
 	//squaresize * 2 for border
-	unsigned int borderOffset = SQUARESIZE * 2;
-	unsigned int WINWIDTH = (SQUARESIZE * COLS) + borderOffset * 4;
-	unsigned int WINHEIGHT = (SQUARESIZE * ROWS) + borderOffset * 4;
+
 	unsigned int current_game_mode; 
 	void* handle = nullptr;
 
-	std::cout << WINWIDTH << " " << WINHEIGHT << std::endl;
-
 	getArgs(argc, argv);
 
-	//this should probably be set in a better way.
-	Gameboard::windowWidth = g_windowWidth ? g_windowWidth : WINWIDTH;
-	Gameboard::windowHeight = g_windowHeight ? g_windowHeight : WINHEIGHT;
+	unsigned int borderOffset = SQUARESIZE * 2;
+	Gameboard::windowWidth = (SQUARESIZE * g_windowCols) + borderOffset * 4;
+	Gameboard::windowHeight = (SQUARESIZE * g_windowRows) + borderOffset * 4;
 	Gameboard::squareSize = SQUARESIZE;
 
 	IRenderer *renderer;
 
-	current_game_mode = Gameboard::gameMode = g_gameMode ? g_gameMode : 1; // GAMEMODE MUST BE EQUAL TO CURRENT RENDERER OR EVERYTHING BREAKS
+	current_game_mode = Gameboard::gameMode = 1; // GAMEMODE MUST BE EQUAL TO CURRENT RENDERER OR EVERYTHING BREAKS
 	if (Gameboard::gameMode == 1)
 		handle = dlopen(PATHLIBA, RTLD_LAZY);
 	else if (Gameboard::gameMode == 2)
@@ -71,7 +69,7 @@ int main(int argc, char** argv)
 		return (1);
 	renderer->init();
 	bool quit = false;
-	Game game(renderer, WINWIDTH, WINHEIGHT, SQUARESIZE);
+	Game game(renderer);
 
 	game.init();
 	g_soundEngine->playLoop(SE_BGM);

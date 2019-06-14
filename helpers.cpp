@@ -2,8 +2,8 @@
 #include "sysconfig.hpp"
 
 int         g_gameMode;
-int         g_windowHeight;
-int         g_windowWidth;
+int         g_windowRows;
+int         g_windowCols;
 
 inline std::vector<std::string> split(char *phrase, std::string delimiter)
 {
@@ -47,14 +47,14 @@ void        getArgs(int ac, char **av)
                     ::exit(EXIT_SUCCESS);
                 }
                 try {
-                    g_windowHeight = std::stoi(windowSize[0]);
-                    g_windowWidth = std::stoi(windowSize[1]);
+                    g_windowRows = std::stoi(windowSize[0]);
+                    g_windowCols = std::stoi(windowSize[1]);
                 } catch(std::exception &e) {
                     std::cout << e.what() << std::endl;
                     ::exit(EXIT_SUCCESS);
                 }
-                if (g_windowHeight > WINDOW_MAX_HEIGHT || WINDOW_MIN_HEIGHT < 0
-                || g_windowWidth > WINDOW_MAX_WIDTH || g_windowWidth < WINDOW_MIN_WIDTH)
+                if (g_windowRows > WINDOW_MAX_HEIGHT || WINDOW_MIN_HEIGHT < 0
+                || g_windowCols > WINDOW_MAX_WIDTH || g_windowCols < WINDOW_MIN_WIDTH)
                 {
                     std::cerr << "Height of the window must be between " << WINDOW_MIN_HEIGHT;
                     std::cerr << " ~ " << WINDOW_MAX_HEIGHT << ". " << std::endl;
@@ -62,8 +62,8 @@ void        getArgs(int ac, char **av)
                     std::cerr << " ~ " << WINDOW_MAX_WIDTH << ". " << std::endl;
                     ::exit(EXIT_SUCCESS);
                 }
-                std::cout << "s: " << std::to_string(g_windowHeight)
-                     << " " << std::to_string(g_windowWidth) <<  std::endl;
+                std::cout << "s: " << std::to_string(g_windowRows)
+                     << " " << std::to_string(g_windowCols) <<  std::endl;
                 break ;
             default:
                std::cerr << "Unknown arguments" << std::endl;

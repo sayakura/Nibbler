@@ -75,7 +75,7 @@ recompile:
 clean:
 	/bin/rm -f *.o
 
-flcean:
+fclean:
 	/bin/rm Nibbler
 	rm -rf lib 
 re: fclean all

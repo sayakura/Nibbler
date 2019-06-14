@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/29 19:11:21 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/13 17:07:53 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/14 14:34:25 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,24 +31,21 @@ class Game {
 
 private:
     GameState _state;
+    GameState _prevState;
     IRenderer * _renderer;
     Snake *_snake;
     RandomlyPlacedObject *_apple;
     std::vector<RandomlyPlacedObject *> _obstacles;
 
-    unsigned int & _width;
-    unsigned int & _height;
-    unsigned int &_squareSize;
     unsigned int _score;
     unsigned int _borderOffset;
     unsigned int _rendererChoice;
-    unsigned int _cannonicalFormDummy;
 
     Direction _prevDirection;
     Direction _curDirection;
 
 public:
-    Game(IRenderer *renderer, unsigned int & width, unsigned int & height, unsigned int & squareSize);
+    Game(IRenderer *renderer);
     ~Game();
     Game(Game const &);
     Game const & operator=(Game const &);

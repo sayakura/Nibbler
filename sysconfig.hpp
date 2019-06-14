@@ -18,7 +18,7 @@
 #define WIN_POINT 10
 
 extern int          g_gameMode;
-extern int          g_windowHeight;
-extern int          g_windowWidth;
+extern int          g_windowRows;
+extern int          g_windowCols;
 extern SoundEngine *g_soundEngine;
 #endif

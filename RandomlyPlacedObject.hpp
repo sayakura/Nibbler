@@ -18,7 +18,6 @@
 class RandomlyPlacedObject {
 
 private:
-    const unsigned int _squareSize;
     const unsigned int _rows;
     const unsigned int _cols;
     std::pair<float, float> _pos;
@@ -28,10 +27,8 @@ private:
     std::uniform_int_distribution<int> rowRange;
     std::uniform_int_distribution<int> colRange;
 
-    RandomlyPlacedObject();
-
 public:
-    RandomlyPlacedObject(unsigned int & width, unsigned int & height, unsigned int squareSize);
+    RandomlyPlacedObject();
     ~RandomlyPlacedObject();
     RandomlyPlacedObject(RandomlyPlacedObject const &);
     RandomlyPlacedObject const & operator=(RandomlyPlacedObject const &);

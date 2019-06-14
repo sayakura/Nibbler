@@ -6,22 +6,22 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/31 20:17:20 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/13 19:33:41 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/14 14:33:40 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Snake.hpp"
+#include "Gameboard.hpp"
 #include <iostream>
 
 //cols is offset * 2
 
-Snake::Snake() : _renderer(nullptr), _cannonicalDummy(0), _width(_cannonicalDummy), 
-_height(_cannonicalDummy), _squareSize(_cannonicalDummy)
+Snake::Snake() : _renderer(nullptr)
 {
     return;
 }
 
-Snake::Snake(Snake const & other) : _width(other._width), _height(other._height), _squareSize(other._squareSize)
+Snake::Snake(Snake const & other)
 {
     *this = other;
 }
@@ -31,9 +31,6 @@ Snake const & Snake::operator=(Snake const & rhs)
     if (this != &rhs)
     {
         this->_renderer = rhs._renderer;
-        this->_width = rhs._width;
-        this->_height = rhs._height;
-        this->_squareSize = rhs._squareSize;
         this->_grow = rhs._grow;
 
         this->_direction = rhs._direction;
@@ -46,10 +43,10 @@ Snake const & Snake::operator=(Snake const & rhs)
     return (*this);
 }
 
-Snake::Snake(IRenderer * renderer, unsigned int & width, unsigned int & height, unsigned int squareSize) : 
-    _renderer(renderer), _width(width), _height(height), _squareSize(squareSize), _grow(false), _direction(Right)
+Snake::Snake(IRenderer * renderer) : 
+    _renderer(renderer), _grow(false), _direction(Right)
 {
-    unsigned int winSize = width * height;
+    unsigned int winSize = Gameboard::windowWidth * Gameboard::windowHeight;
     for (unsigned int i = 0; i < winSize; i++)
         _collisionTable.push_back(false);
 
@@ -61,41 +58,41 @@ Snake::Snake(IRenderer * renderer, unsigned int & width, unsigned int & height, 
     _bodyCoords.push_back(std::pair<float, float>(start[0], start[1]));
     _renderer->buildSnakeVertex(start[0], start[1], _snakeBuffer, "tailLeft");
     _whichTexture.push_back("tailLeft");
-    _collisionTable[_bodyCoords.back().second * _width + _bodyCoords.back().first] = true;
+    _collisionTable[_bodyCoords.back().second * Gameboard::windowWidth + _bodyCoords.back().first] = true;
 
     _bodyCoords.push_back(std::pair<float, float>(start[2], start[3]));
     _renderer->buildSnakeVertex(start[2], start[3], _snakeBuffer, "horizontal");
     _whichTexture.push_back("horizontal");
-    _collisionTable[_bodyCoords.back().second * _width + _bodyCoords.back().first] = true;
+    _collisionTable[_bodyCoords.back().second * Gameboard::windowWidth + _bodyCoords.back().first] = true;
 
     _bodyCoords.push_back(std::pair<float, float>(start[4], start[5]));
     _renderer->buildSnakeVertex(start[4], start[5], _snakeBuffer, "horizontal");
     _whichTexture.push_back("horizontal");
-    _collisionTable[_bodyCoords.back().second * _width + _bodyCoords.back().first] = true;
+    _collisionTable[_bodyCoords.back().second * Gameboard::windowWidth + _bodyCoords.back().first] = true;
 
     _bodyCoords.push_back(std::pair<float, float>(start[6], start[7]));
     _renderer->buildSnakeVertex(start[6], start[7], _snakeBuffer, "headRight");
     _whichTexture.push_back("headRight");
-    _collisionTable[_bodyCoords.back().second * _width + _bodyCoords.back().first] = true;
+    _collisionTable[_bodyCoords.back().second * Gameboard::windowWidth + _bodyCoords.back().first] = true;
 }
 
 std::vector<float> Snake::getStart()
 {
-    unsigned int totalRows = _height / _squareSize;
-    unsigned int totalCols = _width / _squareSize;
+    unsigned int totalRows = Gameboard::windowHeight / Gameboard::squareSize;
+    unsigned int totalCols = Gameboard::windowWidth / Gameboard::squareSize;
     
     //calculating middle of gameboard based on predefined square/grid size
-    int x = (totalCols / 2 - 4) * _squareSize; // offset by 4 so head is in the middle
-    int y = (totalRows / 2) * _squareSize;
+    int x = (totalCols / 2 - 4) * Gameboard::squareSize; // offset by 4 so head is in the middle
+    int y = (totalRows / 2) * Gameboard::squareSize;
 
     std::vector<float> start;
     start.push_back(static_cast<float>(x));
     start.push_back(static_cast<float>(y));
-    start.push_back(static_cast<float>(x + _squareSize));
+    start.push_back(static_cast<float>(x + Gameboard::squareSize));
     start.push_back(static_cast<float>(y));
-    start.push_back(static_cast<float>(x + _squareSize * 2));
+    start.push_back(static_cast<float>(x + Gameboard::squareSize * 2));
     start.push_back(static_cast<float>(y));
-    start.push_back(static_cast<float>(x + _squareSize * 3));
+    start.push_back(static_cast<float>(x + Gameboard::squareSize * 3));
     start.push_back(static_cast<float>(y));
     return (start);
 }
@@ -103,19 +100,19 @@ std::vector<float> Snake::getStart()
 //currently set up for tree bounds taking up  two squares on the edge
 void Snake::setBoundsCollision(unsigned int borderOffset)
 {
-	unsigned int topY = borderOffset + _squareSize;
-	unsigned int botY = _height - (borderOffset + _squareSize * 2);
-	for (unsigned int x = borderOffset; x < _width - borderOffset; x += _squareSize)
+	unsigned int topY = borderOffset + Gameboard::squareSize;
+	unsigned int botY = Gameboard::windowHeight - (borderOffset + Gameboard::squareSize * 2);
+	for (unsigned int x = borderOffset; x < Gameboard::windowWidth - borderOffset; x += Gameboard::squareSize)
 	{
-		_collisionTable[topY * _width + x] = true;
-		_collisionTable[botY * _width + x] = true;
+		_collisionTable[topY * Gameboard::windowWidth + x] = true;
+		_collisionTable[botY * Gameboard::windowWidth + x] = true;
 	}
-	unsigned int leftX = borderOffset + _squareSize;
-	unsigned int rightX = _width - (borderOffset + _squareSize * 2);
-	for (unsigned int y = borderOffset; y < _height - borderOffset; y += _squareSize)
+	unsigned int leftX = borderOffset + Gameboard::squareSize;
+	unsigned int rightX = Gameboard::windowWidth - (borderOffset + Gameboard::squareSize * 2);
+	for (unsigned int y = borderOffset; y < Gameboard::windowHeight - borderOffset; y += Gameboard::squareSize)
 	{
-		_collisionTable[y * _width + leftX] = true;
-		_collisionTable[y * _width + rightX] = true;
+		_collisionTable[y * Gameboard::windowWidth + leftX] = true;
+		_collisionTable[y * Gameboard::windowWidth + rightX] = true;
 	}
 }
 
@@ -138,7 +135,7 @@ bool Snake::moveSnake(Direction direction)
     {
         _renderer->popSnakeTail(_snakeBuffer);
         //this seg faults when out of bounds right now
-        _collisionTable[static_cast<int>(_bodyCoords.front().second * _width + _bodyCoords.front().first)] = false;
+        _collisionTable[static_cast<int>(_bodyCoords.front().second * Gameboard::windowWidth + _bodyCoords.front().first)] = false;
         _bodyCoords.pop_front();
         _whichTexture.pop_front();
         std::string tailDirection = getNewTailDirection();
@@ -163,22 +160,22 @@ bool Snake::checkCollision(Direction & direction)
     std::pair<float, float> headCoord = _bodyCoords.back();
     if (direction == Left)
     {
-        if (_collisionTable[headCoord.second * _width + headCoord.first - _squareSize])
+        if (_collisionTable[headCoord.second * Gameboard::windowWidth + headCoord.first - Gameboard::squareSize])
             return (true);
     }
     if (direction == Right)
     {
-        if (_collisionTable[headCoord.second * _width + headCoord.first + _squareSize])
+        if (_collisionTable[headCoord.second * Gameboard::windowWidth + headCoord.first + Gameboard::squareSize])
             return (true);
     }
     if (direction == Up)
     {
-        if (_collisionTable[(headCoord.second - _squareSize) * _width + headCoord.first])
+        if (_collisionTable[(headCoord.second - Gameboard::squareSize) * Gameboard::windowWidth + headCoord.first])
             return (true);
     }
     if (direction == Down)
     {
-        if (_collisionTable[(headCoord.second + _squareSize) * _width + headCoord.first])
+        if (_collisionTable[(headCoord.second + Gameboard::squareSize) * Gameboard::windowWidth + headCoord.first])
             return (true);
     }
     return (false);
@@ -214,42 +211,42 @@ void Snake::turn(Direction newDirection)
 {
     if (_direction == Right && newDirection == Up)
     {
-        _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first, _bodyCoords.back().second - _squareSize));
+        _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first, _bodyCoords.back().second - Gameboard::squareSize));
         updateHead("headUp", "leftToUp");       
     }
     if (_direction == Right && newDirection == Down)
     {
-        _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first, _bodyCoords.back().second + _squareSize));
+        _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first, _bodyCoords.back().second + Gameboard::squareSize));
         updateHead("headDown", "leftToDown");        
     }
     if (_direction == Down && newDirection == Left)
     {
-        _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first - _squareSize, _bodyCoords.back().second));
+        _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first - Gameboard::squareSize, _bodyCoords.back().second));
         updateHead("headLeft", "leftToUp");        
     }
     if (_direction == Down && newDirection == Right)
     {
-        _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first + _squareSize, _bodyCoords.back().second));
+        _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first + Gameboard::squareSize, _bodyCoords.back().second));
         updateHead("headRight", "rightToUp");        
     }
     if (_direction == Left && newDirection == Up)
     {
-        _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first, _bodyCoords.back().second - _squareSize));
+        _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first, _bodyCoords.back().second - Gameboard::squareSize));
         updateHead("headUp", "rightToUp");       
     }
     if (_direction == Left && newDirection == Down)
     {
-        _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first, _bodyCoords.back().second + _squareSize));
+        _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first, _bodyCoords.back().second + Gameboard::squareSize));
         updateHead("headDown", "rightToDown");        
     }
     if (_direction == Up && newDirection == Left)
     {
-        _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first - _squareSize, _bodyCoords.back().second));
+        _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first - Gameboard::squareSize, _bodyCoords.back().second));
         updateHead("headLeft", "leftToDown");       
     }
     if (_direction == Up && newDirection == Right)
     {
-        _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first + _squareSize, _bodyCoords.back().second));
+        _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first + Gameboard::squareSize, _bodyCoords.back().second));
         updateHead("headRight", "rightToDown");
     }
 }
@@ -258,22 +255,22 @@ void Snake::forward()
 {
     if (_direction == Right)
     {   
-        _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first + _squareSize, _bodyCoords.back().second));
+        _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first + Gameboard::squareSize, _bodyCoords.back().second));
         updateHead("headRight", "horizontal");
     }
     if (_direction == Left)
     {
-        _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first - _squareSize, _bodyCoords.back().second));
+        _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first - Gameboard::squareSize, _bodyCoords.back().second));
         updateHead("headLeft", "horizontal");
     }
     if (_direction == Up)
     {
-        _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first, _bodyCoords.back().second - _squareSize));
+        _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first, _bodyCoords.back().second - Gameboard::squareSize));
         updateHead("headUp", "vertical");
     }
     if (_direction == Down)
     {
-        _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first, _bodyCoords.back().second + _squareSize));
+        _bodyCoords.push_back(std::pair<float, float>(_bodyCoords.back().first, _bodyCoords.back().second + Gameboard::squareSize));
         updateHead("headDown", "vertical");
     }
 }
@@ -285,7 +282,7 @@ void Snake::updateHead(const std::string & head, const std::string & neck)
     _renderer->buildSnakeVertex(_bodyCoords.back().first, _bodyCoords.back().second, _snakeBuffer, head);
     _whichTexture.back() = neck;
     _whichTexture.push_back(head);
-    _collisionTable[_bodyCoords.back().second * _width + _bodyCoords.back().first] = true;
+    _collisionTable[_bodyCoords.back().second * Gameboard::windowWidth + _bodyCoords.back().first] = true;
 }
 
 float Snake::getHeadX()
@@ -300,12 +297,12 @@ float Snake::getHeadY()
 
 bool Snake::checkCollisionPoint(float x, float y)
 {
-	return (_collisionTable[y * _width + x]);
+	return (_collisionTable[y * Gameboard::windowWidth + x]);
 }
 
 void Snake::setCollisionPoint(float x, float y)
 {
-    _collisionTable[static_cast<int>(y) * _width + static_cast<int>(x)] = true;
+    _collisionTable[static_cast<int>(y) * Gameboard::windowWidth + static_cast<int>(x)] = true;
 }
 
 void Snake::resetBuffer()

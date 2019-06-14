@@ -6,7 +6,7 @@
 /*   By: dpeck <dpeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/29 19:19:43 by dpeck             #+#    #+#             */
-/*   Updated: 2019/06/13 18:14:28 by dpeck            ###   ########.fr       */
+/*   Updated: 2019/06/14 14:23:11 by dpeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,10 @@
 
 SoundEngine *g_soundEngine;
 
-Game::Game(IRenderer *renderer, unsigned int & width, unsigned int & height, unsigned int & squareSize) :
-    _state(Active), _renderer(renderer), _snake(nullptr), _apple(nullptr), _width(width), _height(height), _squareSize(squareSize), 
-    _score(0), _borderOffset(squareSize * 2), _rendererChoice(Gameboard::gameMode), _curDirection(Right)
+Game::Game(IRenderer *renderer) :
+    _state(Active), _renderer(renderer), _snake(nullptr), _apple(nullptr), 
+    _score(0), _borderOffset(Gameboard::squareSize * 2), _rendererChoice(Gameboard::gameMode), _curDirection(Right)
 {
-    //_borderOffset = _squareSize * 2;
 }
 
 Game::~Game()
@@ -43,9 +42,9 @@ Game::~Game()
 
 void Game::init()
 {
-    _snake = new Snake(_renderer, _width, _height, _squareSize);
+    _snake = new Snake(_renderer);
 	_snake->setBoundsCollision(_borderOffset);
-    _apple = new RandomlyPlacedObject(_width, _height, _squareSize);
+    _apple = new RandomlyPlacedObject();
 
 	while (_snake->checkCollisionPoint(_apple->getX(), _apple->getY()))
 		_apple->generateRandomPos();
@@ -65,9 +64,9 @@ void Game::restart()
     if (_apple != nullptr)
         delete _apple;
 
-    _snake = new Snake(_renderer, _width, _height, _squareSize);
+    _snake = new Snake(_renderer);
 	_snake->setBoundsCollision(_borderOffset);
-    _apple = new RandomlyPlacedObject(_width, _height, _squareSize);
+    _apple = new RandomlyPlacedObject();
 
 	while (_snake->checkCollisionPoint(_apple->getX(), _apple->getY()))
 		_apple->generateRandomPos();
@@ -96,7 +95,7 @@ void Game::setupObstacles()
     //should change from macro to a variable that's found through the window size.
     for (unsigned int i = 0; i < NUM_OF_OBSTACLES; i++)
     {
-        _obstacles.push_back(new RandomlyPlacedObject(_width, _height, _squareSize));
+        _obstacles.push_back(new RandomlyPlacedObject());
         while (_snake->checkCollisionPoint(_obstacles[i]->getX(), _obstacles[i]->getY())
             || (_obstacles[i]->getX() == _apple->getX() && _obstacles[i]->getY() == _apple->getY()))
             _obstacles[i]->generateRandomPos();
@@ -155,6 +154,7 @@ void Game::processInput()
     _renderer->processInput(_curDirection, _rendererChoice);
     if (_rendererChoice != 0 && _rendererChoice != Gameboard::gameMode)
     {
+        _prevState = _state;
         setGameState(SwitchingRenderers);
         return ;
     }
@@ -196,9 +196,9 @@ void Game::buildObstacles()
     _renderer->buildObstacles(obstacleXPositions, obstacleYPositions);
 }
 
-unsigned int Game::getWidth() const { return (_width); }
+unsigned int Game::getWidth() const { return (Gameboard::windowWidth); }
 
-unsigned int Game::getHeight() const { return (_height); }
+unsigned int Game::getHeight() const { return (Gameboard::windowHeight); }
 
 unsigned int Game::getRendererChoice() const { return (_rendererChoice); }
 
@@ -218,16 +218,16 @@ void Game::switchRenderer(IRenderer *renderer)
 	_renderer->refreshSnakeBuffer(_snake->getBufferAsVector());
     _renderer->updateScore(_score);
     _curDirection = _prevDirection;
+    setGameState(_prevState);
 }
 
-Game::Game() : _state(Quit), _renderer(nullptr), _snake(nullptr), _apple(nullptr), _width(_cannonicalFormDummy),
-_height(_cannonicalFormDummy), _squareSize(_cannonicalFormDummy), 
+Game::Game() : _state(Quit), _renderer(nullptr), _snake(nullptr), _apple(nullptr),
     _score(0), _borderOffset(0), _rendererChoice(Gameboard::gameMode), _curDirection(Right)
 {
 
 }
 
-Game::Game(Game const & other) : _width(_cannonicalFormDummy), _height(_cannonicalFormDummy), _squareSize(_cannonicalFormDummy)
+Game::Game(Game const & other)
 {
     *this = other;
 }
@@ -241,11 +241,11 @@ Game const & Game::operator=(Game const & rhs)
         this->_renderer = rhs._renderer;
         if (this->_snake != nullptr)
             delete _snake;
-        this->_snake = new Snake(_renderer, rhs._width, rhs._height, rhs._squareSize);
+        this->_snake = new Snake(_renderer);
         this->_snake = rhs._snake;
         if (this->_apple != nullptr)
             delete _apple;
-        this->_apple = new RandomlyPlacedObject(rhs._width, rhs._height, rhs._squareSize);
+        this->_apple = new RandomlyPlacedObject();
         this->_apple = rhs._apple;
 
         if (!this->_obstacles.empty())
@@ -256,13 +256,10 @@ Game const & Game::operator=(Game const & rhs)
 
         for (unsigned int i = 0; i < rhs._obstacles.size(); i++)
         {
-            this->_obstacles.push_back(new RandomlyPlacedObject(rhs._width, rhs._height, rhs._squareSize));
+            this->_obstacles.push_back(new RandomlyPlacedObject());
             this->_obstacles[i] = rhs._obstacles[i];
         }
 
-        this->_width = rhs._width;
-        this->_height = rhs._height;
-        this->_squareSize = rhs._squareSize;
         this->_score = rhs._score;
         this->_borderOffset = rhs._borderOffset;
         this->_rendererChoice = rhs._rendererChoice;

@@ -52,13 +52,13 @@ int main(int argc, char** argv)
 	getArgs(argc, argv);
 
 	//this should probably be set in a better way.
-	Gameboard::windowWidth = WINWIDTH;
-	Gameboard::windowHeight = WINHEIGHT;
+	Gameboard::windowWidth = g_windowWidth ? g_windowWidth : WINWIDTH;
+	Gameboard::windowHeight = g_windowHeight ? g_windowHeight : WINHEIGHT;
 	Gameboard::squareSize = SQUARESIZE;
 
 	IRenderer *renderer;
 
-	current_game_mode = Gameboard::gameMode = 1; // GAMEMODE MUST BE EQUAL TO CURRENT RENDERER OR EVERYTHING BREAKS
+	current_game_mode = Gameboard::gameMode = g_gameMode ? g_gameMode : 1; // GAMEMODE MUST BE EQUAL TO CURRENT RENDERER OR EVERYTHING BREAKS
 	if (Gameboard::gameMode == 1)
 		handle = dlopen(PATHLIBA, RTLD_LAZY);
 	else if (Gameboard::gameMode == 2)

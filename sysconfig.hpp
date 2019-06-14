@@ -11,10 +11,10 @@
 #define PATHLIBA "lib/renderA.dylib"
 #define PATHLIBB "lib/renderB.dylib"
 #define PATHLIBC "lib/renderC.dylib"
-#define WINDOW_MAX_HEIGHT 100 // change it later
-#define WINDOW_MIN_HEIGHT 10 // change it later
-#define WINDOW_MAX_WIDTH 200 // change it later
-#define WINDOW_MIN_WIDTH 10 // change it later'
+#define WINDOW_MAX_HEIGHT 1200 // change it later
+#define WINDOW_MIN_HEIGHT 900 // change it later
+#define WINDOW_MAX_WIDTH 900 // change it later
+#define WINDOW_MIN_WIDTH 700 // change it later'
 #define WIN_POINT 10
 
 extern int          g_gameMode;

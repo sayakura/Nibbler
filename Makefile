@@ -69,6 +69,9 @@ dylib:
 	@/bin/rm -f *.o
 	@mv *.dylib lib
 
+recompile:
+	@clang++ -O2 -Wall -Wextra -Werror -std=c++11 -stdlib=libc++ $(INCLUDES) $(LIB) $(DEPEND) $(SOURCE) -o Nibbler
+
 clean:
 	/bin/rm -f *.o
 

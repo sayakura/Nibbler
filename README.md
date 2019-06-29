@@ -27,4 +27,12 @@ Switch to respective renderer with 1, 2, 3 keys
 
 Run "make" and an executable will be created. Type "export DYLD_LIBRARY_PATH=lib" to set up the env. Run "./Nibbler" and enjoy the game!
 
+<h3>Gameplay Demo</h3>
 
+[![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/3PxN0nGZwIg/0.jpg)](https://youtu.be/3PxN0nGZwIg)
+
+<h3>Screenshots</h3>
+
+![alt-text](https://github.com/dylanmpeck/Nibbler/blob/master/screenshots/renderer1.png "Renderer 1")
+![alt-text](https://github.com/dylanmpeck/Nibbler/blob/master/screenshots/renderer2.png "Renderer 2")
+![alt-text](https://github.com/dylanmpeck/Nibbler/blob/master/screenshots/renderer3.png "Renderer 3")

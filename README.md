@@ -33,6 +33,6 @@ Run "make" and an executable will be created. Type "export DYLD_LIBRARY_PATH=lib
 
 <h3>Screenshots</h3>
 
-![alt-text](https://github.com/dylanmpeck/Nibbler/blob/master/screenshots/renderer1.png "Renderer 1")
-![alt-text](https://github.com/dylanmpeck/Nibbler/blob/master/screenshots/renderer2.png "Renderer 2")
 ![alt-text](https://github.com/dylanmpeck/Nibbler/blob/master/screenshots/renderer3.png "Renderer 3")
+![alt-text](https://github.com/dylanmpeck/Nibbler/blob/master/screenshots/renderer2.png "Renderer 2")
+![alt-text](https://github.com/dylanmpeck/Nibbler/blob/master/screenshots/renderer1.png "Renderer 1")

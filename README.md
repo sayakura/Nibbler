@@ -29,7 +29,7 @@ Run "make" and an executable will be created. Type "export DYLD_LIBRARY_PATH=lib
 
 <h3>Gameplay Demo</h3>
 
-[![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/3PxN0nGZwIg/0.jpg)](https://youtu.be/3PxN0nGZwIg)
+[![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/LjmoKbjfvyE/0.jpg)](https://youtu.be/LjmoKbjfvyE)
 
 <h3>Screenshots</h3>
 
